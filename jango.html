@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>2026 잔고관리</title>
+<script src="https://accounts.google.com/gsi/client" async defer onload="gdReady()"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Apple SD Gothic Neo',-apple-system,'Malgun Gothic',sans-serif;background:#f0f2f7;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none}
+input,select,textarea{font-family:inherit;outline:none}
+#content{flex:1;overflow-y:auto;padding:12px 14px 24px;-webkit-overflow-scrolling:touch}
+.card{background:#fff;border-radius:10px;padding:11px 14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(26,43,74,.08);display:flex;align-items:center;gap:10px}
+.badge{display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;white-space:nowrap}
+.inp{width:100%;padding:9px 11px;border-radius:8px;border:1px solid #e2e8f0;font-size:14px;color:#1a2b4a}
+.row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #e2e8f0}
+</style>
+</head>
+<body>
+
+<div id="header"></div>
+<div id="dbar" style="background:#f8f9fb;border-bottom:1px solid #e2e8f0;padding:5px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0">
+  <span style="font-size:14px">☁️</span>
+  <span id="gdst" style="color:#8593b0;font-size:11px;flex:1">☁ 드라이브</span>
+  <button onclick="gdAuth('load')" style="background:#fff;border:1px solid #e2e8f0;border-radius:7px;padding:4px 10px;font-size:11px;cursor:pointer;color:#1a2b4a;font-family:inherit">📥 불러오기</button>
+  <button onclick="gdAuth('save')" style="background:#1a2b4a;border:none;border-radius:7px;padding:4px 10px;font-size:11px;cursor:pointer;color:#fff;font-family:inherit">📤 저장</button>
+</div>
+<div id="summary" style="background:#1a2b4a;padding:10px 14px 12px;flex-shrink:0"></div>
+<div id="secnav" style="background:#fff;border-bottom:1px solid #e2e8f0;padding:8px 14px;display:flex;align-items:center;gap:6px;flex-shrink:0"></div>
+<div id="cobbar" style="display:none;background:#f8f9fb;border-bottom:1px solid #e2e8f0;padding:7px 14px;flex-shrink:0;align-items:center;gap:8px"></div>
+<div id="content"></div>
+<div id="footer" style="background:#fff;border-top:1px solid #e2e8f0;padding:10px 14px;flex-shrink:0"></div>
+
+<div id="overlay" style="display:none;position:fixed;inset:0;background:rgba(26,43,74,.55);z-index:999;align-items:center;justify-content:center;padding:14px">
+  <div id="mbox" style="background:#fff;border-radius:16px;width:100%;max-width:420px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(26,43,74,.3)"></div>
+</div>
+
+<script>
+// ── 상수 ──────────────────────────────────
+const NAV='#1a2b4a',GOLD='#c9a84c',BG='#f0f2f7',BORD='#e2e8f0',TEXT='#1a2b4a',MUTED='#8593b0';
+const MN=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+const TT={
+  '수수료':  {bg:'#dcfce7',tc:'#16a34a',affects:'net'},
+  '소개비':  {bg:'#fef9c3',tc:'#92400e',affects:'net'},
+  '외주비':  {bg:'#ffedd5',tc:'#c2410c',affects:'net'},
+  '생활비':  {bg:'#fee2e2',tc:'#dc2626',affects:'bal'},
+  '계산서':  {bg:'#f1f5f9',tc:'#475569',affects:'bal'},
+  '기타지출':{bg:'#fdf4ff',tc:'#9333ea',affects:'bal'},
+};
+
+// ── 포맷 ──────────────────────────────────
+const W=n=>{
+  if((!n&&n!==0)||n===0)return'-';
+  const a=Math.abs(+n);
+  if(a>=100000000){const e=Math.floor(a/100000000),m=Math.floor((a%100000000)/10000);return m?`${e}억 ${m}만`:`${e}억`;}
+  return a>=10000?Math.floor(a/10000)+'만':F(a)+'원';
+};
+const F=n=>(+n||0).toLocaleString('ko-KR');
+const SC=n=>n>0?'#16a34a':n<0?'#dc2626':MUTED;
+
+// ── 계산 ──────────────────────────────────
+function calcM(m){
+  if(!m)return{net:0,bal:0,biz:0,life:0,pl:0};
+  const txs=m.transactions||[];
+  const net=txs.filter(t=>TT[t.type]?.affects==='net').reduce((s,t)=>s+(+t.amount||0),0);
+  const badj=txs.filter(t=>TT[t.type]?.affects==='bal').reduce((s,t)=>s+(+t.amount||0),0);
+  const bal=(+m.carryover||0)+net+badj;
+  const biz=(m.bizCosts||[]).reduce((s,c)=>s+(+c.amount||0),0);
+  const life=(m.lifeCosts||[]).reduce((s,c)=>s+(+c.amount||0),0);
+  return{net,bal,biz,life,pl:net-biz-life};
+}
+
+// ── 기본 템플릿 ────────────────────────────
+const DEF_BIZ=()=>[
+  {id:'bx1',label:'렌트비',amount:650430},{id:'bx2',label:'한손회',amount:50000},
+  {id:'bx3',label:'주차비',amount:150000},{id:'bx4',label:'기장료',amount:110000},
+  {id:'bx5',label:'국민연금',amount:189570},{id:'bx6',label:'건강보험',amount:105410},
+];
+const DEF_LIFE=()=>[
+  {id:'lx1',label:'생활비',person:'김다정',amount:5400000},
+  {id:'lx2',label:'교보보험',person:'보험',amount:172480},{id:'lx3',label:'한화보험',person:'보험',amount:62311},
+  {id:'lx4',label:'KB보험①',person:'보험',amount:13611},{id:'lx5',label:'KB보험②',person:'보험',amount:163227},
+  {id:'lx6',label:'KB보험③',person:'보험',amount:17915},{id:'lx7',label:'DB보험',person:'보험',amount:10000},
+  {id:'lx8',label:'청약',person:'유승민',amount:100000},{id:'lx9',label:'농협대출이자',person:'유승민',amount:2000000},
+];
+
+// ── 시드 데이터 ────────────────────────────
+const SEED={
+ '2026-01':{carryover:1380000,
+  transactions:[
+   {id:'t1a',label:'일배책누수(한라비발디)',contractNo:'251201S',person:'배민숙',type:'수수료',amount:690000,date:'2026-01-02'},
+   {id:'t1b',label:'생활비',contractNo:'',person:'김다정',type:'생활비',amount:-2070000,date:'2026-01-28'},
+   {id:'t1c',label:'일배책누수(한일4차)',contractNo:'260101S',person:'한지로',type:'수수료',amount:506000,date:'2026-01-30'},
+   {id:'t1d',label:'계산서(한지로)',contractNo:'260101S',person:'유승민',type:'계산서',amount:-506000,date:'2026-01-30'},
+  ],
+  bizCosts:[
+   {id:'b1a',label:'렌트비',amount:650430},{id:'b1b',label:'한손회',amount:50000},
+   {id:'b1c',label:'주차비',amount:150000},{id:'b1d',label:'식대',amount:200000},{id:'b1e',label:'등록면허세',amount:27000},
+  ],
+  lifeCosts:[
+   {id:'l1a',label:'생활비',person:'김다정',amount:4000000},{id:'l1b',label:'교보보험',person:'보험',amount:172480},
+   {id:'l1c',label:'한화보험',person:'보험',amount:62311},{id:'l1d',label:'KB보험①',person:'보험',amount:13611},
+   {id:'l1e',label:'KB보험②',person:'보험',amount:163227},{id:'l1f',label:'KB보험③',person:'보험',amount:17915},
+   {id:'l1g',label:'DB보험',person:'보험',amount:10000},{id:'l1h',label:'농협대출이자',person:'유승민',amount:2000000},
+   {id:'l1i',label:'삼성카드',person:'유승민',amount:1231040},{id:'l1j',label:'하나카드',person:'유승민',amount:481880},
+   {id:'l1k',label:'롯데카드',person:'유승민',amount:300},
+  ]},
+ '2026-02':{carryover:0,
+  transactions:[
+   {id:'t2a',label:'시배책누수(오케이피트니스)',contractNo:'251203S',person:'이도관',type:'수수료',amount:651000,date:'2026-02-05'},
+   {id:'t2b',label:'계산서(이도관)',contractNo:'251203S',person:'유승민',type:'계산서',amount:-651000,date:'2026-02-05'},
+   {id:'t2c',label:'부곡동점포(화재)',contractNo:'251101F',person:'최영숙',type:'수수료',amount:3540000,date:'2026-02-13'},
+   {id:'t2d',label:'부곡동점포(소개)',contractNo:'251101F',person:'임진석',type:'소개비',amount:-700000,date:'2026-02-13'},
+   {id:'t2e',label:'생활비',contractNo:'',person:'김다정',type:'생활비',amount:-2500000,date:'2026-02-27'},
+  ],
+  bizCosts:[
+   {id:'b2a',label:'렌트비',amount:650430},{id:'b2b',label:'한손회',amount:50000},
+   {id:'b2c',label:'주차비',amount:150000},{id:'b2d',label:'기장료',amount:110000},
+   {id:'b2e',label:'국민연금',amount:563700},{id:'b2f',label:'건강보험',amount:209170},
+  ],
+  lifeCosts:[
+   {id:'l2a',label:'생활비',person:'김다정',amount:4000000},{id:'l2b',label:'교보보험',person:'보험',amount:172480},
+   {id:'l2c',label:'한화보험',person:'보험',amount:62311},{id:'l2d',label:'KB보험①',person:'보험',amount:13611},
+   {id:'l2e',label:'KB보험②',person:'보험',amount:163227},{id:'l2f',label:'KB보험③',person:'보험',amount:17915},
+   {id:'l2g',label:'DB보험',person:'보험',amount:10000},{id:'l2h',label:'청약',person:'유승민',amount:100000},
+   {id:'l2i',label:'농협대출이자',person:'유승민',amount:2000000},{id:'l2j',label:'삼성카드',person:'유승민',amount:2425313},
+   {id:'l2k',label:'하나카드',person:'유승민',amount:223600},{id:'l2l',label:'롯데카드',person:'유승민',amount:20000},
+   {id:'l2m',label:'생활비추가',person:'김다정',amount:2500000},
+  ]},
+ '2026-03':{carryover:340000,
+  transactions:[
+   {id:'t3a',label:'현송아트빌라(화재)',contractNo:'251001F',person:'-',type:'수수료',amount:7560000,date:'2026-03-06'},
+   {id:'t3b',label:'현송아트빌라(외주)',contractNo:'251001F',person:'김다정',type:'외주비',amount:-500000,date:'2026-03-06'},
+   {id:'t3c',label:'생활비',contractNo:'',person:'유승민',type:'생활비',amount:-4000000,date:'2026-03-11'},
+   {id:'t3d',label:'생활비(주담대)',contractNo:'',person:'유승민',type:'생활비',amount:-2000000,date:'2026-03-11'},
+   {id:'t3e',label:'일배책누수(고창대산)',contractNo:'260208KS',person:'박두환',type:'수수료',amount:200000,date:'2026-03-13'},
+   {id:'t3f',label:'계산서(박두환)',contractNo:'260208KS',person:'하나은행',type:'계산서',amount:-200000,date:'2026-03-13'},
+   {id:'t3g',label:'일배책누수(광주무등)',contractNo:'260304KS',person:'이익현',type:'수수료',amount:250000,date:'2026-03-14'},
+   {id:'t3h',label:'계산서(이익현)',contractNo:'260304KS',person:'하나은행',type:'계산서',amount:-250000,date:'2026-03-14'},
+   {id:'t3i',label:'거제유림아시아드',contractNo:'251103F',person:'김민수',type:'수수료',amount:2000000,date:'2026-03-19'},
+   {id:'t3j',label:'거제유림(외주)',contractNo:'251103F',person:'김다정',type:'외주비',amount:-500000,date:'2026-03-19'},
+   {id:'t3k',label:'생활비',contractNo:'',person:'김다정',type:'생활비',amount:-2000000,date:'2026-03-26'},
+   {id:'t3l',label:'다대몰운대비치',contractNo:'260302W',person:'다대몰운대',type:'수수료',amount:7080000,date:'2026-03-27'},
+   {id:'t3m',label:'계산서(몰운대)',contractNo:'260302W',person:'하나은행',type:'계산서',amount:-7080000,date:'2026-03-27'},
+   {id:'t3n',label:'일배책누수(태림)',contractNo:'260209S',person:'손주영',type:'수수료',amount:550000,date:'2026-03-31'},
+   {id:'t3o',label:'계산서(손주영)',contractNo:'260209S',person:'하나은행',type:'계산서',amount:-550000,date:'2026-03-31'},
+  ],
+  bizCosts:[
+   {id:'b3a',label:'렌트비',amount:650430},{id:'b3b',label:'한손회',amount:50000},
+   {id:'b3c',label:'주차비',amount:150000},{id:'b3d',label:'기장료',amount:110000},{id:'b3e',label:'건강보험',amount:105410},
+  ],
+  lifeCosts:[
+   {id:'l3a',label:'생활비',person:'김다정',amount:4000000},{id:'l3b',label:'교보보험',person:'보험',amount:172480},
+   {id:'l3c',label:'한화보험',person:'보험',amount:62311},{id:'l3d',label:'KB보험①',person:'보험',amount:13611},
+   {id:'l3e',label:'KB보험②',person:'보험',amount:163227},{id:'l3f',label:'KB보험③',person:'보험',amount:17915},
+   {id:'l3g',label:'DB보험',person:'보험',amount:10000},{id:'l3h',label:'청약',person:'유승민',amount:100000},
+   {id:'l3i',label:'농협대출이자',person:'유승민',amount:2000000},{id:'l3j',label:'삼성카드',person:'유승민',amount:2942921},
+   {id:'l3k',label:'하나카드',person:'유승민',amount:570460},
+  ]},
+ '2026-04':{carryover:900000,
+  transactions:[
+   {id:'t4a',label:'만덕주택(화재)',contractNo:'251105F',person:'-',type:'수수료',amount:12000000,date:'2026-04-14'},
+   {id:'t4b',label:'만덕주택(소개)',contractNo:'251105F',person:'임진석',type:'소개비',amount:-2000000,date:'2026-04-14'},
+   {id:'t4c',label:'만덕주택(외주)',contractNo:'251105F',person:'김다정',type:'외주비',amount:-500000,date:'2026-04-14'},
+   {id:'t4d',label:'생활비',contractNo:'',person:'유승민',type:'생활비',amount:-3000000,date:'2026-04-06'},
+   {id:'t4e',label:'이안해운대(누수)',contractNo:'260202L',person:'-',type:'수수료',amount:4635045,date:'2026-04-11'},
+   {id:'t4f',label:'이안해운대(소개)',contractNo:'260202L',person:'김동원',type:'소개비',amount:-1635045,date:'2026-04-11'},
+   {id:'t4g',label:'일배책누수(벽산)',contractNo:'260308S',person:'김필선',type:'수수료',amount:530000,date:'2026-04-20'},
+   {id:'t4h',label:'계산서(김필선)',contractNo:'260308S',person:'김필선',type:'계산서',amount:-530000,date:'2026-04-20'},
+   {id:'t4i',label:'생활비',contractNo:'',person:'김다정',type:'생활비',amount:-5400000,date:'2026-04-29'},
+   {id:'t4j',label:'가락타운(화재)',contractNo:'251204F',person:'조상철',type:'수수료',amount:5000000,date:'2026-04-23'},
+   {id:'t4k',label:'가락타운(외주)',contractNo:'251204F',person:'김다정',type:'외주비',amount:-500000,date:'2026-04-23'},
+   {id:'t4l',label:'사천주택(화재)',contractNo:'260206F',person:'-',type:'수수료',amount:9800000,date:'2026-04-29'},
+   {id:'t4m',label:'사천주택(외주)',contractNo:'260206F',person:'김다정',type:'외주비',amount:-500000,date:'2026-04-29'},
+   {id:'t4n',label:'사천주택(소개)',contractNo:'260206F',person:'곽순원',type:'소개비',amount:-1800000,date:'2026-04-29'},
+   {id:'t4o',label:'생활비',contractNo:'',person:'유승민',type:'생활비',amount:-1000000,date:'2026-04-30'},
+  ],
+  bizCosts:[
+   {id:'b4a',label:'렌트비',amount:650430},{id:'b4b',label:'한손회',amount:50000},
+   {id:'b4c',label:'주차비',amount:150000},{id:'b4d',label:'기장료',amount:110000},
+   {id:'b4e',label:'국민연금',amount:190000},{id:'b4f',label:'건강보험',amount:105410},{id:'b4g',label:'모임(고진회)',amount:200000},
+  ],
+  lifeCosts:[
+   {id:'l4a',label:'생활비',person:'김다정',amount:5400000},{id:'l4b',label:'교보보험',person:'보험',amount:172480},
+   {id:'l4c',label:'한화보험',person:'보험',amount:62311},{id:'l4d',label:'KB보험①',person:'보험',amount:13611},
+   {id:'l4e',label:'KB보험②',person:'보험',amount:163227},{id:'l4f',label:'KB보험③',person:'보험',amount:17915},
+   {id:'l4g',label:'DB보험',person:'보험',amount:10000},{id:'l4h',label:'청약',person:'유승민',amount:100000},
+   {id:'l4i',label:'농협대출이자',person:'유승민',amount:2000000},{id:'l4j',label:'삼성카드',person:'유승민',amount:2189200},
+   {id:'l4k',label:'하나카드',person:'유승민',amount:424763},
+  ]},
+ '2026-05':{carryover:16000000,
+  transactions:[
+   {id:'t5a',label:'생활비',contractNo:'',person:'김다정',type:'생활비',amount:-500000,date:'2026-05-03'},
+   {id:'t5b',label:'아시아선수촌(화재)',contractNo:'260306F',person:'-',type:'수수료',amount:9510000,date:'2026-05-07'},
+   {id:'t5c',label:'아시아선수촌(외주)',contractNo:'260306F',person:'김다정',type:'외주비',amount:-500000,date:'2026-05-07'},
+   {id:'t5d',label:'생활비',contractNo:'',person:'유승민',type:'생활비',amount:-3000000,date:'2026-05-08'},
+   {id:'t5e',label:'아시아선수촌(소개)',contractNo:'260306F',person:'-',type:'소개비',amount:-2000000,date:'2026-05-29'},
+   {id:'t5f',label:'챔피언(화재)',contractNo:'251202F',person:'-',type:'수수료',amount:4230000,date:'2026-05-08'},
+   {id:'t5g',label:'챔피언(소개)',contractNo:'251202F',person:'-',type:'소개비',amount:-1000000,date:'2026-05-09'},
+   {id:'t5h',label:'생활비',contractNo:'',person:'유승민',type:'생활비',amount:-2000000,date:'2026-05-09'},
+   {id:'t5i',label:'생활비',contractNo:'',person:'김다정',type:'생활비',amount:-5400000,date:'2026-05-13'},
+   {id:'t5j',label:'고성주택(화재)',contractNo:'260301F',person:'-',type:'수수료',amount:10000000,date:'2026-05-13'},
+   {id:'t5k',label:'별도입금(유민호)',contractNo:'260301F',person:'유승민',type:'기타지출',amount:-3300000,date:'2026-05-13'},
+   {id:'t5l',label:'고성주택(소개)',contractNo:'260301F',person:'곽순원',type:'소개비',amount:-1700000,date:'2026-05-13'},
+   {id:'t5m',label:'고성주택(외주)',contractNo:'260301F',person:'김다정',type:'외주비',amount:-500000,date:'2026-05-13'},
+   {id:'t5n',label:'여행비',contractNo:'',person:'김다정',type:'생활비',amount:-5000000,date:'2026-05-26'},
+   {id:'t5o',label:'엄궁동주택(화재)',contractNo:'260207F',person:'-',type:'수수료',amount:4930000,date:'2026-05-27'},
+   {id:'t5p',label:'엄궁동주택(외주)',contractNo:'260207F',person:'김다정',type:'외주비',amount:-500000,date:'2026-05-27'},
+   {id:'t5q',label:'여행비',contractNo:'',person:'김다정',type:'생활비',amount:-2000000,date:'2026-05-27'},
+  ],
+  bizCosts:[
+   {id:'b5a',label:'렌트비',amount:650430},{id:'b5b',label:'한손회',amount:50000},
+   {id:'b5c',label:'주차비',amount:150000},{id:'b5d',label:'기장료',amount:110000},
+   {id:'b5e',label:'국민연금',amount:189570},{id:'b5f',label:'건강보험',amount:105410},
+   {id:'b5g',label:'감사비',amount:1000000},{id:'b5h',label:'결산수수료',amount:300000},
+  ],
+  lifeCosts:[
+   {id:'l5a',label:'생활비',person:'김다정',amount:5400000},{id:'l5b',label:'교보보험',person:'보험',amount:172480},
+   {id:'l5c',label:'한화보험',person:'보험',amount:62311},{id:'l5d',label:'KB보험①',person:'보험',amount:13611},
+   {id:'l5e',label:'KB보험②',person:'보험',amount:163227},{id:'l5f',label:'KB보험③',person:'보험',amount:17915},
+   {id:'l5g',label:'DB보험',person:'보험',amount:10000},{id:'l5h',label:'청약',person:'유승민',amount:100000},
+   {id:'l5i',label:'농협대출이자',person:'유승민',amount:2000000},{id:'l5j',label:'삼성카드',person:'유승민',amount:2437435},
+   {id:'l5k',label:'여행경비',person:'김다정',amount:7000000},
+  ]},
+ '2026-06':{carryover:17270000,
+  transactions:[
+   {id:'t6d',label:'생활비',contractNo:'',person:'유승민',type:'생활비',amount:-4000000,date:'2026-06-04'},
+   {id:'t6e',label:'생활비',contractNo:'',person:'유승민',type:'생활비',amount:-4000000,date:'2026-06-08'},
+   {id:'t6a',label:'성원아파트(화재)',contractNo:'260305F',person:'-',type:'수수료',amount:6570000,date:'2026-06-10'},
+   {id:'t6b',label:'성원아파트(외주)',contractNo:'260305F',person:'김다정',type:'외주비',amount:-500000,date:'2026-06-10'},
+   {id:'t6c',label:'성원아파트(소개)',contractNo:'260305F',person:'김용진',type:'소개비',amount:-1300000,date:'2026-06-10'},
+   {id:'t6f',label:'동대신동주택(화재)',contractNo:'260603F',person:'-',type:'수수료',amount:6000000,date:'2026-06-11'},
+   {id:'t6g',label:'동대신동주택(외주)',contractNo:'260603F',person:'김다정',type:'외주비',amount:-500000,date:'2026-06-11'},
+   {id:'t6h',label:'동대신동주택(소개)',contractNo:'260603F',person:'임진석',type:'소개비',amount:-1000000,date:'2026-06-11'},
+  ],
+  bizCosts:[
+   {id:'b6a',label:'렌트비',amount:650430},{id:'b6b',label:'한손회',amount:50000},
+   {id:'b6c',label:'주차비',amount:150000},{id:'b6d',label:'기장료',amount:110000},
+   {id:'b6e',label:'국민연금',amount:189570},{id:'b6f',label:'건강보험',amount:105410},
+  ],
+  lifeCosts:[
+   {id:'l6a',label:'생활비',person:'김다정',amount:5400000},{id:'l6b',label:'교보보험',person:'보험',amount:172480},
+   {id:'l6c',label:'한화보험',person:'보험',amount:62311},{id:'l6d',label:'KB보험①',person:'보험',amount:13611},
+   {id:'l6e',label:'KB보험②',person:'보험',amount:163227},{id:'l6f',label:'KB보험③',person:'보험',amount:17915},
+   {id:'l6g',label:'DB보험',person:'보험',amount:10000},{id:'l6h',label:'청약',person:'유승민',amount:100000},
+   {id:'l6i',label:'농협대출이자',person:'유승민',amount:2000000},{id:'l6j',label:'삼성카드',person:'유승민',amount:4000000},
+   {id:'l6k',label:'경조사',person:'유승민',amount:1000000},
+  ]},
+};
+// 7-12월은 사용자가 직접 세팅
+
+// ── 앱 상태 ────────────────────────────────
+let D=JSON.parse(JSON.stringify(SEED));
+let tab='month',month='2026-06',sec='tx',year=2026;
+let editTarget=null;
+
+// ── 스토리지 ───────────────────────────────
+let gdAutoTimer=null;
+async function save(){
+  try{await window.storage.set('theham-jango-v6',JSON.stringify(D));}catch(e){}
+  // localStorage 폴백 (Netlify 등 외부 환경)
+  try{localStorage.setItem('theham-jango-v6',JSON.stringify(D));}catch(e){}
+  // 드라이브 자동저장 (마지막 변경 후 3초 뒤)
+  if(gdtok){
+    clearTimeout(gdAutoTimer);
+    gdAutoTimer=setTimeout(()=>{
+      gdDoSave();
+    },3000);
+  }
+}
+async function load(){
+  try{const r=await window.storage.get('theham-jango-v6');if(r?.value){D=JSON.parse(r.value);return;}}catch(e){}
+  // localStorage 폴백
+  try{const r=localStorage.getItem('theham-jango-v6');if(r)D=JSON.parse(r);}catch(e){}
+}
+
+// ── 월 데이터 가져오기 ──────────────────────
+function getM(){return D[month]||null;}
+
+// ── 렌더링 ─────────────────────────────────
+function render(){
+  const m=getM();
+  const c=m?calcM(m):{net:0,bal:0,biz:0,life:0,pl:0};
+  const mi=parseInt(month.split('-')[1])-1;
+
+  // 헤더
+  document.getElementById('header').style.cssText='background:#1a2b4a;padding:10px 14px;flex-shrink:0;box-shadow:0 2px 8px rgba(26,43,74,.3)';
+  document.getElementById('header').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${tab==='month'?'8px':'0'}">
+      <div>
+        <div style="color:${GOLD};font-size:10px;letter-spacing:.12em;font-weight:600">더함화재특종손해사정</div>
+        <div style="color:#fff;font-size:16px;font-weight:800">${year}년 잔고 관리</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px">
+        <button onclick="setYear(year-1)" style="background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:8px;width:28px;height:28px;font-size:14px;cursor:pointer">←</button>
+        <span style="color:${GOLD};font-weight:800;font-size:14px;min-width:48px;text-align:center">${year}년</span>
+        <button onclick="setYear(year+1)" style="background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:8px;width:28px;height:28px;font-size:14px;cursor:pointer">→</button>
+        <div style="width:1px;height:20px;background:rgba(255,255,255,.2);margin:0 2px"></div>
+        ${['month','annual'].map(t=>`<button onclick="setTab('${t}')" style="background:${tab===t?GOLD:'rgba(255,255,255,.15)'};color:${tab===t?NAV:'#fff'};border:none;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700">${t==='month'?'월별':'연간'}</button>`).join('')}
+      </div>
+    </div>
+    ${tab==='month'?`<div style="display:flex;gap:4px;overflow-x:auto;padding-bottom:2px">
+      ${MN.map((ml,i)=>{
+        const k=`${year}-${String(i+1).padStart(2,'0')}`;
+        const hasTx=(D[k]?.transactions||[]).length>0;
+        const act=month===k;
+        return`<button onclick="setMonth('${k}')" style="background:${act?GOLD:hasTx?'rgba(255,255,255,.2)':'rgba(255,255,255,.07)'};color:${act?NAV:hasTx?'#fff':'rgba(255,255,255,.35)'};border:none;border-radius:8px;padding:4px 8px;font-size:12px;font-weight:${act?700:400};white-space:nowrap;flex-shrink:0">${ml}</button>`;
+      }).join('')}
+    </div>`:''}`; 
+
+  if(tab==='annual'){renderAnnual();return;}
+
+  // 데이터 없는 달 → 세팅 화면
+  if(!m){
+    document.getElementById('summary').style.display='none';
+    document.getElementById('secnav').style.display='none';
+    document.getElementById('cobbar').style.display='none';
+    document.getElementById('footer').style.display='none';
+    document.getElementById('content').innerHTML=`
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 24px;gap:16px;text-align:center">
+        <div style="font-size:40px">📋</div>
+        <div style="color:${TEXT};font-weight:700;font-size:17px">${year}년 ${mi+1}월</div>
+        <div style="color:${MUTED};font-size:13px;line-height:1.7">아직 이 달 데이터가 없습니다.<br>업무고정비·생활비를 어떻게 세팅할까요?</div>
+        <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:280px;margin-top:8px">
+          <button onclick="seedMonth('prev')" style="background:${NAV};color:#fff;border:none;border-radius:12px;padding:15px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 2px 8px rgba(26,43,74,.2)">
+            ↩ 이전 달 고정비·생활비 복사
+          </button>
+          <button onclick="seedMonth('default')" style="background:${CARD};color:${TEXT};border:2px solid ${BORD};border-radius:12px;padding:14px;font-weight:600;font-size:14px;cursor:pointer">
+            📋 기본값으로 세팅
+          </button>
+        </div>
+        <div style="color:${MUTED};font-size:11px;margin-top:4px">이월은 이전 달 잔고로 자동 설정됩니다</div>
+      </div>`;
+    return;
+  }
+
+  // 누적손익 (1월~현재월 합산)
+  let cumPL=0;
+  for(let i=0;i<=mi;i++){const k=`${year}-${String(i+1).padStart(2,'0')}`;cumPL+=calcM(D[k]).pl;}
+  // 차감액 = 생활비·계산서·기타지출 (잔고에서만 차감, 순매출에는 미포함)
+  const balDed=(m.transactions||[]).filter(t=>TT[t.type]?.affects==='bal').reduce((s,t)=>s+(+t.amount||0),0);
+  // 요약 바
+  document.getElementById('summary').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:3px;text-align:center">
+      ${[['이월',m.carryover||0,'rgba(255,255,255,.45)',false],['순매출',c.net,GOLD,false],['차감액',balDed,'#f87171',true],['잔고',c.bal,'#60a5fa',false],['누적손익',cumPL,cumPL>=0?'#34d399':'#fb923c',true]].map(([l,v,cl,sgn])=>`
+        <div><div style="color:rgba(255,255,255,.38);font-size:9px">${l}</div><div style="color:${cl};font-weight:800;font-size:12px;margin-top:1px">${sgn?(v>=0?'+':'-'):''}${W(Math.abs(v))}</div></div>
+      `).join('')}
+    </div>`;
+  document.getElementById('summary').style.display='';
+
+  // 섹션 탭
+  document.getElementById('secnav').innerHTML=`
+    ${[['tx','📥 매출/지출'],['biz','🏢 업무고정비'],['life','🏠 생활비']].map(([s,l])=>`
+      <button onclick="setSec('${s}')" style="background:${sec===s?NAV:BG};color:${sec===s?'#fff':MUTED};border:none;border-radius:20px;padding:5px 10px;font-size:12px;font-weight:${sec===s?700:400}">${l}</button>
+    `).join('')}
+    <button onclick="openModal('${sec}',null)" style="margin-left:auto;background:${GOLD};color:${NAV};border:none;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;flex-shrink:0">+ 추가</button>`;
+  document.getElementById('secnav').style.display='flex';
+  document.getElementById('cobbar').style.display='none';
+
+  // 콘텐츠
+  let html='';
+  if(sec==='tx'){
+    const txs=[...(m.transactions||[])].sort((a,b)=>{
+      if(!a.date&&!b.date)return 0;
+      if(!a.date)return 1;
+      if(!b.date)return -1;
+      return a.date.localeCompare(b.date);
+    });
+    // ── 이월 카드 (최상단) ──
+    html+=`<div class="card" style="border-left:3px solid #60a5fa;margin-bottom:10px">
+      <div style="flex:1;min-width:0">
+        <div style="color:${MUTED};font-size:10px;margin-bottom:2px">이월금액</div>
+        <div style="color:${TEXT};font-size:12px">전월 잔고 이월</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;margin-right:8px">
+        <div id="cov-disp" style="color:#60a5fa;font-weight:700;font-size:15px">${F(m.carryover||0)}</div>
+        <div style="color:${MUTED};font-size:10px">${W(m.carryover||0)}</div>
+      </div>
+      <button onclick="startEditCarryover()" style="background:${BG};border:none;border-radius:6px;padding:4px 8px;font-size:11px;color:${TEXT};cursor:pointer;flex-shrink:0">✏</button>
+    </div>`;
+    const grossIncome=txs.filter(t=>t.type==='수수료').reduce((s,t)=>s+(+t.amount||0),0);
+    const deductions=txs.filter(t=>t.type==='소개비'||t.type==='외주비').reduce((s,t)=>s+(+t.amount||0),0);
+    const netSales=grossIncome+deductions;
+    html+=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+      ${[['총매출',grossIncome,'#16a34a'],['차감액',deductions,'#dc2626'],['순매출',netSales,SC(netSales)]].map(([l,v,cl])=>`
+        <div style="background:#fff;border-radius:10px;padding:8px;text-align:center;box-shadow:0 1px 3px rgba(26,43,74,.07)">
+          <div style="color:${MUTED};font-size:10px">${l}</div>
+          <div style="color:${cl};font-weight:700;font-size:12px;margin-top:2px">${v>0?'+':v<0?'':''}${W(v)}</div>
+        </div>`).join('')}
+    </div>`;
+    if(!txs.length) html+='<div style="text-align:center;padding:30px;color:'+MUTED+'">거래 내역이 없습니다</div>';
+    txs.forEach(t=>{
+      const tt=TT[t.type]||{bg:'#f1f5f9',tc:MUTED};
+      html+=`<div class="card">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px;flex-wrap:wrap">
+            <span class="badge" style="background:${tt.bg};color:${tt.tc}">${t.type}</span>
+            ${t.date?`<span style="color:${GOLD};font-size:11px;font-weight:600">${t.date.slice(5).replace('-','/')}</span>`:''}
+            ${t.contractNo?`<span style="color:${MUTED};font-size:10px">${t.contractNo}</span>`:''}
+          </div>
+          <div style="color:${TEXT};font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.label}</div>
+          ${t.person&&t.person!=='-'?`<div style="color:${MUTED};font-size:11px;margin-top:1px">${t.person}</div>`:''}
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="color:${SC(t.amount)};font-weight:700;font-size:15px">${t.amount>0?'+':''}${F(t.amount)}</div>
+          <div style="color:${MUTED};font-size:10px">${W(Math.abs(t.amount))}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0">
+          <button onclick="openModal('tx',${JSON.stringify(t).replace(/"/g,'&quot;')})" style="background:${BG};border:none;border-radius:6px;padding:4px 8px;font-size:11px;color:${TEXT}">수정</button>
+          <button onclick="delItem('tx','${t.id}')" style="background:#fef2f2;border:none;border-radius:6px;padding:4px 8px;font-size:11px;color:#dc2626">삭제</button>
+        </div>
+      </div>`;
+    });
+  } else if(sec==='biz'){
+    const items=m.bizCosts||[];
+    html+=`<div style="background:#fff;border-radius:10px;padding:10px 14px;margin-bottom:10px;display:flex;justify-content:space-between;box-shadow:0 1px 4px rgba(26,43,74,.07)">
+      <span style="color:${TEXT};font-weight:600">합계</span><span style="color:#f97316;font-weight:800;font-size:16px">${F(c.biz)}원</span></div>`;
+    if(!items.length) html+='<div style="text-align:center;padding:30px;color:'+MUTED+'">항목이 없습니다</div>';
+    items.forEach(item=>{
+      html+=`<div class="card">
+        <div style="flex:1;color:${TEXT};font-weight:600;font-size:14px">${item.label}</div>
+        <div style="color:#f97316;font-weight:700;font-size:14px;flex-shrink:0">${F(item.amount)}원</div>
+        <div style="display:flex;gap:3px;flex-shrink:0">
+          <button onclick="openModal('biz',${JSON.stringify(item).replace(/"/g,'&quot;')})" style="background:${BG};border:none;border-radius:6px;padding:4px 8px;font-size:11px">수정</button>
+          <button onclick="delItem('biz','${item.id}')" style="background:#fef2f2;border:none;border-radius:6px;padding:4px 8px;font-size:11px;color:#dc2626">삭제</button>
+        </div>
+      </div>`;
+    });
+  } else {
+    const items=m.lifeCosts||[];
+    html+=`<div style="background:#fff;border-radius:10px;padding:10px 14px;margin-bottom:10px;display:flex;justify-content:space-between;box-shadow:0 1px 4px rgba(26,43,74,.07)">
+      <span style="color:${TEXT};font-weight:600">합계</span><span style="color:#dc2626;font-weight:800;font-size:16px">${F(c.life)}원</span></div>`;
+    if(!items.length) html+='<div style="text-align:center;padding:30px;color:'+MUTED+'">항목이 없습니다</div>';
+    items.forEach(item=>{
+      html+=`<div class="card">
+        <div style="flex:1;min-width:0">
+          <div style="color:${TEXT};font-weight:600;font-size:14px">${item.label}</div>
+          ${item.person?`<div style="color:${MUTED};font-size:11px;margin-top:1px">${item.person}</div>`:''}
+        </div>
+        <div style="color:#dc2626;font-weight:700;font-size:14px;flex-shrink:0">${F(item.amount)}원</div>
+        <div style="display:flex;gap:3px;flex-shrink:0">
+          <button onclick="openModal('life',${JSON.stringify(item).replace(/"/g,'&quot;')})" style="background:${BG};border:none;border-radius:6px;padding:4px 8px;font-size:11px">수정</button>
+          <button onclick="delItem('life','${item.id}')" style="background:#fef2f2;border:none;border-radius:6px;padding:4px 8px;font-size:11px;color:#dc2626">삭제</button>
+        </div>
+      </div>`;
+    });
+  }
+  document.getElementById('content').innerHTML=html;
+
+  // 하단 바
+  document.getElementById('footer').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+      <div><div style="color:${MUTED};font-size:10px">업무고정비</div><div style="color:#f97316;font-weight:700;font-size:13px">${W(c.biz)}</div></div>
+      <div><div style="color:${MUTED};font-size:10px">생활비</div><div style="color:#dc2626;font-weight:700;font-size:13px">${W(c.life)}</div></div>
+      <div><div style="color:${MUTED};font-size:10px">순매출−비용</div><div style="color:${SC(c.pl)};font-weight:800;font-size:13px">${c.pl>=0?'+':''}${W(c.pl)}</div></div>
+    </div>`;
+  document.getElementById('footer').style.display='';
+}
+
+function renderAnnual(){
+  document.getElementById('summary').style.display='none';
+  document.getElementById('secnav').style.display='none';
+  document.getElementById('cobbar').style.display='none';
+  document.getElementById('footer').style.display='none';
+
+  let cumAcc=0;
+  const rows=MN.map((_,i)=>{
+    const k=`${year}-${String(i+1).padStart(2,'0')}`;
+    const hasD=!!D[k];
+    const c=hasD?calcM(D[k]):{net:0,bal:0,biz:0,life:0,pl:0};
+    if(hasD) cumAcc+=c.pl;
+    return{m:`${i+1}월`,hasD,carryover:D[k]?.carryover||0,...c,cumPL:hasD?cumAcc:null};
+  });
+  const tNet=rows.reduce((s,r)=>s+r.net,0);
+  const tBiz=rows.reduce((s,r)=>s+r.biz,0);
+  const tLife=rows.reduce((s,r)=>s+r.life,0);
+  const tPL=rows.reduce((s,r)=>s+r.pl,0);
+  const lastCum=rows[rows.length-1]?.cumPL||0;
+
+  // 마지막 데이터가 있는 월 인덱스
+  const lastDataIdx=rows.reduce((acc,r,i)=>(r.net!==0||r.biz!==0?i:acc),-1);
+
+  document.getElementById('content').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      ${[[`연간 순매출`,tNet,GOLD],[`연간 비용합계`,tBiz+tLife,'#f97316'],[`연간 손익`,tPL,tPL>=0?'#22c55e':'#dc2626'],[`누적손익`,lastDataIdx>=0?rows[lastDataIdx].cumPL:0,rows[lastDataIdx>=0?lastDataIdx:0]?.cumPL>=0?'#34d399':'#fb923c']].map(([l,v,cl])=>`
+        <div style="background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 1px 4px rgba(26,43,74,.08);border-left:4px solid ${cl}">
+          <div style="color:${MUTED};font-size:11px">${l}</div>
+          <div style="color:${cl};font-weight:800;font-size:18px;margin-top:2px">${v>=0?'+':'-'}${W(Math.abs(v))}</div>
+          <div style="color:${MUTED};font-size:10px">${F(v)}원</div>
+        </div>`).join('')}
+    </div>
+    <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(26,43,74,.07)">
+      <div style="background:${NAV};padding:9px 10px;display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr 1fr 1fr;gap:3px">
+        ${['월','잔고','순매출','비용','손익','누적손익'].map(h=>`<span style="color:rgba(255,255,255,.65);font-size:11px;font-weight:600">${h}</span>`).join('')}
+      </div>
+      ${rows.map((r,i)=>`
+        <div style="display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr 1fr 1fr;gap:3px;padding:9px 10px;border-bottom:1px solid ${BORD};background:${i%2?'#fafbfc':'#fff'}">
+          <span style="color:${TEXT};font-weight:600;font-size:13px">${r.m}</span>
+          <span style="color:#0ea5e9;font-size:11px;font-weight:500">${r.hasD?W(r.bal):'-'}</span>
+          <span style="color:${GOLD};font-size:11px;font-weight:500">${r.hasD&&r.net?W(r.net):'-'}</span>
+          <span style="color:#f97316;font-size:11px">${r.hasD?(r.biz+r.life?W(r.biz+r.life):'-'):'-'}</span>
+          <span style="color:${r.hasD?SC(r.pl):MUTED};font-size:11px;font-weight:${r.hasD?700:400}">${r.hasD?(r.pl>=0?'+':'-')+W(Math.abs(r.pl)):'-'}</span>
+          <span style="color:${r.cumPL!==null?SC(r.cumPL):MUTED};font-size:11px;font-weight:${r.cumPL!==null?700:400}">${r.cumPL!==null?(r.cumPL>=0?'+':'-')+W(Math.abs(r.cumPL)):'-'}</span>
+        </div>`).join('')}
+      <div style="display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr 1fr 1fr;gap:3px;padding:9px 10px;background:${NAV}">
+        <span style="color:${GOLD};font-size:11px;font-weight:700">합계</span>
+        <span style="color:rgba(255,255,255,.3);font-size:11px">-</span>
+        <span style="color:${GOLD};font-size:11px;font-weight:700">${W(tNet)}</span>
+        <span style="color:#fca5a5;font-size:11px;font-weight:700">${W(tBiz+tLife)}</span>
+        <span style="color:${SC(tPL)};font-size:11px;font-weight:700">${tPL>=0?'+':'-'}${W(Math.abs(tPL))}</span>
+        <span style="color:rgba(255,255,255,.4);font-size:11px">↑</span>
+      </div>
+    </div>`;
+}
+
+// ── 액션 ───────────────────────────────────
+function setTab(t){tab=t;render();}
+function setMonth(k){month=k;year=parseInt(k.split('-')[0]);render();}
+function setSec(s){sec=s;render();}
+function updateCarryover(v){const m=getM();if(m){m.carryover=Number(v)||0;save();}}
+
+function startEditCarryover(){
+  const el=document.getElementById('cov-disp');
+  if(!el)return;
+  const m=getM();
+  const cur=m?.carryover||0;
+  el.innerHTML=`<input id="cov-inp" type="number" value="${cur}"
+    style="width:110px;padding:4px 6px;border:1.5px solid #60a5fa;border-radius:7px;text-align:right;font-size:14px;font-weight:700;color:#1a2b4a;outline:none"
+    onblur="saveCarryover(this.value)" onkeydown="if(event.key==='Enter')this.blur()">`;
+  document.getElementById('cov-inp').select();
+}
+function saveCarryover(v){
+  const m=getM();
+  if(m){m.carryover=Number(v)||0;save();render();}
+}
+
+function setYear(y){
+  if(y<2024||y>2035)return;
+  year=y;
+  month=`${y}-${month.split('-')[1]}`;
+  save();render();
+}
+
+// 이 달 세팅
+function seedMonth(type){
+  const mi=parseInt(month.split('-')[1]);
+  const prevKey=mi===1?`${year-1}-12`:`${year}-${String(mi-1).padStart(2,'0')}`;
+  const carryover=D[prevKey]?calcM(D[prevKey]).bal:0;
+  let bizCosts=[],lifeCosts=[];
+  const ts=Date.now();
+  if(type==='default'||!D[prevKey]){
+    bizCosts=DEF_BIZ().map((b,i)=>({...b,id:`bx${i}_${ts}`}));
+    lifeCosts=DEF_LIFE().map((l,i)=>({...l,id:`lx${i}_${ts}`}));
+  } else {
+    const prev=D[prevKey];
+    bizCosts=(prev.bizCosts||[]).map(b=>({...b,id:b.id+'c'+ts}));
+    lifeCosts=(prev.lifeCosts||[]).map(l=>({...l,id:l.id+'c'+ts}));
+  }
+  D[month]={carryover,transactions:[],bizCosts,lifeCosts,_seeded:true};
+  save();render();
+}
+
+function delItem(s,id){
+  const m=getM();
+  const k={tx:'transactions',biz:'bizCosts',life:'lifeCosts'}[s];
+  m[k]=(m[k]||[]).filter(x=>x.id!==id);
+  save();render();
+}
+
+// ── 모달 ───────────────────────────────────
+function openModal(s,item){
+  editTarget={section:s,item:item||null};
+  const ov=document.getElementById('overlay');
+  const box=document.getElementById('mbox');
+  const titles={tx:'수입/지출',biz:'업무고정비',life:'생활비'};
+  const isTx=s==='tx';
+  const isLife=s==='life';
+  const iv=item||{};
+
+  box.innerHTML=`
+    <div style="background:${NAV};border-radius:16px 16px 0 0;padding:14px 18px;display:flex;justify-content:space-between;align-items:center">
+      <span style="color:#fff;font-weight:700;font-size:16px">${item?'수정':'추가'} — ${titles[s]}</span>
+      <button onclick="closeModal()" style="background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:8px;width:30px;height:30px;font-size:16px">✕</button>
+    </div>
+    <form id="mform" style="padding:18px;display:flex;flex-direction:column;gap:12px">
+      <div>
+        <label style="color:${MUTED};font-size:12px;display:block;margin-bottom:4px">항목명</label>
+        <input name="label" class="inp" value="${iv.label||''}" placeholder="예) 성원아파트(화재)" required>
+      </div>
+      ${isTx?`
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <label style="color:${MUTED};font-size:12px;display:block;margin-bottom:4px">날짜</label>
+          <input name="txDate" type="date" class="inp" value="${iv.date||''}">
+        </div>
+        <div>
+          <label style="color:${MUTED};font-size:12px;display:block;margin-bottom:4px">계약번호(선택)</label>
+          <input name="contractNo" class="inp" value="${iv.contractNo||''}" placeholder="260305F">
+        </div>
+      </div>
+      <div>
+        <label style="color:${MUTED};font-size:12px;display:block;margin-bottom:4px">담당자</label>
+        <input name="person" class="inp" value="${iv.person||''}" placeholder="유승민">
+      </div>
+      <div>
+        <label style="color:${MUTED};font-size:12px;display:block;margin-bottom:6px">유형</label>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          ${Object.keys(TT).map(t=>{
+            const tt=TT[t],act=(iv.type||'수수료')===t;
+            return`<button type="button" onclick="selType('${t}')" id="tt_${t}" style="background:${act?tt.bg:'#f8fafc'};color:${act?tt.tc:MUTED};border:1.5px solid ${act?tt.tc:BORD};border-radius:20px;padding:4px 10px;font-size:12px;font-weight:${act?700:400}">${t}</button>`;
+          }).join('')}
+        </div>
+        <input type="hidden" name="type" id="typeInput" value="${iv.type||'수수료'}">
+        <div id="typeHint" style="color:${MUTED};font-size:11px;margin-top:5px">${getTypeHint(iv.type||'수수료')}</div>
+      </div>`:''}
+      ${isLife?`
+      <div>
+        <label style="color:${MUTED};font-size:12px;display:block;margin-bottom:4px">담당자</label>
+        <input name="person" class="inp" value="${iv.person||''}" placeholder="김다정">
+      </div>`:(!isTx?'':'')}
+      <div>
+        <label style="color:${MUTED};font-size:12px;display:block;margin-bottom:4px">금액 (원, 양수 입력)</label>
+        <div style="position:relative">
+          <input name="amount" type="number" class="inp" value="${Math.abs(iv.amount||0)||''}" placeholder="0" style="padding-right:28px" required>
+          <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:${MUTED};font-size:12px">원</span>
+        </div>
+      </div>
+      <button type="submit" style="background:${NAV};color:#fff;border:none;border-radius:10px;padding:13px;font-weight:700;font-size:15px;margin-top:4px">${item?'수정 완료':'추가하기'}</button>
+    </form>`;
+
+  document.getElementById('mform').onsubmit=function(e){
+    e.preventDefault();
+    const fd=new FormData(this);
+    const label=fd.get('label')||'';
+    const rawAmt=parseFloat(fd.get('amount')||0);
+    const person=fd.get('person')||'';
+    const contractNo=fd.get('contractNo')||'';
+    const type=fd.get('type')||'수수료';
+    const txDate=fd.get('txDate')||'';
+    if(!label||isNaN(rawAmt)||rawAmt===0)return;
+    let amount=Math.abs(rawAmt);
+    if(isTx&&type!=='수수료') amount=-amount;
+    const newItem={
+      id:(editTarget.item?.id)||`${s}${Date.now()}`,
+      label,amount,
+      ...(isTx?{date:txDate,contractNo,person,type}:{}),
+      ...(isLife?{person}:{}),
+    };
+    const m=getM();
+    const k={tx:'transactions',biz:'bizCosts',life:'lifeCosts'}[s];
+    const list=m[k]||[];
+    const idx=list.findIndex(x=>x.id===newItem.id);
+    if(idx>=0)list[idx]=newItem;else list.push(newItem);
+    m[k]=list;
+    save();
+    closeModal();
+    render();
+  };
+
+  ov.style.display='flex';
+}
+
+function getTypeHint(t){
+  const h={'수수료':'✅ 순매출에 포함','소개비':'📤 순매출에서 차감','외주비':'🔧 순매출에서 차감','생활비':'🏠 잔고만 차감','계산서':'📄 잔고만 차감','기타지출':'💸 잔고만 차감'};
+  return h[t]||'';
+}
+
+function selType(t){
+  document.getElementById('typeInput').value=t;
+  document.getElementById('typeHint').textContent=getTypeHint(t);
+  Object.keys(TT).forEach(k=>{
+    const btn=document.getElementById('tt_'+k);
+    if(!btn)return;
+    const tt=TT[k],act=k===t;
+    btn.style.background=act?tt.bg:'#f8fafc';
+    btn.style.color=act?tt.tc:MUTED;
+    btn.style.borderColor=act?tt.tc:BORD;
+    btn.style.fontWeight=act?700:400;
+  });
+}
+
+function closeModal(){
+  document.getElementById('overlay').style.display='none';
+  editTarget=null;
+}
+
+document.getElementById('overlay').addEventListener('click',function(e){
+  if(e.target===this)closeModal();
+});
+
+
+// ── Google Drive 연동 ──────────────────────────────────────
+const GD_CID='505763803094-8ej5ued2e8b5qe8v8k6ocphqnmm42o35.apps.googleusercontent.com';
+const GD_SCOPE='https://www.googleapis.com/auth/drive.file';
+const GD_FILE='theham-jango-data.json';
+let gdc=null,gdtok=null,gdpend=null;
+
+function gdSt(t,col='#8593b0'){
+  const el=document.getElementById('gdst');
+  if(el){el.textContent=t;el.style.color=col;}
+}
+
+function gdStoreToken(token,expiresIn){
+  try{
+    localStorage.setItem('gd_token',token);
+    localStorage.setItem('gd_expiry',(Date.now()+((expiresIn||3600)*1000)).toString());
+    localStorage.setItem('gd_was_authed','1');
+  }catch(e){}
+}
+function gdCachedToken(){
+  try{
+    const tok=localStorage.getItem('gd_token');
+    const exp=parseInt(localStorage.getItem('gd_expiry')||'0');
+    if(tok&&Date.now()<exp-120000)return tok; // 만료 2분 전까지 유효
+  }catch(e){}
+  return null;
+}
+
+function gdReady(){
+  try{
+    gdc=google.accounts.oauth2.initTokenClient({
+      client_id:GD_CID,
+      scope:GD_SCOPE,
+      callback:async r=>{
+        if(r.error){
+          if(gdpend){gdpend=null;}
+          gdSt('☁ 드라이브: 📤 저장으로 로그인');
+          return;
+        }
+        gdtok=r.access_token;
+        gdStoreToken(r.access_token,r.expires_in);
+        if(gdpend==='save'){gdpend=null;await gdDoSave();}
+        else if(gdpend==='load'){gdpend=null;await gdDoLoad();}
+        else{
+          gdSt('📥 최신 데이터 불러오는 중...','#c9a84c');
+          await gdDoLoad();
+        }
+      }
+    });
+
+    // 캐싱된 토큰 있으면 바로 사용 (팝업 없이)
+    const cached=gdCachedToken();
+    if(cached){
+      gdtok=cached;
+      gdSt('✅ 자동저장 활성화','#16a34a');
+      setTimeout(async()=>await gdDoLoad(),500);
+    } else if(localStorage.getItem('gd_was_authed')){
+      // 토큰 만료 → 재로그인 필요 (팝업)
+      gdSt('드라이브 재연결 중...');
+      setTimeout(()=>{
+        try{gdc.requestAccessToken({prompt:''});}
+        catch(e){gdSt('☁ 드라이브: 📤 저장으로 로그인');}
+      },800);
+    }else{
+      gdSt('☁ 드라이브: 📤 저장으로 로그인');
+    }
+  }catch(e){
+    gdSt('⚠️ 드라이브 사용 불가','#f97316');
+  }
+}
+
+async function gdH(url,opt={}){
+  return fetch(url,{...opt,headers:{Authorization:`Bearer ${gdtok}`,...(opt.headers||{})}});
+}
+
+async function gdFindId(){
+  const r=await gdH(`https://www.googleapis.com/drive/v3/files?q=name='${GD_FILE}' and trashed=false&fields=files(id)`);
+  const d=await r.json();
+  return d.files?.[0]?.id||null;
+}
+
+async function gdDoSave(){
+  gdSt('💾 저장 중...','#c9a84c');
+  try{
+    const body=JSON.stringify(D);
+    const fid=await gdFindId();
+    if(fid){
+      await gdH(`https://www.googleapis.com/upload/drive/v3/files/${fid}?uploadType=media`,
+        {method:'PATCH',headers:{'Content-Type':'application/json'},body});
+    }else{
+      const fm=new FormData();
+      fm.append('metadata',new Blob([JSON.stringify({name:GD_FILE,mimeType:'application/json'})],{type:'application/json'}));
+      fm.append('file',new Blob([body],{type:'application/json'}));
+      await gdH('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',body:fm});
+    }
+    const t=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+    gdSt(`✅ 저장 완료 ${t}`,'#16a34a');
+  }catch(e){gdSt('❌ 저장 실패: '+e.message,'#dc2626');}
+}
+
+async function gdDoLoad(){
+  gdSt('📥 불러오는 중...','#c9a84c');
+  try{
+    const fid=await gdFindId();
+    if(!fid){gdSt('⚠️ 드라이브에 저장된 파일 없음 (먼저 저장하세요)','#f97316');return;}
+    const r=await gdH(`https://www.googleapis.com/drive/v3/files/${fid}?alt=media`);
+    const loaded=await r.json();
+    D=loaded;
+    await save();render();
+    const t=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+    gdSt(`✅ 불러오기 완료 ${t}`,'#16a34a');
+  }catch(e){gdSt('❌ 불러오기 실패: '+e.message,'#dc2626');}
+}
+
+function gdAuth(next){
+  if(!gdc){gdSt('⚠️ GIS 라이브러리 미로드 - 인터넷 연결 확인','#f97316');return;}
+  if(!gdtok){gdpend=next;gdc.requestAccessToken({prompt:''});}
+  else{if(next==='save')gdDoSave();else gdDoLoad();}
+}
+
+// ── 초기화 ─────────────────────────────────
+async function init(){
+  await load();
+  // 자동 세팅된 빈 달 정리 (트랜잭션 없고 _seeded 플래그 없으면 삭제)
+  Object.keys(D).forEach(k=>{
+    if(D[k]&&!(D[k].transactions||[]).length&&!D[k]._seeded){
+      delete D[k];
+    }
+  });
+  save();
+  render();
+}
+init();
+</script>
+</body>
+</html>
