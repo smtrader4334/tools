@@ -229,12 +229,14 @@ function App(){
   },[btKey,strId,grade,area,cYear,cMonth,aYear,aMonth,eqMap]);
 
   const buildText=()=>[
-    `[2026년 보험가액 산출]`,`용도: ${bd?.label}`,`구조: ${st?.label}`,`급수: ${grade}급`,
-    `연면적: ${fmt(calc.A)} ㎡`,`사용승인: ${cYear}년 ${cMonth}월 / 사고: ${aYear}년 ${aMonth}월`,
+    `[보험가액 산출]`,`용도: ${bd?.label}`,`구조: ${st?.label}`,
+    `연면적: ${fmt(calc.A)} ㎡`,
+    `건축년월: ${cYear}년 ${cMonth}월`,`사고년월: ${aYear}년 ${aMonth}월`,
     `경과: ${calc.em}개월 (${(calc.em/12).toFixed(1)}년)`,`경년감가율: ${fmtP(calc.dep.rate)}%/년`,
-    `잔가율: ${fmtP(calc.res)}%${calc.cap?" [최저30%]":""}`,``,
-    `건축공사비: ${fmt(calc.cc)} 원`,`부대설비비: ${fmt(calc.ec)} 원`,`공사비합계: ${fmt(calc.tc)} 원`,``,
-    `▶ 보험가액: ${fmt(calc.iv)} 원`,`▶ 80% Co-insurance: ${fmt(calc.c8)} 원`
+    `총감가율: ${fmtP(1-calc.res)}%`,`잔가율: ${fmtP(calc.res)}%`,``,
+    `▶ 재조달가액: ${fmt(calc.tc)} 원`,
+    `▶ 감가상각액: ${fmt(calc.tc*(1-calc.res))} 원`,
+    `▶ 보험가액: ${fmt(calc.iv)} 원`
   ].join("\n");
 
   const copy=async()=>{
@@ -289,13 +291,13 @@ function App(){
         <div>
           <h1 style={{color:"#fff",fontSize:18,fontWeight:800,margin:0}}>🏢 2026년 보험가액 계산기</h1>
           <div style={{color:"rgba(255,255,255,0.45)",fontSize:10,marginTop:2}}>
-            2026년 신축단가표 기준 · 별표1 경년감가율 적용 · 2025년 11월 발행
+            2026년 신축단가표 기준 (2025년 11월 발행)<br/>별표1 경년감가율 적용
           </div>
           <div style={{color:"#fff",fontSize:12,fontWeight:800,marginTop:6,letterSpacing:"0.3px"}}>
             제작 · 더함화재특종손해사정 대표 유승민
           </div>
         </div>
-        <button onClick={reset} style={{padding:"6px 14px",background:"rgba(255,255,255,0.12)",color:"#fff",border:"1px solid rgba(255,255,255,0.25)",borderRadius:6,fontSize:11,cursor:"pointer"}}>
+        <button onClick={reset} style={{padding:"6px 14px",background:"rgba(255,255,255,0.12)",color:"#fff",border:"1px solid rgba(255,255,255,0.25)",borderRadius:6,fontSize:11,cursor:"pointer",whiteSpace:"nowrap"}}>
           🔄 초기화
         </button>
       </div>
@@ -401,12 +403,13 @@ function App(){
                   <div style={{...s.rr,borderBottom:"none"}}><span style={{...s.rl,fontWeight:700,color:N}}>부대설비 소계</span><span style={{...s.rv,color:B}}>{fmt(calc.ec)} 원</span></div>
                 </>)}
 
-                <div style={s.ts}><span>공사비합계</span><span>{fmt(calc.tc)} 원</span></div>
+                <div style={s.ts}><span>재조달가액</span><span>{fmt(calc.tc)} 원</span></div>
 
                 <div style={s.sh}>③ 경년감가 적용</div>
                 <div style={s.rr}><span style={s.rl}>구조 ({calc.dep.label})</span><span style={s.rv}>{fmtP(calc.dep.rate)}%/년</span></div>
                 <div style={s.rr}><span style={s.rl}>경과년수</span><span style={s.rv}>{calc.em}개월 ({(calc.em/12).toFixed(1)}년)</span></div>
                 <div style={s.rr}><span style={{...s.rl,color:RD}}>감가액</span><span style={{...s.rv,color:RD}}>- {fmt(calc.tc*(1-calc.res))} 원</span></div>
+                <div style={s.rr}><span style={{...s.rl,color:RD}}>감가율</span><span style={{...s.rv,color:RD}}>{fmtP(1-calc.res)}%</span></div>
                 <div style={{...s.rr,borderBottom:"none"}}>
                   <span style={{...s.rl,fontWeight:700}}>잔가율{calc.cap&&<span style={s.bdr}>최저 30%</span>}</span>
                   <span style={s.rv}>{fmtP(calc.res)}%</span>
