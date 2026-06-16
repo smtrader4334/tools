@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>2026 보험가액 계산기</title>
+<meta name="application-name" content="보험가액 계산기">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="보험가액 계산기">
+<meta name="theme-color" content="#1A3054">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif;background:#EEF2F8;min-height:100vh}
+select,input,button{font-family:inherit}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#C8D4E8;border-radius:3px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useMemo} = React;
+
+const DEP={
+  rc:{label:"철근콘크리트조",rate:0.0107},src:{label:"철골철근콘크리트조",rate:0.0107},
+  steel:{label:"철골조·석조·연와석조",rate:0.0133},brick:{label:"벽돌조·콘크리트조",rate:0.0160},
+  stone:{label:"연와조",rate:0.0160},block:{label:"블록조·경량철골조",rate:0.0200},
+  light:{label:"간이목조·컨테이너",rate:0.0800},rc_wh:{label:"철근콘크리트조(공장/창고)",rate:0.0140},
+  steel_wh:{label:"철골조(공장/창고)",rate:0.0178},brick_wh:{label:"벽돌조(공장/창고)",rate:0.0211},
+  block_wh:{label:"블록조(공장/창고)",rate:0.0267},
+};
+
+const BD={
+  아파트:{label:"아파트",cat:"공동주택",structures:[
+    {id:"s1",label:"철근콘크리트조 (5층)",dep:"rc",code:"2-1-5-1",grades:{2:1787000,3:1684000,4:1420000}},
+    {id:"s2",label:"철근콘크리트조 (6~15층)",dep:"rc",code:"2-1-5-2",grades:{2:1774000,3:1659000,4:1388000}},
+    {id:"s3",label:"철근콘크리트조 (16~29층)",dep:"rc",code:"2-1-5-3",grades:{2:1785000,3:1668000,4:1435000}},
+    {id:"s4",label:"철근콘크리트조 (30층이상)",dep:"rc",code:"2-1-5-4",grades:{2:1842000,3:1726000,4:1468000}},
+    {id:"s5",label:"철골철근콘크리트조 (10~29층)",dep:"src",code:"2-1-5-6",grades:{2:1826000,3:1702000,4:1450000}},
+    {id:"s6",label:"철골철근콘크리트조 (30층이상)",dep:"src",code:"2-1-5-7",grades:{2:1952000,3:1789000,4:1528000}},
+  ],equip:[
+    {id:"fd",label:"화재탐지설비",t:"A",rate:13000,on:true},{id:"br",label:"방송설비",t:"A",rate:2000,on:true},
+    {id:"tv",label:"TV공시청설비",t:"A",rate:3000,on:true},{id:"dt",label:"DATA설비",t:"A",rate:20000,on:true},
+    {id:"ha",label:"H/A설비",t:"A",rate:9000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:89000,on:true},
+    {id:"ht",label:"난방설비",t:"A",rate:70000,on:true},
+    {id:"hyd",label:"옥내소화전설비",t:"U",unit:"개소",rate:5700000,qty:1,on:false},
+    {id:"spr",label:"스프링클러설비",t:"A",rate:24600,on:false},
+    {id:"elv",label:"승강기(20층/13인승)",t:"U",unit:"대",rate:240300000,qty:1,on:false},
+  ]},
+  일반주택:{label:"일반주택",cat:"단독주택",structures:[
+    {id:"s1",label:"벽돌조(시멘트벽돌) 슬래브지붕",dep:"brick",code:"1-1-2-5",grades:{1:2214000,2:2072000,3:1922000,4:1626000}},
+    {id:"s2",label:"연와조 슬래브지붕",dep:"stone",code:"1-1-3-7",grades:{1:2207000,2:1911000,3:1752000}},
+    {id:"s3",label:"블록조(시멘트블록) 슬래브지붕",dep:"block",code:"1-1-4-5",grades:{5:1191000}},
+    {id:"s4",label:"철근콘크리트조 슬래브",dep:"rc",code:"1-1-5-8",grades:{2:2119000,3:1943000}},
+  ],equip:[{id:"tv",label:"TV공시청설비",t:"A",rate:3000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:90000,on:true},{id:"ht",label:"난방설비",t:"A",rate:103000,on:true}]},
+  고급주택:{label:"고급주택",cat:"단독주택",structures:[
+    {id:"s1",label:"전통한옥(소형) 목조 한식기와",dep:"block",code:"1-2-1-2",grades:{1:5460000}},
+    {id:"s2",label:"신한옥 목조 한식기와",dep:"block",code:"1-2-1-3",grades:{1:3859000,2:3445000}},
+    {id:"s3",label:"벽돌조 슬래브 아스팔트슁글",dep:"brick",code:"1-2-2-1",grades:{2:3894000,3:2750000}},
+    {id:"s4",label:"경량철골조 아스팔트슁글",dep:"block",code:"1-2-6-1",grades:{2:2265000,3:1991000}},
+  ],equip:[{id:"wt",label:"급배수위생설비",t:"A",rate:110000,on:true},{id:"ht",label:"난방설비",t:"A",rate:110000,on:true}]},
+  다가구주택:{label:"다가구주택",cat:"단독주택",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"1-3-5-2",grades:{2:1897000,3:1596000}},
+    {id:"s2",label:"연와조 슬래브",dep:"stone",code:"1-3-3-1",grades:{2:1890000,3:1550000}},
+  ],equip:[{id:"tv",label:"TV공시청설비",t:"A",rate:3000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:85000,on:true},{id:"ht",label:"난방설비",t:"A",rate:85000,on:true}]},
+  연립주택:{label:"연립주택",cat:"공동주택",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"2-2-5-1",grades:{2:1882000,3:1678000,4:1475000}},
+    {id:"s2",label:"연립주택-고급타운형 철콘조",dep:"rc",code:"2-2-5-2",grades:{1:2977000,2:2444000}},
+    {id:"s3",label:"벽돌조 슬래브",dep:"brick",code:"2-2-2-1",grades:{3:1493000,4:1375000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:9000,on:true},{id:"tv",label:"TV공시청설비",t:"A",rate:4000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:70000,on:true},{id:"ht",label:"난방설비",t:"A",rate:60000,on:true}]},
+  다세대주택:{label:"다세대주택",cat:"공동주택",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"2-3-5-2",grades:{2:1716000,3:1479000}},
+    {id:"s2",label:"철근콘크리트조 슬래브(도시형생활주택)",dep:"rc",code:"2-3-5-3",grades:{2:1956000,3:1739000}},
+    {id:"s3",label:"벽돌조 슬래브",dep:"brick",code:"2-3-2-1",grades:{2:1583000,3:1222000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:9000,on:true},{id:"tv",label:"TV공시청설비",t:"A",rate:4000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:60000,on:true},{id:"ht",label:"난방설비",t:"A",rate:60000,on:true}]},
+  점포및상가:{label:"점포 및 상가",cat:"근린생활시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"4-1-5-7",grades:{1:1679000,2:1541000,3:1280000,4:1071000,5:820000}},
+    {id:"s2",label:"철근콘크리트조 슬래브(치장벽돌벽)",dep:"rc",code:"4-1-5-8",grades:{1:1928000,2:1754000,3:1682000,4:1548000,5:1108000}},
+    {id:"s3",label:"벽돌조 슬래브",dep:"brick",code:"4-1-2-6",grades:{1:1820000,2:1611000,3:1481000,4:1218000,5:960000}},
+    {id:"s4",label:"블록조 슬래브",dep:"block",code:"4-1-4-4",grades:{3:1417000,4:1196000,5:891000}},
+    {id:"s5",label:"철골조 슬래브",dep:"steel",code:"4-1-6-10",grades:{2:1538000,3:1240000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:7000,on:true},{id:"tv",label:"TV공시청설비",t:"A",rate:2000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:60000,on:true}]},
+  목욕장:{label:"목욕장",cat:"근린생활시설",structures:[
+    {id:"s1",label:"연와조 슬래브",dep:"stone",code:"4-2-3-3",grades:{1:1935000,2:1807000,3:1531000,4:1387000,5:1225000}},
+    {id:"s2",label:"벽돌조 슬래브",dep:"brick",code:"4-2-2-2",grades:{2:1549000,3:1477000,4:1342000,5:1284000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:9000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:120000,on:true}]},
+  목욕장_사우나:{label:"목욕장(사우나포함)",cat:"근린생활시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"4-3-5-1",grades:{1:2232000,2:2026000,3:1839000,4:1700000,5:1602000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:9000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:135000,on:true}]},
+  일반창고:{label:"일반창고",cat:"창고시설",structures:[
+    {id:"s1",label:"철골조 샌드위치판넬",dep:"steel_wh",code:"5-1-6-11",grades:{3:738000,4:582000}},
+    {id:"s2",label:"철골조 칼라피복철판",dep:"steel_wh",code:"5-1-6-10",grades:{1:1071000,2:913000,3:885000,4:775000,5:611000}},
+    {id:"s3",label:"철근콘크리트조 슬래브",dep:"rc_wh",code:"5-1-5-8",grades:{1:1276000,2:1148000,3:941000,4:866000}},
+    {id:"s4",label:"연와조 슬래브",dep:"brick_wh",code:"5-1-3-6",grades:{1:1264000,2:1189000,3:1050000,4:910000,5:675000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:12000,on:true}]},
+  저온창고:{label:"저온창고",cat:"창고시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc_wh",code:"5-2-5-1",grades:{1:1632000,2:1395000,3:1286000}},
+    {id:"s2",label:"철골조 샌드위치판넬",dep:"steel_wh",code:"5-2-6-2",grades:{1:1177000,2:1081000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:6000,on:true}]},
+  냉동창고:{label:"냉동창고",cat:"창고시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc_wh",code:"5-3-5-1",grades:{1:1819000,2:1595000,3:1437000}},
+    {id:"s2",label:"철골조 샌드위치판넬",dep:"steel_wh",code:"5-3-6-2",grades:{1:1326000,2:1182000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:6000,on:true}]},
+  일반공장:{label:"일반공장",cat:"공업시설",structures:[
+    {id:"s1",label:"철골조 샌드위치판넬 (층고4.5m)",dep:"steel_wh",code:"6-1-6-14",grades:{3:677000}},
+    {id:"s2",label:"철골조 샌드위치판넬 (층고6m)",dep:"steel_wh",code:"6-1-6-15",grades:{3:750000}},
+    {id:"s3",label:"철골조 샌드위치판넬 (층고9m)",dep:"steel_wh",code:"6-1-6-16",grades:{3:759000}},
+    {id:"s4",label:"철골조 칼라피복 (층고9m이하)",dep:"steel_wh",code:"6-1-6-11",grades:{1:1543000,2:1380000,3:1135000,4:1027000,5:881000}},
+    {id:"s5",label:"철골조 칼라피복 (층고9~20m)",dep:"steel_wh",code:"6-1-6-12",grades:{1:1860000,2:1634000,3:1356000,4:1189000,5:1036000}},
+    {id:"s6",label:"철근콘크리트조 슬래브",dep:"rc_wh",code:"6-1-5-6",grades:{1:1470000,2:1373000,3:1170000,4:1110000,5:837000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:12000,on:true}]},
+  여관:{label:"여관",cat:"숙박시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"7-1-5-3",grades:{1:1793000,2:1658000,3:1567000,4:1416000,5:1274000}},
+    {id:"s2",label:"연와조 슬래브",dep:"stone",code:"7-1-3-2",grades:{2:1874000,3:1698000,4:1575000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:16000,on:true},{id:"br",label:"방송설비",t:"A",rate:5500,on:true},{id:"tv",label:"TV공시청설비",t:"A",rate:7000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:70000,on:true},{id:"ht",label:"냉난방설비",t:"A",rate:100000,on:false}]},
+  호텔:{label:"호텔",cat:"숙박시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"7-2-5-1",grades:{1:2315000,2:1924000,3:1797000,4:1617000}},
+    {id:"s2",label:"철골철근콘크리트조 슬래브",dep:"src",code:"7-2-7-2",grades:{1:2752000,2:2415000,3:2257000,4:1741000,5:1590000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:22000,on:true},{id:"br",label:"방송설비",t:"A",rate:7000,on:true},{id:"tv",label:"TV공시청설비",t:"A",rate:12000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:100000,on:true}]},
+  콘도미니엄:{label:"콘도미니엄",cat:"숙박시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브(호텔형)",dep:"rc",code:"7-3-5-1",grades:{1:1796000,2:1707000}},
+    {id:"s2",label:"철근콘크리트조 슬래브(빌라형)",dep:"rc",code:"7-3-5-2",grades:{1:2044000,2:1931000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:14000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:80000,on:true}]},
+  일반업무시설:{label:"일반업무시설",cat:"업무시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브(5층이하)",dep:"rc",code:"8-1-5-5",grades:{1:1499000,2:1411000,3:1327000,4:1127000,5:995000}},
+    {id:"s2",label:"철근콘크리트조 슬래브(6~15층)",dep:"rc",code:"8-1-5-6",grades:{1:1732000,2:1651000,3:1554000,4:1436000,5:1311000}},
+    {id:"s3",label:"철골철근콘크리트조 슬래브(16층이상)",dep:"src",code:"8-1-7-7",grades:{1:2209000,2:1896000,3:1799000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:17000,on:true},{id:"br",label:"방송설비",t:"A",rate:7000,on:true},{id:"dt",label:"DATA설비",t:"A",rate:17000,on:true},{id:"ha",label:"H/A설비",t:"A",rate:22000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:65000,on:true}]},
+  오피스텔:{label:"오피스텔",cat:"업무시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"8-2-5-1",grades:{1:1718000,2:1612000,3:1520000}},
+    {id:"s2",label:"철골철근콘크리트조 슬래브",dep:"src",code:"8-2-7-2",grades:{1:2037000,2:1630000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:17000,on:true},{id:"dt",label:"DATA설비",t:"A",rate:17000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:65000,on:true}]},
+  공공업무시설:{label:"공공업무시설",cat:"업무시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"8-3-5-1",grades:{2:1511000,3:1489000}},
+    {id:"s2",label:"철골철근콘크리트조 DECK PLATE",dep:"src",code:"8-3-7-2",grades:{1:1685000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:19000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:45000,on:true}]},
+  백화점:{label:"백화점",cat:"판매시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"9-1-5-1",grades:{1:2628000,2:2338000,3:1944000}},
+    {id:"s2",label:"철골철근콘크리트조 슬래브",dep:"src",code:"9-1-7-2",grades:{2:2224000,3:2165000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:15000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:67000,on:true}]},
+  체육관:{label:"체육관",cat:"운동시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"10-3-5-1",grades:{1:1983000,2:1823000}},
+    {id:"s2",label:"철골철근콘크리트조 철골지붕",dep:"src",code:"10-3-7-2",grades:{1:1982000,2:1739000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:15000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:35000,on:true}]},
+  레저시설:{label:"레저시설",cat:"운동시설",structures:[{id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"10-4-5-1",grades:{1:2229000,2:2033000,3:1940000}}],
+  equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:15000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:95000,on:true}]},
+  병원:{label:"병원",cat:"의료시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브(5층이하)",dep:"rc",code:"11-1-5-1",grades:{3:1680000,4:1509000}},
+    {id:"s2",label:"철근콘크리트조 슬래브(6층이상)",dep:"rc",code:"11-1-5-2",grades:{2:2097000,3:2081000}},
+    {id:"s3",label:"철골철근콘크리트조 슬래브",dep:"src",code:"11-1-7-3",grades:{1:2618000,2:2235000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:16000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:160000,on:true}]},
+  예식장:{label:"예식장",cat:"문화집회시설",structures:[{id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"13-1-5-1",grades:{1:2032000,2:1837000,3:1769000}}],
+  equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:10000,on:true},{id:"br",label:"방송설비",t:"A",rate:25000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:65000,on:true}]},
+  학교:{label:"학교",cat:"교육시설",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"14-1-5-1",grades:{1:1462000,2:1315000,3:1293000}},
+    {id:"s2",label:"철골철근콘크리트조 슬래브",dep:"src",code:"14-1-7-2",grades:{1:1671000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:11000,on:true},{id:"br",label:"방송설비",t:"A",rate:12000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:38000,on:true}]},
+  유치원:{label:"유치원",cat:"교육시설",structures:[{id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"18-1-5-1",grades:{3:1805000,4:1511000}}],
+  equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:9000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:72000,on:true}]},
+  주유소:{label:"주유소",cat:"기타",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"15-1-5-1",grades:{1:1510000,2:1472000,3:1369000,4:1143000}},
+    {id:"s2",label:"주유소캐노피(독립형,철콘조)",dep:"rc",code:"15-1-5-2",grades:{3:863000}},
+    {id:"s3",label:"주유소캐노피(독립형,철골조)",dep:"steel",code:"15-1-6-3",grades:{3:919000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:13000,on:true}]},
+  주차빌딩:{label:"주차빌딩",cat:"기타",structures:[
+    {id:"s1",label:"철근콘크리트조 슬래브",dep:"rc",code:"16-1-5-1",grades:{1:821000,2:697000,3:658000,4:650000}},
+    {id:"s2",label:"철골철근콘크리트조 슬래브",dep:"src",code:"16-1-7-2",grades:{1:1016000,2:913000,3:886000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:21000,on:true}]},
+  교회:{label:"교회",cat:"종교시설",structures:[
+    {id:"s1",label:"철근콘크리트조 철골지붕 동슁글",dep:"rc",code:"17-1-5-1",grades:{1:2021000,2:1599000}},
+    {id:"s2",label:"철근콘크리트조 슬래브지붕",dep:"rc",code:"17-1-5-2",grades:{3:1977000,4:1399000}},
+  ],equip:[{id:"fd",label:"화재탐지설비",t:"A",rate:22000,on:true},{id:"br",label:"방송설비",t:"A",rate:15000,on:true},{id:"wt",label:"급배수위생설비",t:"A",rate:81000,on:true}]},
+};
+
+const CATS={};
+Object.entries(BD).forEach(([k,v])=>{if(!CATS[v.cat])CATS[v.cat]=[];CATS[v.cat].push({key:k,label:v.label});});
+const fmt=(n)=>Math.round(n||0).toLocaleString("ko-KR");
+const fmtP=(r)=>(r*100).toFixed(2);
+
+const N="#1A3054",B="#2356A8",BG="#EEF2F8",W="#FFF",BD2="#C8D4E8",MU="#6B7A99",GR="#15803D",RD="#DC2626";
+
+function App(){
+  const now=new Date();
+  const [btKey,setBtKey]=useState("");
+  const [strId,setStrId]=useState("");
+  const [grade,setGrade]=useState("");
+  const [area,setArea]=useState("");
+  const [cYear,setCYear]=useState("");
+  const [cMonth,setCMonth]=useState("");
+  const [aYear,setAYear]=useState(String(now.getFullYear()));
+  const [aMonth,setAMonth]=useState(String(now.getMonth()+1));
+  const [eqMap,setEqMap]=useState({});
+  const [copied,setCopied]=useState(false);
+  const [showModal,setShowModal]=useState(false);
+  const [modalText,setModalText]=useState('');
+
+  const bd=btKey?BD[btKey]:null;
+  const st=bd?bd.structures.find(s=>s.id===strId):null;
+  const gOpts=st?Object.keys(st.grades).map(Number).sort((a,b)=>a-b):[];
+
+  const reset=()=>{setBtKey("");setStrId("");setGrade("");setArea("");setCYear("");setCMonth("");setEqMap({});};
+  const gEq=(eq)=>{const s=eqMap[eq.id];return{on:s?.on??eq.on,rate:s?.rate??eq.rate,qty:s?.qty??(eq.qty??1)};};
+  const tgEq=(id)=>{const eq=bd.equip.find(e=>e.id===id),es=gEq(eq);setEqMap(p=>({...p,[id]:{...es,on:!es.on}}));};
+  const sER=(id,v)=>{const eq=bd.equip.find(e=>e.id===id),es=gEq(eq);setEqMap(p=>({...p,[id]:{...es,rate:parseFloat(v)||0}}));};
+  const sEQ=(id,v)=>{const eq=bd.equip.find(e=>e.id===id),es=gEq(eq);setEqMap(p=>({...p,[id]:{...es,qty:parseFloat(v)||0}}));};
+
+  const calc=useMemo(()=>{
+    if(!btKey||!strId||!grade||!area||!cYear||!cMonth) return null;
+    const b=BD[btKey];if(!b)return null;
+    const s=b.structures.find(x=>x.id===strId);if(!s)return null;
+    const A=parseFloat(area);if(isNaN(A)||A<=0)return null;
+    const up=s.grades[parseInt(grade)];if(!up)return null;
+    const cc=A*up;let ec=0;const el=[];
+    b.equip.forEach(eq=>{
+      const es=eqMap[eq.id]?{on:eqMap[eq.id].on,rate:eqMap[eq.id].rate??eq.rate,qty:eqMap[eq.id].qty??(eq.qty??1)}:{on:eq.on,rate:eq.rate,qty:eq.qty??1};
+      if(!es.on)return;const c=eq.t==="A"?A*es.rate:es.rate*es.qty;
+      if(c<=0)return;ec+=c;el.push({label:eq.label,cost:c});
+    });
+    const tc=cc+ec,cy=parseInt(cYear),cm=parseInt(cMonth),ay=parseInt(aYear),am=parseInt(aMonth);
+    if(isNaN(cy)||isNaN(cm)||isNaN(ay)||isNaN(am))return null;
+    const em=(ay-cy)*12+(am-cm);
+    if(em<0)return{error:"사고 년월이 건축 년월보다 앞섭니다."};
+    const dep=DEP[s.dep],rr=1-dep.rate*(em/12),res=Math.max(0.3,rr),cap=rr<0.3;
+    const iv=Math.round(tc*res),c8=Math.round(iv*0.8);
+    return{up,A,cc,el,ec,tc,em,dep,rr,res,cap,iv,c8,code:s.code};
+  },[btKey,strId,grade,area,cYear,cMonth,aYear,aMonth,eqMap]);
+
+  const buildText=()=>[
+    `[2026년 보험가액 산출]`,`용도: ${bd?.label}`,`구조: ${st?.label}`,`급수: ${grade}급`,
+    `연면적: ${fmt(calc.A)} ㎡`,`사용승인: ${cYear}년 ${cMonth}월 / 사고: ${aYear}년 ${aMonth}월`,
+    `경과: ${calc.em}개월 (${(calc.em/12).toFixed(1)}년)`,`경년감가율: ${fmtP(calc.dep.rate)}%/년`,
+    `잔가율: ${fmtP(calc.res)}%${calc.cap?" [최저30%]":""}`,``,
+    `건축공사비: ${fmt(calc.cc)} 원`,`부대설비비: ${fmt(calc.ec)} 원`,`공사비합계: ${fmt(calc.tc)} 원`,``,
+    `▶ 보험가액: ${fmt(calc.iv)} 원`,`▶ 80% Co-insurance: ${fmt(calc.c8)} 원`
+  ].join("\n");
+
+  const copy=async()=>{
+    if(!calc||calc.error)return;
+    const t=buildText();
+    // 방법1: Clipboard API (HTTPS/데스크톱)
+    if(navigator.clipboard&&window.isSecureContext){
+      try{await navigator.clipboard.writeText(t);setCopied(true);setTimeout(()=>setCopied(false),2500);return;}catch(e){}
+    }
+    // 방법2: execCommand (구형/file://)
+    try{
+      const ta=document.createElement('textarea');
+      ta.value=t;ta.style.cssText='position:fixed;top:0;left:0;opacity:0;font-size:16px';
+      document.body.appendChild(ta);ta.focus();ta.select();
+      const ok=document.execCommand('copy');
+      document.body.removeChild(ta);
+      if(ok){setCopied(true);setTimeout(()=>setCopied(false),2500);return;}
+    }catch(e){}
+    // 방법3: 모달 팝업 (모바일 최후 수단 — 길게 눌러서 복사)
+    setModalText(t);setShowModal(true);
+  };
+
+  const s={
+    hdr:{background:N,padding:"13px 22px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:100},
+    bdy:{display:"flex",gap:14,maxWidth:1100,margin:"0 auto",padding:"16px 14px",flexWrap:"wrap",alignItems:"flex-start"},
+    lft:{flex:"1 1 390px",minWidth:270,maxWidth:460},
+    rgt:{flex:"1 1 300px",minWidth:260},
+    crd:{background:W,borderRadius:10,padding:"16px 18px",marginBottom:12,boxShadow:"0 1px 8px rgba(26,48,84,0.07)"},
+    tt:{fontSize:11,fontWeight:800,color:N,textTransform:"uppercase",letterSpacing:1.1,marginBottom:11,paddingBottom:7,borderBottom:`2px solid ${BG}`},
+    lb:{display:"block",fontSize:12,fontWeight:700,color:MU,marginBottom:3,marginTop:10},
+    sl:{width:"100%",padding:"9px 10px",border:`1.5px solid ${BD2}`,borderRadius:7,fontSize:13,color:N,background:W},
+    ip:{width:"100%",padding:"9px 10px",border:`1.5px solid ${BD2}`,borderRadius:7,fontSize:13,color:N},
+    dr:{display:"flex",gap:8},
+    eqr:{display:"flex",alignItems:"center",gap:6,padding:"6px 0",borderBottom:"1px solid #F0F4FA"},
+    eqi:{width:76,padding:"5px 6px",border:`1px solid ${BD2}`,borderRadius:5,fontSize:11,textAlign:"right"},
+    rr:{display:"flex",justifyContent:"space-between",alignItems:"baseline",padding:"5px 0",borderBottom:"1px dashed #EEF2F8",fontSize:12},
+    rl:{color:MU},rv:{fontFamily:"monospace",fontWeight:700,color:N,fontSize:13},
+    ts:{borderTop:`2px solid ${N}`,marginTop:6,paddingTop:8,display:"flex",justifyContent:"space-between",fontWeight:800,fontSize:14,color:N},
+    hl:{background:`linear-gradient(135deg,${N} 0%,${B} 100%)`,borderRadius:10,padding:"16px 18px",marginTop:12,color:"#fff"},
+    c8:{background:BG,borderRadius:8,padding:"10px 14px",marginTop:8,display:"flex",justifyContent:"space-between",alignItems:"center"},
+    emp:{textAlign:"center",padding:"36px 0",color:MU,fontSize:12,lineHeight:2},
+    sh:{fontSize:11,fontWeight:800,color:MU,margin:"12px 0 4px",paddingTop:8,borderTop:"1px dashed #DDE2EC"},
+    bdr:{display:"inline-block",padding:"2px 7px",borderRadius:4,fontSize:9,fontWeight:800,background:"#FEF3C7",color:"#92400E",marginLeft:6},
+    gb:(a)=>({flex:"1 1 auto",padding:"8px 4px",border:a?`2px solid ${B}`:`1.5px solid ${BD2}`,borderRadius:7,background:a?B:W,color:a?"#fff":MU,fontWeight:800,fontSize:12,cursor:"pointer"}),
+    cb:{padding:"9px 18px",background:copied?GR:B,color:"#fff",border:"none",borderRadius:7,fontSize:13,fontWeight:700,cursor:"pointer",width:"100%",marginTop:10},
+  };
+  const onCnt=bd?bd.equip.filter(e=>gEq(e).on).length:0;
+
+  return (
+    <div style={{fontFamily:"'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic',sans-serif",background:BG,minHeight:"100vh"}}>
+      <div style={s.hdr}>
+        <div>
+          <h1 style={{color:"#fff",fontSize:18,fontWeight:800,margin:0}}>🏢 2026년 보험가액 계산기</h1>
+          <div style={{color:"rgba(255,255,255,0.45)",fontSize:10,marginTop:2}}>
+            2026년 신축단가표 기준 · 별표1 경년감가율 적용 · 2025년 11월 발행
+          </div>
+          <div style={{color:"#fff",fontSize:12,fontWeight:800,marginTop:6,letterSpacing:"0.3px"}}>
+            제작 · 더함화재특종손해사정 대표 유승민
+          </div>
+        </div>
+        <button onClick={reset} style={{padding:"6px 14px",background:"rgba(255,255,255,0.12)",color:"#fff",border:"1px solid rgba(255,255,255,0.25)",borderRadius:6,fontSize:11,cursor:"pointer"}}>
+          🔄 초기화
+        </button>
+      </div>
+
+      <div style={s.bdy}>
+        {/* 왼쪽 폼 */}
+        <div style={s.lft}>
+          <div style={s.crd}>
+            <div style={s.tt}>건물 기본정보</div>
+
+            <label style={s.lb}>건물 용도</label>
+            <select style={s.sl} value={btKey} onChange={e=>{setBtKey(e.target.value);setStrId("");setGrade("");setEqMap({});}}>
+              <option value="">── 선택하세요 ──</option>
+              {Object.entries(CATS).map(([cat,its])=>(
+                <optgroup key={cat} label={`● ${cat}`}>
+                  {its.map(it=><option key={it.key} value={it.key}>{it.label}</option>)}
+                </optgroup>
+              ))}
+            </select>
+
+            {bd&&(<>
+              <label style={s.lb}>건물 구조</label>
+              <select style={s.sl} value={strId} onChange={e=>{setStrId(e.target.value);setGrade("");}}>
+                <option value="">── 선택하세요 ──</option>
+                {bd.structures.map(st=><option key={st.id} value={st.id}>{st.label}</option>)}
+              </select>
+            </>)}
+
+            {st&&(<>
+              <label style={s.lb}>급수 <span style={{fontSize:10,color:"#aaa",fontWeight:400}}>(1급=최고급 · 5급=기본)</span></label>
+              <div style={{display:"flex",gap:6,marginTop:4,flexWrap:"wrap"}}>
+                {gOpts.map(g=>(
+                  <button key={g} style={s.gb(parseInt(grade)===g)} onClick={()=>setGrade(String(g))}>{g}급</button>
+                ))}
+              </div>
+              {grade&&st.grades[parseInt(grade)]&&(
+                <div style={{fontSize:11,color:MU,marginTop:6,background:"#F0F4FF",padding:"5px 10px",borderRadius:5}}>
+                  단위가격 <strong style={{color:N}}>{fmt(st.grades[parseInt(grade)])}</strong> 원/㎡
+                  &nbsp;|&nbsp; 코드 <strong style={{color:N}}>{st.code}</strong>
+                </div>
+              )}
+            </>)}
+
+            <label style={s.lb}>연면적 (㎡)</label>
+            <input style={s.ip} type="number" placeholder="예: 450.82" value={area} onChange={e=>setArea(e.target.value)}/>
+
+            <label style={s.lb}>사용승인(건축) 년월</label>
+            <div style={s.dr}>
+              <input style={{...s.ip,flex:3}} type="number" placeholder="건축년도 (YYYY)" value={cYear} onChange={e=>setCYear(e.target.value)} min="1900" max="2026"/>
+              <input style={{...s.ip,flex:1}} type="number" placeholder="월" value={cMonth} onChange={e=>setCMonth(e.target.value)} min="1" max="12"/>
+            </div>
+
+            <label style={s.lb}>사고 년월</label>
+            <div style={s.dr}>
+              <input style={{...s.ip,flex:3}} type="number" placeholder="사고년도 (YYYY)" value={aYear} onChange={e=>setAYear(e.target.value)} min="1900" max="2030"/>
+              <input style={{...s.ip,flex:1}} type="number" placeholder="월" value={aMonth} onChange={e=>setAMonth(e.target.value)} min="1" max="12"/>
+            </div>
+          </div>
+
+          {bd&&(
+            <div style={s.crd}>
+              <div style={s.tt}>부대설비 <span style={{fontWeight:400,fontSize:10,color:MU,textTransform:"none"}}>({onCnt}/{bd.equip.length}개 선택)</span></div>
+              <div style={{fontSize:11,color:MU,marginBottom:10}}>✔ 체크된 항목만 합산 · 단가/수량 직접 수정 가능</div>
+              {bd.equip.map(eq=>{
+                const es=gEq(eq);
+                return(
+                  <div key={eq.id} style={s.eqr}>
+                    <input type="checkbox" checked={es.on} onChange={()=>tgEq(eq.id)} style={{accentColor:B,marginRight:2}}/>
+                    <span style={{flex:1,fontSize:12,opacity:es.on?1:0.38}}>{eq.label}</span>
+                    {eq.t==="A"?(
+                      <><input style={{...s.eqi,opacity:es.on?1:0.38}} type="number" value={es.rate} onChange={e=>sER(eq.id,e.target.value)} disabled={!es.on}/><span style={{fontSize:11,color:MU,minWidth:32}}>원/㎡</span></>
+                    ):(
+                      <><input style={{...s.eqi,opacity:es.on?1:0.38}} type="number" value={es.qty} onChange={e=>sEQ(eq.id,e.target.value)} disabled={!es.on}/><span style={{fontSize:11,color:MU,minWidth:32}}>{eq.unit}</span></>
+                    )}
+                  </div>
+                );
+              })}
+              <div style={{fontSize:10,color:"#bbb",marginTop:8}}>* 2026년 표준 단가 기준. 현장 사양에 따라 수정 가능.</div>
+            </div>
+          )}
+        </div>
+
+        {/* 오른쪽 결과 */}
+        <div style={s.rgt}>
+          <div style={{...s.crd,position:"sticky",top:58}}>
+            <div style={s.tt}>계산 명세서</div>
+            {!calc?(
+              <div style={s.emp}>
+                {!btKey?"건물 용도를 선택하세요":!strId?"건물 구조를 선택하세요":!grade?"급수(등급)를 선택하세요":!area?"연면적을 입력하세요":(!cYear||!cMonth)?"사용승인 년월을 입력하세요":"입력 완료 시 자동 계산됩니다"}
+              </div>
+            ):calc.error?(
+              <div style={{background:"#FEE2E2",borderRadius:8,padding:"12px",color:"#991B1B",fontSize:13}}>⚠️ {calc.error}</div>
+            ):(
+              <>
+                <div style={s.sh}>① 건축공사비</div>
+                <div style={s.rr}><span style={s.rl}>연면적</span><span style={s.rv}>{fmt(calc.A)} ㎡</span></div>
+                <div style={s.rr}><span style={s.rl}>신축단가 [{calc.code}]</span><span style={s.rv}>{fmt(calc.up)} 원/㎡</span></div>
+                <div style={{...s.rr,borderBottom:"none"}}><span style={{...s.rl,fontWeight:700,color:N}}>건축공사비 소계</span><span style={{...s.rv,color:B}}>{fmt(calc.cc)} 원</span></div>
+
+                {calc.el.length>0&&(<>
+                  <div style={s.sh}>② 부대설비공사비</div>
+                  {calc.el.map((e,i)=><div key={i} style={s.rr}><span style={s.rl}>{e.label}</span><span style={s.rv}>{fmt(e.cost)} 원</span></div>)}
+                  <div style={{...s.rr,borderBottom:"none"}}><span style={{...s.rl,fontWeight:700,color:N}}>부대설비 소계</span><span style={{...s.rv,color:B}}>{fmt(calc.ec)} 원</span></div>
+                </>)}
+
+                <div style={s.ts}><span>공사비합계</span><span>{fmt(calc.tc)} 원</span></div>
+
+                <div style={s.sh}>③ 경년감가 적용</div>
+                <div style={s.rr}><span style={s.rl}>구조 ({calc.dep.label})</span><span style={s.rv}>{fmtP(calc.dep.rate)}%/년</span></div>
+                <div style={s.rr}><span style={s.rl}>경과년수</span><span style={s.rv}>{calc.em}개월 ({(calc.em/12).toFixed(1)}년)</span></div>
+                <div style={s.rr}><span style={{...s.rl,color:RD}}>감가액</span><span style={{...s.rv,color:RD}}>- {fmt(calc.tc*(1-calc.res))} 원</span></div>
+                <div style={{...s.rr,borderBottom:"none"}}>
+                  <span style={{...s.rl,fontWeight:700}}>잔가율{calc.cap&&<span style={s.bdr}>최저 30%</span>}</span>
+                  <span style={s.rv}>{fmtP(calc.res)}%</span>
+                </div>
+
+                <div style={s.hl}>
+                  <div style={{fontSize:10,opacity:0.65,letterSpacing:0.5}}>▶ 보험가액</div>
+                  <div style={{fontSize:26,fontWeight:800,fontFamily:"monospace",letterSpacing:"-1px",marginTop:2}}>₩ {fmt(calc.iv)}</div>
+                  <div style={{fontSize:10,opacity:0.5,marginTop:3}}>= {fmt(calc.tc)} × {fmtP(calc.res)}%</div>
+                </div>
+
+                <div style={s.c8}>
+                  <div>
+                    <div style={{fontSize:10,color:MU}}>80% 공동보험 기준가액</div>
+                    <div style={{fontSize:17,fontWeight:800,color:N,fontFamily:"monospace"}}>₩ {fmt(calc.c8)}</div>
+                  </div>
+                  <span style={{fontSize:22}}>📋</span>
+                </div>
+
+                <button style={s.cb} onClick={copy}>{copied?"✅ 복사됨!":"📄 결과 텍스트 복사"}</button>
+
+                <div style={{marginTop:10,fontSize:10,color:"#bbb",lineHeight:1.7}}>
+                  ※ 2026년 신축단가표 (2025.11 발행) 기준<br/>
+                  ※ 별표1 경년감가율 / 잔가율 최저 30%<br/>
+                  ※ 부대설비는 표준 단가 기준 (현장 확인 필요)
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App,null));
+</script>
+</body>
+</html>
