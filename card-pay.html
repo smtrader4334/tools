@@ -25,7 +25,8 @@
   --teal: #00897B;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'Noto Sans KR', sans-serif; background: var(--gray100); color: var(--gray800); min-height: 100vh; }
+body { font-family: 'Noto Sans KR', sans-serif; background: #CCCCCC; color: var(--gray800); min-height: 100vh; display: flex; justify-content: center; }
+.app-wrap { width: 100%; max-width: 480px; background: var(--gray100); min-height: 100vh; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.15); }
 
 /* 헤더 */
 header {
@@ -122,13 +123,14 @@ header h1 span { background: var(--yellow); color: var(--navy); padding: 0 4px; 
 }
 .sheet-overlay.open { display: block; }
 .bottom-sheet {
-  position: fixed; bottom: 0; left: 0; right: 0;
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
+  width: 100%; max-width: 480px;
   background: #fff; border-radius: 20px 20px 0 0;
   z-index: 1000; max-height: 78vh;
   display: flex; flex-direction: column;
-  transform: translateY(100%); transition: transform .3s ease;
+  transition: transform .3s ease;
 }
-.bottom-sheet.open { transform: translateY(0); }
+.bottom-sheet.open { transform: translateX(-50%) translateY(0); }
 
 .sheet-handle { width: 40px; height: 4px; background: var(--gray200); border-radius: 2px; margin: 12px auto 0; flex-shrink: 0; }
 .sheet-header {
@@ -168,6 +170,7 @@ header h1 span { background: var(--yellow); color: var(--navy); padding: 0 4px; 
 </style>
 </head>
 <body>
+<div class="app-wrap">
 
 <header>
   <div class="header-eyebrow">TODAY'S INSU</div>
@@ -192,6 +195,8 @@ header h1 span { background: var(--yellow); color: var(--navy); padding: 0 4px; 
 
 <div class="tab-panel active" id="panel-life"><div class="card-list" id="list-life"></div></div>
 <div class="tab-panel" id="panel-nonlife"><div class="card-list" id="list-nonlife"></div></div>
+
+</div><!-- /app-wrap -->
 
 <!-- 바텀시트 -->
 <div class="sheet-overlay" id="overlay" onclick="closeSheet()"></div>
