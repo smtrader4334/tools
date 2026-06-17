@@ -269,7 +269,7 @@ function renderCards(type, data) {
       ? `<div class="info-row"><span class="info-key">계속분</span><span class="info-val">${item.contMemo}</span></div>` : "";
     const telHtml = item.tel
       ? `<a href="tel:${item.tel}" class="tel-link">📞 ${item.tel}</a>`
-      : (item.telNote ? `<span style="font-size:12px;color:var(--gray500)">☎ ${item.telNote}</span>` : "");
+      : (item.telNote ? `<span style="display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:7px 14px;border-radius:8px;background:#FFF8E1;border:1.5px solid #F5C518;font-size:13px;font-weight:700;color:#1A1A2E;">📋 ${item.telNote}</span>` : "");
 
     div.innerHTML = `
       <div class="card-header">
