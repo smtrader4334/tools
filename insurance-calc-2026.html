@@ -239,6 +239,19 @@ function App(){
     `▶ 보험가액: ${fmt(calc.iv)} 원`
   ].join("\n");
 
+  const share=async()=>{
+    if(!calc||calc.error)return;
+    const t=buildText();
+    if(navigator.share){
+      try{await navigator.share({text:t});return;}catch(e){}
+    }
+    // 공유 미지원 시 복사로 대체
+    if(navigator.clipboard&&window.isSecureContext){
+      try{await navigator.clipboard.writeText(t);setCopied(true);setTimeout(()=>setCopied(false),2500);return;}catch(e){}
+    }
+    setModalText(t);setShowModal(true);
+  };
+
   const copy=async()=>{
     if(!calc||calc.error)return;
     const t=buildText();
@@ -281,7 +294,8 @@ function App(){
     sh:{fontSize:11,fontWeight:800,color:MU,margin:"12px 0 4px",paddingTop:8,borderTop:"1px dashed #DDE2EC"},
     bdr:{display:"inline-block",padding:"2px 7px",borderRadius:4,fontSize:9,fontWeight:800,background:"#FEF3C7",color:"#92400E",marginLeft:6},
     gb:(a)=>({flex:"1 1 auto",padding:"8px 4px",border:a?`2px solid ${B}`:`1.5px solid ${BD2}`,borderRadius:7,background:a?B:W,color:a?"#fff":MU,fontWeight:800,fontSize:12,cursor:"pointer"}),
-    cb:{padding:"9px 18px",background:copied?GR:B,color:"#fff",border:"none",borderRadius:7,fontSize:13,fontWeight:700,cursor:"pointer",width:"100%",marginTop:10},
+    cb:{padding:"10px 18px",background:copied?GR:B,color:"#fff",border:"none",borderRadius:7,fontSize:14,fontWeight:700,cursor:"pointer",width:"100%",marginTop:10},
+    sb:{padding:"10px 18px",background:"#16A34A",color:"#fff",border:"none",borderRadius:7,fontSize:14,fontWeight:700,cursor:"pointer",width:"100%",marginTop:8},
   };
   const onCnt=bd?bd.equip.filter(e=>gEq(e).on).length:0;
 
@@ -294,10 +308,10 @@ function App(){
             2026년 신축단가표 기준 (2025년 11월 발행)<br/>별표1 경년감가율 적용
           </div>
           <div style={{color:"#fff",fontSize:12,fontWeight:800,marginTop:6,letterSpacing:"0.3px"}}>
-            제작 · 더함화재특종손해사정 대표 유승민
+            더함화재특종손해사정 대표 유승민
           </div>
         </div>
-        <button onClick={reset} style={{padding:"6px 14px",background:"rgba(255,255,255,0.12)",color:"#fff",border:"1px solid rgba(255,255,255,0.25)",borderRadius:6,fontSize:11,cursor:"pointer",whiteSpace:"nowrap"}}>
+        <button onClick={reset} style={{padding:"9px 20px",background:"rgba(255,255,255,0.12)",color:"#fff",border:"1px solid rgba(255,255,255,0.25)",borderRadius:7,fontSize:13,cursor:"pointer",whiteSpace:"nowrap",fontWeight:700}}>
           🔄 초기화
         </button>
       </div>
@@ -429,6 +443,7 @@ function App(){
                   <span style={{fontSize:22}}>📋</span>
                 </div>
 
+                <button style={s.sb} onClick={share}>💬 결과 공유하기</button>
                 <button style={s.cb} onClick={copy}>{copied?"✅ 복사됨!":"📄 결과 텍스트 복사"}</button>
 
                 <div style={{marginTop:10,fontSize:10,color:"#bbb",lineHeight:1.7}}>
