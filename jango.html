@@ -7,8 +7,9 @@
 <script src="https://accounts.google.com/gsi/client" async defer onload="gdReady()"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{font-family:'Apple SD Gothic Neo',-apple-system,'Malgun Gothic',sans-serif;background:#f0f2f7;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+html,body{height:100%;background:#1a2b4a}
+body{font-family:'Apple SD Gothic Neo',-apple-system,'Malgun Gothic',sans-serif;display:flex;justify-content:center;height:100dvh}
+#app{width:100%;max-width:500px;display:flex;flex-direction:column;height:100dvh;overflow:hidden;background:#f0f2f7}
 button{font-family:inherit;cursor:pointer;border:none}
 input,select,textarea{font-family:inherit;outline:none}
 #content{flex:1;overflow-y:auto;padding:12px 14px 24px;-webkit-overflow-scrolling:touch}
@@ -20,6 +21,7 @@ input,select,textarea{font-family:inherit;outline:none}
 </head>
 <body>
 
+<div id="app" style="font-family:'Apple SD Gothic Neo',-apple-system,'Malgun Gothic',sans-serif">
 <div id="header"></div>
 <div id="dbar" style="background:#f8f9fb;border-bottom:1px solid #e2e8f0;padding:5px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0">
   <span style="font-size:14px">☁️</span>
@@ -32,6 +34,8 @@ input,select,textarea{font-family:inherit;outline:none}
 <div id="cobbar" style="display:none;background:#f8f9fb;border-bottom:1px solid #e2e8f0;padding:7px 14px;flex-shrink:0;align-items:center;gap:8px"></div>
 <div id="content"></div>
 <div id="footer" style="background:#fff;border-top:1px solid #e2e8f0;padding:10px 14px;flex-shrink:0"></div>
+
+</div><!-- /app -->
 
 <div id="overlay" style="display:none;position:fixed;inset:0;background:rgba(26,43,74,.55);z-index:999;align-items:center;justify-content:center;padding:14px">
   <div id="mbox" style="background:#fff;border-radius:16px;width:100%;max-width:420px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(26,43,74,.3)"></div>
