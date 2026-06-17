@@ -261,17 +261,13 @@ let tab='month',month='2026-06',sec='tx',year=2026;
 let editTarget=null;
 
 // ── 스토리지 ───────────────────────────────
-let gdAutoTimer=null;
+let gdAutoTimer=null,gdSkipDriveSave=false;
 async function save(){
   try{await window.storage.set('theham-jango-v6',JSON.stringify(D));}catch(e){}
-  // localStorage 폴백 (Netlify 등 외부 환경)
   try{localStorage.setItem('theham-jango-v6',JSON.stringify(D));}catch(e){}
-  // 드라이브 자동저장 (마지막 변경 후 3초 뒤)
-  if(gdtok){
+  if(gdtok&&!gdSkipDriveSave){
     clearTimeout(gdAutoTimer);
-    gdAutoTimer=setTimeout(()=>{
-      gdDoSave();
-    },3000);
+    gdAutoTimer=setTimeout(()=>{gdDoSave();},3000);
   }
 }
 async function load(){
@@ -802,7 +798,10 @@ async function gdDoLoad(){
     const r=await gdH(`https://www.googleapis.com/drive/v3/files/${fid}?alt=media`);
     const loaded=await r.json();
     D=loaded;
-    await save();render();
+    gdSkipDriveSave=true;  // 불러오기 후엔 드라이브 재저장 안 함
+    await save();
+    gdSkipDriveSave=false;
+    render();
     const t=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
     gdSt(`✅ 불러오기 완료 ${t}`,'#16a34a');
   }catch(e){gdSt('❌ 불러오기 실패: '+e.message,'#dc2626');}
