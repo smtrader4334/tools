@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>보험 카드납 비교표 | 더함화재특종손해사정</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #F5C518;
+    --navy: #1A1A2E;
+    --navy2: #2D2D4E;
+    --white: #FFFFFF;
+    --gray100: #F7F7F7;
+    --gray200: #E8E8E8;
+    --gray500: #888888;
+    --gray800: #333333;
+    --red: #D93025;
+    --green: #1A7A4A;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(26,26,46,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--gray100);
+    color: var(--gray800);
+    min-height: 100vh;
+  }
+
+  /* ── 헤더 ── */
+  header {
+    background: var(--navy);
+    padding: 20px 16px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+  header h1 {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.3;
+  }
+  header h1 span {
+    background: var(--yellow);
+    color: var(--navy);
+    padding: 0 4px;
+    border-radius: 3px;
+  }
+
+  /* ── 탭 ── */
+  .tab-bar {
+    display: flex;
+    background: var(--navy2);
+    padding: 0 16px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 12px 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.45);
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .tab-btn.active {
+    color: var(--yellow);
+    border-bottom-color: var(--yellow);
+  }
+
+  /* ── 검색 & 필터 영역 ── */
+  .filter-area {
+    background: var(--white);
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--gray200);
+    position: sticky;
+    top: 98px;
+    z-index: 90;
+  }
+  .search-wrap {
+    position: relative;
+    margin-bottom: 10px;
+  }
+  .search-wrap input {
+    width: 100%;
+    padding: 10px 14px 10px 36px;
+    border: 1.5px solid var(--gray200);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    outline: none;
+    background: var(--gray100);
+    transition: border-color 0.2s;
+  }
+  .search-wrap input:focus { border-color: var(--navy); }
+  .search-icon {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray500);
+    font-size: 15px;
+    pointer-events: none;
+  }
+  .filter-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gray500);
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+  .card-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .card-filter-btn {
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1.5px solid var(--gray200);
+    background: var(--white);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray800);
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .card-filter-btn:hover { border-color: var(--navy); }
+  .card-filter-btn.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: var(--yellow);
+  }
+
+  /* ── 결과 개수 ── */
+  .result-meta {
+    padding: 10px 16px 4px;
+    font-size: 12px;
+    color: var(--gray500);
+    font-weight: 500;
+  }
+  .result-meta strong { color: var(--navy); }
+
+  /* ── 카드 목록 ── */
+  .card-list {
+    padding: 4px 12px 80px;
+  }
+  .ins-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 10px;
+    overflow: hidden;
+    border-left: 4px solid var(--navy);
+    transition: box-shadow 0.2s;
+  }
+  .ins-card:hover { box-shadow: 0 4px 20px rgba(26,26,46,0.16); }
+  .ins-card.hidden { display: none; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px 8px;
+    cursor: pointer;
+  }
+  .card-name {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--navy);
+  }
+  .badges {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 5px;
+  }
+  .badge-ok { background: #E6F4ED; color: var(--green); }
+  .badge-no { background: #FDE8E8; color: var(--red); }
+  .badge-label { font-size: 9px; font-weight: 500; color: var(--gray500); margin-right: 2px; }
+
+  .card-body { padding: 0 14px 14px; }
+  .info-row {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    margin-top: 7px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .info-key {
+    min-width: 68px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gray500);
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .info-val { color: var(--gray800); font-weight: 500; }
+  .info-val a {
+    color: var(--navy);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .info-val a:hover { text-decoration: underline; }
+  .divider {
+    height: 1px;
+    background: var(--gray200);
+    margin: 8px 0;
+  }
+
+  /* 카드사 태그들 */
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 3px;
+  }
+  .ctag {
+    font-size: 11px;
+    padding: 3px 7px;
+    border-radius: 5px;
+    background: var(--gray100);
+    color: var(--gray800);
+    font-weight: 500;
+    border: 1px solid var(--gray200);
+  }
+  .ctag.match {
+    background: var(--yellow);
+    color: var(--navy);
+    border-color: var(--yellow);
+    font-weight: 700;
+  }
+
+  /* 콜센터 전화 버튼 */
+  .tel-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 10px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    background: var(--gray100);
+    border: 1.5px solid var(--gray200);
+    color: var(--navy);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .tel-btn:hover { background: var(--navy); color: var(--yellow); }
+
+  /* 초회 가능 여부 뱃지 행 */
+  .badge-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .badge-item {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  /* 탭 패널 */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* 빈 상태 */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--gray500);
+  }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  /* 하단 주석 */
+  .footnote {
+    background: var(--navy);
+    color: rgba(255,255,255,0.6);
+    font-size: 11px;
+    padding: 14px 16px;
+    line-height: 1.8;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<header>
+  <div class="header-label">TODAY'S INSU</div>
+  <h1>회사별 카드납 비교 <span>한눈에!</span></h1>
+</header>
+
+<!-- 탭 바 -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('life', this)">🏦 생명보험</button>
+  <button class="tab-btn" onclick="switchTab('nonlife', this)">🔥 손해보험</button>
+</div>
+
+<!-- 검색 & 필터 -->
+<div class="filter-area">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="보험사 검색..." oninput="applyFilter()">
+  </div>
+  <div class="filter-label">카드사 필터</div>
+  <div class="card-filters" id="cardFilters"></div>
+</div>
+
+<div class="result-meta" id="resultMeta"></div>
+
+<!-- 생명보험 패널 -->
+<div class="tab-panel active" id="panel-life">
+  <div class="card-list" id="list-life"></div>
+</div>
+
+<!-- 손해보험 패널 -->
+<div class="tab-panel" id="panel-nonlife">
+  <div class="card-list" id="list-nonlife"></div>
+</div>
+
+<script>
+/* ── 데이터 ── */
+const lifeData = [
+  {
+    name: "KB라이프",
+    initial: "O", continue: "O",
+    tel: "1588-3374",
+    product: "딱좋은요증건강보험",
+    cards: ["KB"],
+    cardNote: "KB라이프 전용 카드만 가능",
+    scope: "계약자, 배우자, 직계존비속, 형제자매, 시부모, 사위, 며느리"
+  },
+  {
+    name: "농협생명",
+    initial: "O", continue: "O",
+    tel: "1544-4000",
+    product: "보장성 상품",
+    cards: ["농협", "BC", "현대", "롯데"],
+    cardNote: null,
+    scope: "계약자"
+  },
+  {
+    name: "동양생명",
+    initial: "O", continue: "O",
+    tel: "1577-1004",
+    product: "보장성 (종신/CI, 변액/저축 불가)",
+    cards: ["신한", "현대", "삼성", "롯데", "BC", "KB", "우리"],
+    cardNote: null,
+    scope: "계약자"
+  },
+  {
+    name: "라이나생명",
+    initial: "O", continue: "O",
+    tel: "1588-0058",
+    product: "종신 제외 (25.9.1 이후 신계약부터)",
+    cards: ["BC", "신한", "국민", "삼성", "현대", "롯데", "하나", "농협", "씨티"],
+    cardNote: null,
+    scope: "계약자, 배우자, 직계존비속, 형제자매, 시부모, 사위, 며느리"
+  },
+  {
+    name: "삼성생명",
+    initial: "X", continue: "O",
+    tel: "1588-3114",
+    product: "순수보장성 (종신/연금 불가)",
+    cards: ["삼성"],
+    cardNote: "삼성카드만 가능",
+    scope: "계약자"
+  },
+  {
+    name: "신한라이프",
+    initial: "O", continue: "O",
+    tel: "1588-5580",
+    product: "슈퍼ONE, 원더우먼, 라이트원, 통합원, ONE더케어, 케어받는암(9월 추가) 외 불가",
+    cards: ["BC", "신한", "국민", "삼성", "현대", "롯데", "하나", "농협", "씨티"],
+    cardNote: null,
+    scope: "계약자, 배우자, 직계존비속, 형제자매, 시부모, 사위, 며느리"
+  },
+  {
+    name: "처브라이프",
+    initial: "O", continue: "O",
+    tel: null,
+    telNote: "신계약 청약 시 신청",
+    product: "보장성 월보험료 15만원 이하 (전자서명 시 가능)",
+    cards: ["전카드"],
+    cardNote: "국내 전 카드사 가능",
+    scope: "계약자"
+  },
+  {
+    name: "푸본현대",
+    initial: "O", continue: "O",
+    tel: "1577-3311",
+    product: "보장성 상품",
+    cards: ["현대", "BC", "신한", "KB"],
+    cardNote: null,
+    scope: "계약자, 피보험자"
+  },
+  {
+    name: "하나생명",
+    initial: "O", continue: "O",
+    tel: null,
+    telNote: "신계약 청약 시 신청",
+    product: "넥스트케어, 3·10·5 간편 외 불가",
+    cards: ["BC", "국민", "하나", "삼성", "신한", "현대", "롯데"],
+    cardNote: null,
+    scope: "계약자"
+  }
+];
+
+const nonlifeData = [
+  {
+    name: "AIG손보",
+    initial: "O", continue: "O",
+    continueMemo: "카드 자동이체 (콜센터 1544-2792)",
+    tel: "1544-2792",
+    cards: ["KB", "롯데", "BC", "삼성", "신한", "우리", "하나", "외환", "농협", "씨티", "현대", "수협"],
+    cardNote: "제주·광주·전북·해외카드 등 포함",
+    scope: "계약자, 피보험자"
+  },
+  {
+    name: "DB손보",
+    initial: "O", continue: "O",
+    continueMemo: "계속분: 설계사 수납",
+    tel: null,
+    cards: ["KB", "롯데", "BC", "삼성", "신한", "하나", "농협", "현대", "우리"],
+    cardNote: null,
+    scope: "계약자, 피보험자, 직계존비속, 형제자매"
+  },
+  {
+    name: "KB손보",
+    initial: "O", continue: "O",
+    continueMemo: "계속분: 설계사 수납",
+    tel: null,
+    cards: ["KB", "롯데", "BC", "삼성", "신한", "우리", "농협", "씨티", "현대", "하나"],
+    cardNote: null,
+    scope: "계약자, 배우자, 직계가족"
+  },
+  {
+    name: "농협손보",
+    initial: "O", continue: "O",
+    continueMemo: "카드 자동이체 (농협/농축협 내방)",
+    tel: null,
+    cards: ["농협", "BC", "KB", "신한", "삼성", "하나"],
+    cardNote: null,
+    scope: "계약자"
+  },
+  {
+    name: "라이나손보",
+    initial: "O", continue: "O",
+    continueMemo: "카드 자동이체 (콜센터 1566-5800)",
+    tel: "1566-5800",
+    cards: ["씨티", "BC", "우리", "광주", "수협", "신한", "삼성", "롯데", "농협", "국민", "현대", "하나"],
+    cardNote: "한미·신협·전북·제주·현대증권·산업·은련·하나SK·외환·롯데아멕스·해외카드 포함",
+    scope: "계약자, 직계가족"
+  },
+  {
+    name: "롯데손보",
+    initial: "O", continue: "O",
+    continueMemo: "계속분: 설계사 수납",
+    tel: null,
+    cards: ["BC", "KB", "농협", "롯데", "삼성", "신한", "씨티", "하나", "현대"],
+    cardNote: null,
+    scope: "계약자, 배우자, 직계가족"
+  },
+  {
+    name: "메리츠화재",
+    initial: "O", continue: "O",
+    continueMemo: "카드 자동이체 (콜센터 1566-7711)",
+    tel: "1566-7711",
+    cards: ["BC", "KB", "롯데", "삼성", "신한", "하나", "현대", "NH", "우리"],
+    cardNote: null,
+    scope: "계약자, 배우자, 직계가족"
+  },
+  {
+    name: "삼성화재",
+    initial: "O", continue: "O",
+    continueMemo: "계속분: 설계사 수납",
+    tel: null,
+    cards: ["KB", "롯데", "BC", "삼성", "신한", "하나", "외환", "농협", "씨티", "현대", "광주", "전북", "수협"],
+    cardNote: "하나SK·제주·해외카드 포함",
+    scope: "계약자"
+  },
+  {
+    name: "하나손보",
+    initial: "O", continue: "O",
+    continueMemo: "－",
+    tel: null,
+    cards: ["KB", "롯데", "BC", "삼성", "신한", "우리", "하나", "외환", "농협", "씨티", "현대"],
+    cardNote: "하나SK·갤러리아카드 포함",
+    scope: "계약자"
+  },
+  {
+    name: "한화손보",
+    initial: "O", continue: "O",
+    continueMemo: "카드 자동이체 (고객센터/지점 내방, 콜센터 불가)",
+    tel: null,
+    cards: ["KB", "BC", "신한", "농협", "현대", "하나", "롯데", "삼성"],
+    cardNote: "삼성체크카드 자동이체 불가",
+    scope: "계약자, 피보험자"
+  },
+  {
+    name: "현대해상",
+    initial: "O", continue: "O",
+    continueMemo: "계속분: 설계사 수납",
+    tel: null,
+    cards: ["KB", "롯데", "BC", "삼성", "신한", "농협", "씨티", "현대", "하나"],
+    cardNote: null,
+    scope: "계약자, 피보험자, 직계존비속, 형제자매"
+  },
+  {
+    name: "흥국화재",
+    initial: "O", continue: "O",
+    continueMemo: "카드 자동이체 (콜센터 1688-1688)",
+    tel: "1688-1688",
+    cards: ["BC", "하나", "KB", "삼성", "신한", "롯데", "현대", "농협"],
+    cardNote: null,
+    scope: "계약자, 배우자, 직계가족"
+  }
+];
+
+/* ── 주요 카드사 목록 ── */
+const majorCards = ["KB", "삼성", "신한", "현대", "롯데", "BC", "하나", "농협", "국민", "우리", "씨티", "NH"];
+
+let currentTab = "life";
+let activeCardFilter = null;
+
+/* ── 초기화 ── */
+function init() {
+  renderCards("life", lifeData);
+  renderCards("nonlife", nonlifeData);
+  renderCardFilters();
+  updateResultMeta();
+}
+
+function renderCardFilters() {
+  const wrap = document.getElementById("cardFilters");
+  wrap.innerHTML = `<button class="card-filter-btn active" onclick="setCardFilter(null, this)">전체</button>`;
+  majorCards.forEach(c => {
+    wrap.innerHTML += `<button class="card-filter-btn" onclick="setCardFilter('${c}', this)">${c}</button>`;
+  });
+}
+
+function setCardFilter(card, btn) {
+  activeCardFilter = card;
+  document.querySelectorAll(".card-filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  applyFilter();
+}
+
+function switchTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.getElementById(`panel-${tab}`).classList.add("active");
+  applyFilter();
+}
+
+function applyFilter() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const listId = `list-${currentTab}`;
+  const cards = document.querySelectorAll(`#${listId} .ins-card`);
+  let visible = 0;
+
+  cards.forEach(card => {
+    const name = card.dataset.name || "";
+    const cardList = (card.dataset.cards || "").toLowerCase();
+    const matchSearch = !q || name.includes(q);
+    const matchCard = !activeCardFilter || cardList.includes(activeCardFilter.toLowerCase());
+
+    if (matchSearch && matchCard) {
+      card.classList.remove("hidden");
+      visible++;
+      // 카드사 태그 하이라이트
+      card.querySelectorAll(".ctag").forEach(tag => {
+        if (activeCardFilter && tag.textContent.includes(activeCardFilter)) {
+          tag.classList.add("match");
+        } else {
+          tag.classList.remove("match");
+        }
+      });
+    } else {
+      card.classList.add("hidden");
+    }
+  });
+
+  updateResultMeta(visible, cards.length);
+}
+
+function updateResultMeta(visible, total) {
+  const meta = document.getElementById("resultMeta");
+  const label = currentTab === "life" ? "생명보험" : "손해보험";
+  if (visible === undefined) {
+    const t = document.querySelectorAll(`#list-${currentTab} .ins-card`).length;
+    meta.innerHTML = `<strong>${label}</strong> · 전체 ${t}개사`;
+  } else {
+    meta.innerHTML = `<strong>${label}</strong> · ${visible} / ${total}개사 표시`;
+  }
+}
+
+/* ── 카드 렌더링 ── */
+function renderCards(type, data) {
+  const list = document.getElementById(`list-${type}`);
+
+  data.forEach(item => {
+    const cardStr = item.cards.join(",");
+    const div = document.createElement("div");
+    div.className = "ins-card";
+    div.dataset.name = item.name.toLowerCase();
+    div.dataset.cards = cardStr.toLowerCase();
+
+    const initBadge = item.initial === "O"
+      ? `<span class="badge badge-ok">초회 ✓</span>`
+      : `<span class="badge badge-no">초회 ✗</span>`;
+    const contBadge = item.continue === "O"
+      ? `<span class="badge badge-ok">계속 ✓</span>`
+      : `<span class="badge badge-no">계속 ✗</span>`;
+
+    const cardTags = item.cards.map(c =>
+      `<span class="ctag">${c}</span>`
+    ).join("");
+
+    const telHtml = item.tel
+      ? `<a href="tel:${item.tel}" class="tel-btn">📞 ${item.tel}</a>`
+      : item.telNote
+      ? `<span style="font-size:12px;color:var(--gray500);">☎ ${item.telNote}</span>`
+      : "";
+
+    const continueMemoHtml = type === "nonlife" && item.continueMemo
+      ? `<div class="info-row"><span class="info-key">계속분</span><span class="info-val">${item.continueMemo}</span></div>`
+      : "";
+
+    div.innerHTML = `
+      <div class="card-header">
+        <span class="card-name">${item.name}</span>
+        <div class="badges">${initBadge}${contBadge}</div>
+      </div>
+      <div class="card-body">
+        <div class="divider"></div>
+        <div class="info-row">
+          <span class="info-key">가능상품</span>
+          <span class="info-val">${item.product}</span>
+        </div>
+        ${continueMemoHtml}
+        <div class="info-row">
+          <span class="info-key">사용카드</span>
+          <span class="info-val">
+            <div class="card-tags">${cardTags}</div>
+            ${item.cardNote ? `<div style="font-size:11px;color:var(--gray500);margin-top:4px;">※ ${item.cardNote}</div>` : ""}
+          </span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">명의범위</span>
+          <span class="info-val">${item.scope}</span>
+        </div>
+        <div style="margin-top:10px;">${telHtml}</div>
+      </div>
+    `;
+
+    list.appendChild(div);
+  });
+}
+
+/* 빈 상태 감지 */
+function checkEmpty() {
+  ["life", "nonlife"].forEach(type => {
+    const list = document.getElementById(`list-${type}`);
+    const existing = list.querySelector(".empty-state");
+    const visible = list.querySelectorAll(".ins-card:not(.hidden)").length;
+    if (visible === 0 && !existing) {
+      const e = document.createElement("div");
+      e.className = "empty-state";
+      e.innerHTML = `<div class="icon">🔍</div><p>검색 결과가 없습니다</p>`;
+      list.appendChild(e);
+    } else if (visible > 0 && existing) {
+      existing.remove();
+    }
+  });
+}
+
+const origApply = applyFilter;
+window.applyFilter = function() { origApply(); checkEmpty(); updateResultMeta(...arguments); };
+
+init();
+</script>
+</body>
+</html>
