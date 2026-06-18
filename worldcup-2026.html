@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 FIFA 월드컵 조별 순위</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #080e1c;
+    color: #e2e8f0;
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #0a1628 0%, #0d2040 60%, #0a1628 100%);
+    border-bottom: 1px solid #1e2d45;
+    padding: 14px 14px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .header-icon { font-size: 24px; }
+  .header-title { font-size: 17px; font-weight: 800; color: #ffd700; letter-spacing: -0.5px; }
+  .header-sub { font-size: 11px; color: #6b7fa3; margin-top: 2px; }
+  .live-dot {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #ff3a3a;
+    background: rgba(255,58,58,0.15);
+    border-radius: 5px;
+    padding: 3px 8px;
+  }
+  .live-dot span { animation: pulse 1.2s infinite; display: inline-block; }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    overflow-x: auto;
+    gap: 2px;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 8px 13px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 6px 6px 0 0;
+    background: transparent;
+    color: #6b7fa3;
+    border: none;
+    white-space: nowrap;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .tab.active {
+    background: #00c864;
+    color: #000;
+    font-weight: 800;
+  }
+  .tab:hover:not(.active) { color: #e2e8f0; background: rgba(255,255,255,0.05); }
+
+  /* Body */
+  .body { padding: 14px; max-width: 600px; margin: 0 auto; }
+
+  /* Card */
+  .card {
+    background: #111827;
+    border-radius: 10px;
+    border: 1px solid #1e2d45;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid #1e2d45;
+    background: rgba(255,255,255,0.02);
+  }
+  .card-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6b7fa3;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .card-meta { font-size: 11px; color: #6b7fa3; }
+
+  /* Standings Table */
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    padding: 7px 6px;
+    color: #6b7fa3;
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  thead th.left { text-align: left; padding-left: 8px; }
+  tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.1s;
+  }
+  tbody tr:hover { background: rgba(255,255,255,0.03) !important; }
+  tbody td { padding: 9px 6px; text-align: center; font-size: 12px; }
+  tbody td.rank { font-weight: 700; font-size: 13px; }
+  tbody td.team-cell { text-align: left; padding-left: 6px; }
+  .team-inner { display: flex; align-items: center; gap: 7px; }
+  .team-flag { font-size: 19px; line-height: 1; }
+  .team-name { font-size: 13px; font-weight: 500; }
+  .team-name.bold { font-weight: 700; }
+  .host-badge { font-size: 9px; color: #ffd700; margin-left: 3px; vertical-align: middle; }
+  .pts { font-weight: 800; font-size: 14px; color: #ffd700; }
+  .gd-pos { color: #00c864; }
+  .gd-neg { color: #ff6060; }
+  .gd-zer { color: #6b7fa3; }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 14px;
+    padding: 8px 14px;
+    flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: #6b7fa3; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+  /* Results */
+  .result-row {
+    display: flex;
+    align-items: center;
+    padding: 9px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    gap: 8px;
+  }
+  .result-row:last-child { border-bottom: none; }
+  .team-side { display: flex; align-items: center; gap: 6px; flex: 1; }
+  .team-side.right { justify-content: flex-end; }
+  .result-flag { font-size: 18px; }
+  .result-name { font-size: 12px; font-weight: 600; }
+  .score-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    min-width: 70px;
+  }
+  .score-box {
+    background: rgba(255,255,255,0.08);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: 1px;
+    font-variant-numeric: tabular-nums;
+  }
+  .score-date { font-size: 9px; color: #6b7fa3; }
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    background: rgba(255,40,40,0.2);
+    border-radius: 4px;
+    padding: 1px 6px;
+    color: #ff3a3a;
+    font-weight: 700;
+  }
+  .live-badge span { animation: pulse 1.2s infinite; }
+
+  /* Upcoming */
+  .upcoming-row {
+    display: flex;
+    align-items: center;
+    padding: 9px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    gap: 8px;
+  }
+  .upcoming-row:last-child { border-bottom: none; }
+  .date-badge {
+    font-size: 10px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 4px;
+    padding: 2px 7px;
+    color: #6b7fa3;
+    white-space: nowrap;
+  }
+  .today-badge {
+    font-size: 10px;
+    background: rgba(255,100,0,0.2);
+    border-radius: 4px;
+    padding: 2px 7px;
+    color: #ff7722;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* AI Update button */
+  .update-wrap { padding: 14px; }
+  #updateBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(0,200,100,0.12);
+    border: 1px solid #00c864;
+    color: #00c864;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  #updateBtn:hover { background: rgba(0,200,100,0.22); }
+  #updateBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+  #updateMsg {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #6b7fa3;
+    text-align: center;
+    min-height: 18px;
+  }
+  .spin { animation: spin 1s linear infinite; display: inline-block; }
+
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+  @keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <span class="header-icon">⚽</span>
+    <div>
+      <div class="header-title">2026 FIFA 월드컵 조별 순위</div>
+      <div class="header-sub" id="headerSub">2026.06.19 기준 · AI 업데이트 지원</div>
+    </div>
+    <div class="live-dot" id="liveDot" style="display:none">
+      <span>●</span> LIVE
+    </div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<div class="body">
+  <div id="groupContent"></div>
+
+  <!-- AI Update -->
+  <div class="card">
+    <div class="update-wrap">
+      <button id="updateBtn" onclick="aiUpdate()">
+        🤖 AI로 최신 결과 업데이트
+      </button>
+      <div id="updateMsg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 데이터 =====
+const GROUPS = {
+  A: {
+    teams: [
+      { id:"MEX", name:"멕시코",     flag:"🇲🇽", host:true },
+      { id:"KOR", name:"한국",       flag:"🇰🇷" },
+      { id:"CZE", name:"체코",       flag:"🇨🇿" },
+      { id:"RSA", name:"남아공",     flag:"🇿🇦" },
+    ],
+    results: [
+      { home:"MEX", away:"RSA", hg:2, ag:0, date:"6/11" },
+      { home:"KOR", away:"CZE", hg:2, ag:1, date:"6/12" },
+      { home:"CZE", away:"RSA", hg:1, ag:1, date:"6/18" },
+    ],
+    upcoming: [
+      { home:"MEX", away:"KOR", date:"오늘 6/19", today:true },
+      { home:"CZE", away:"MEX", date:"6/24" },
+      { home:"RSA", away:"KOR", date:"6/24" },
+    ]
+  },
+  B: {
+    teams: [
+      { id:"CAN", name:"캐나다",   flag:"🇨🇦", host:true },
+      { id:"SUI", name:"스위스",   flag:"🇨🇭" },
+      { id:"QAT", name:"카타르",   flag:"🇶🇦" },
+      { id:"BIH", name:"보스니아", flag:"🇧🇦" },
+    ],
+    results: [
+      { home:"CAN", away:"BIH", hg:1, ag:1, date:"6/12" },
+      { home:"SUI", away:"QAT", hg:1, ag:1, date:"6/13" },
+      { home:"SUI", away:"BIH", hg:4, ag:1, date:"6/18" },
+      { home:"CAN", away:"QAT", hg:5, ag:0, date:"6/18", live:true },
+    ],
+    upcoming: [
+      { home:"SUI", away:"CAN", date:"6/24" },
+      { home:"BIH", away:"QAT", date:"6/24" },
+    ]
+  },
+  C: {
+    teams: [
+      { id:"BRA", name:"브라질",     flag:"🇧🇷" },
+      { id:"SCO", name:"스코틀랜드", flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿" },
+      { id:"MAR", name:"모로코",     flag:"🇲🇦" },
+      { id:"HAI", name:"아이티",     flag:"🇭🇹" },
+    ],
+    results: [
+      { home:"BRA", away:"MAR", hg:1, ag:1, date:"6/13" },
+      { home:"SCO", away:"HAI", hg:1, ag:0, date:"6/13" },
+    ],
+    upcoming: [
+      { home:"SCO", away:"MAR", date:"오늘 6/19", today:true },
+      { home:"BRA", away:"HAI", date:"오늘 6/19", today:true },
+      { home:"SCO", away:"BRA", date:"6/24" },
+      { home:"MAR", away:"HAI", date:"6/24" },
+    ]
+  },
+  D: {
+    teams: [
+      { id:"USA", name:"미국",     flag:"🇺🇸", host:true },
+      { id:"AUS", name:"호주",     flag:"🇦🇺" },
+      { id:"PAR", name:"파라과이", flag:"🇵🇾" },
+      { id:"TUR", name:"튀르키예", flag:"🇹🇷" },
+    ],
+    results: [
+      { home:"USA", away:"PAR", hg:4, ag:1, date:"6/12" },
+      { home:"AUS", away:"TUR", hg:2, ag:0, date:"6/14" },
+    ],
+    upcoming: [
+      { home:"USA", away:"AUS", date:"오늘 6/19", today:true },
+      { home:"TUR", away:"PAR", date:"오늘/내일 새벽", today:true },
+      { home:"TUR", away:"USA", date:"6/25" },
+      { home:"PAR", away:"AUS", date:"6/25" },
+    ]
+  },
+  E: {
+    teams: [
+      { id:"GER", name:"독일",       flag:"🇩🇪" },
+      { id:"CIV", name:"코트디부아르",flag:"🇨🇮" },
+      { id:"ECU", name:"에콰도르",   flag:"🇪🇨" },
+      { id:"CUW", name:"퀴라소",     flag:"🇨🇼" },
+    ],
+    results: [
+      { home:"GER", away:"CUW", hg:7, ag:1, date:"6/14" },
+      { home:"CIV", away:"ECU", hg:1, ag:0, date:"6/14" },
+    ],
+    upcoming: [
+      { home:"GER", away:"CIV", date:"6/20" },
+      { home:"ECU", away:"CUW", date:"6/20" },
+      { home:"ECU", away:"GER", date:"6/25" },
+      { home:"CUW", away:"CIV", date:"6/25" },
+    ]
+  },
+  F: {
+    teams: [
+      { id:"NED", name:"네덜란드", flag:"🇳🇱" },
+      { id:"SWE", name:"스웨덴",   flag:"🇸🇪" },
+      { id:"JPN", name:"일본",     flag:"🇯🇵" },
+      { id:"TUN", name:"튀니지",   flag:"🇹🇳" },
+    ],
+    results: [
+      { home:"NED", away:"JPN", hg:2, ag:2, date:"6/14" },
+      { home:"SWE", away:"TUN", hg:5, ag:1, date:"6/14" },
+    ],
+    upcoming: [
+      { home:"NED", away:"SWE", date:"6/20" },
+      { home:"TUN", away:"JPN", date:"6/20" },
+      { home:"JPN", away:"SWE", date:"6/25" },
+      { home:"TUN", away:"NED", date:"6/25" },
+    ]
+  },
+  G: {
+    teams: [
+      { id:"BEL", name:"벨기에",   flag:"🇧🇪" },
+      { id:"EGY", name:"이집트",   flag:"🇪🇬" },
+      { id:"IRN", name:"이란",     flag:"🇮🇷" },
+      { id:"NZL", name:"뉴질랜드", flag:"🇳🇿" },
+    ],
+    results: [
+      { home:"BEL", away:"EGY", hg:1, ag:1, date:"6/15" },
+      { home:"IRN", away:"NZL", hg:2, ag:2, date:"6/15" },
+    ],
+    upcoming: [
+      { home:"BEL", away:"IRN", date:"6/21" },
+      { home:"NZL", away:"EGY", date:"6/21" },
+      { home:"BEL", away:"NZL", date:"6/26" },
+      { home:"EGY", away:"IRN", date:"6/26" },
+    ]
+  },
+  H: {
+    teams: [
+      { id:"ESP", name:"스페인",     flag:"🇪🇸" },
+      { id:"URU", name:"우루과이",   flag:"🇺🇾" },
+      { id:"SAU", name:"사우디",     flag:"🇸🇦" },
+      { id:"CPV", name:"카보베르데", flag:"🇨🇻" },
+    ],
+    results: [
+      { home:"ESP", away:"CPV", hg:0, ag:0, date:"6/15" },
+      { home:"SAU", away:"URU", hg:1, ag:1, date:"6/15" },
+    ],
+    upcoming: [
+      { home:"ESP", away:"SAU", date:"6/21" },
+      { home:"URU", away:"CPV", date:"6/21" },
+      { home:"CPV", away:"SAU", date:"6/26" },
+      { home:"URU", away:"ESP", date:"6/26" },
+    ]
+  },
+  I: {
+    teams: [
+      { id:"FRA", name:"프랑스",   flag:"🇫🇷" },
+      { id:"NOR", name:"노르웨이", flag:"🇳🇴" },
+      { id:"SEN", name:"세네갈",   flag:"🇸🇳" },
+      { id:"IRQ", name:"이라크",   flag:"🇮🇶" },
+    ],
+    results: [
+      { home:"FRA", away:"SEN", hg:3, ag:1, date:"6/16" },
+      { home:"NOR", away:"IRQ", hg:4, ag:1, date:"6/16" },
+    ],
+    upcoming: [
+      { home:"FRA", away:"IRQ", date:"6/22" },
+      { home:"NOR", away:"SEN", date:"6/22" },
+      { home:"NOR", away:"FRA", date:"6/26" },
+      { home:"SEN", away:"IRQ", date:"6/26" },
+    ]
+  },
+  J: {
+    teams: [
+      { id:"ARG", name:"아르헨티나", flag:"🇦🇷" },
+      { id:"AUT", name:"오스트리아", flag:"🇦🇹" },
+      { id:"ALG", name:"알제리",     flag:"🇩🇿" },
+      { id:"JOR", name:"요르단",     flag:"🇯🇴" },
+    ],
+    results: [
+      { home:"ARG", away:"ALG", hg:3, ag:0, date:"6/16" },
+      { home:"AUT", away:"JOR", hg:3, ag:1, date:"6/17" },
+    ],
+    upcoming: [
+      { home:"ARG", away:"AUT", date:"6/22" },
+      { home:"JOR", away:"ALG", date:"6/22" },
+      { home:"ALG", away:"AUT", date:"6/27" },
+      { home:"JOR", away:"ARG", date:"6/27" },
+    ]
+  },
+  K: {
+    teams: [
+      { id:"COL", name:"콜롬비아",     flag:"🇨🇴" },
+      { id:"POR", name:"포르투갈",     flag:"🇵🇹" },
+      { id:"DRC", name:"DR콩고",       flag:"🇨🇩" },
+      { id:"UZB", name:"우즈베키스탄", flag:"🇺🇿" },
+    ],
+    results: [
+      { home:"POR", away:"DRC", hg:1, ag:1, date:"6/17" },
+      { home:"COL", away:"UZB", hg:3, ag:1, date:"6/17" },
+    ],
+    upcoming: [
+      { home:"POR", away:"UZB", date:"6/23" },
+      { home:"COL", away:"DRC", date:"6/23" },
+      { home:"COL", away:"POR", date:"6/27" },
+      { home:"DRC", away:"UZB", date:"6/27" },
+    ]
+  },
+  L: {
+    teams: [
+      { id:"ENG", name:"잉글랜드",   flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿" },
+      { id:"GHA", name:"가나",       flag:"🇬🇭" },
+      { id:"CRO", name:"크로아티아", flag:"🇭🇷" },
+      { id:"PAN", name:"파나마",     flag:"🇵🇦" },
+    ],
+    results: [
+      { home:"ENG", away:"CRO", hg:4, ag:2, date:"6/17" },
+      { home:"GHA", away:"PAN", hg:1, ag:0, date:"6/17" },
+    ],
+    upcoming: [
+      { home:"ENG", away:"GHA", date:"6/23" },
+      { home:"PAN", away:"CRO", date:"6/23" },
+      { home:"PAN", away:"ENG", date:"6/27" },
+      { home:"CRO", away:"GHA", date:"6/27" },
+    ]
+  }
+};
+
+// ===== 상태 =====
+let activeGroup = "A";
+let data = JSON.parse(JSON.stringify(GROUPS));
+
+// ===== 순위 계산 =====
+function calcStandings(teams, results) {
+  const stats = {};
+  teams.forEach(t => {
+    stats[t.id] = { p:0, w:0, d:0, l:0, gf:0, ga:0 };
+  });
+  results.forEach(r => {
+    const h = stats[r.home], a = stats[r.away];
+    if (!h||!a) return;
+    h.p++; a.p++;
+    h.gf += r.hg; h.ga += r.ag;
+    a.gf += r.ag; a.ga += r.hg;
+    if (r.hg > r.ag) { h.w++; a.l++; }
+    else if (r.hg < r.ag) { a.w++; h.l++; }
+    else { h.d++; a.d++; }
+  });
+  return teams.map(t => ({
+    ...t, ...stats[t.id],
+    pts: stats[t.id].w*3 + stats[t.id].d,
+    gd: stats[t.id].gf - stats[t.id].ga
+  })).sort((a,b) => {
+    if (b.pts !== a.pts) return b.pts - a.pts;
+    if (b.gd  !== a.gd)  return b.gd  - a.gd;
+    return b.gf - a.gf;
+  });
+}
+
+function getTeam(id, teams) {
+  return teams.find(t=>t.id===id) || { name:id, flag:"🏳" };
+}
+
+// ===== 렌더링 =====
+function render() {
+  renderTabs();
+  renderContent();
+  checkLive();
+}
+
+function renderTabs() {
+  const tabEl = document.getElementById("tabs");
+  const keys = Object.keys(data);
+  tabEl.innerHTML = keys.map(g => {
+    const hasLive = data[g].results.some(r=>r.live);
+    const label = hasLive ? `🔴 ${g}조` : `${g}조`;
+    return `<button class="tab${g===activeGroup?' active':''}" onclick="setGroup('${g}')">${label}</button>`;
+  }).join("");
+}
+
+function renderContent() {
+  const g = data[activeGroup];
+  const standings = calcStandings(g.teams, g.results);
+  let html = "";
+
+  // 순위표
+  html += `
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">📊 조 ${activeGroup} 순위표</span>
+      <span class="card-meta">${g.results.length}경기 완료</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:28px">#</th>
+          <th class="left">팀</th>
+          <th>경</th><th>승</th><th>무</th><th>패</th><th>득실</th>
+          <th style="color:#ffd700">승점</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+  standings.forEach((t, i) => {
+    const rankColors = [
+      { bg:"rgba(0,200,100,0.15)", border:"#00c864" },
+      { bg:"rgba(0,180,80,0.10)",  border:"#00a050" },
+      { bg:"rgba(255,180,0,0.10)", border:"#e6a800" },
+      { bg:"rgba(255,60,60,0.06)", border:"#333"   },
+    ];
+    const rc = rankColors[Math.min(i, 3)];
+    const rankColor = i<2 ? "#00c864" : i===2 ? "#e6a800" : "#6b7fa3";
+    const gdClass = t.gd>0?"gd-pos":t.gd<0?"gd-neg":"gd-zer";
+    const gdStr = t.gd>0?"+"+t.gd:t.gd;
+    const hostBadge = t.host ? `<span class="host-badge">H</span>` : "";
+    html += `
+      <tr style="background:${rc.bg};border-left:3px solid ${rc.border}">
+        <td class="rank" style="color:${rankColor}">${i+1}</td>
+        <td class="team-cell">
+          <div class="team-inner">
+            <span class="team-flag">${t.flag}</span>
+            <span class="team-name${i<2?' bold':''}">${t.name}${hostBadge}</span>
+          </div>
+        </td>
+        <td style="color:#6b7fa3">${t.p}</td>
+        <td>${t.w}</td>
+        <td style="color:#6b7fa3">${t.d}</td>
+        <td style="color:#6b7fa3">${t.l}</td>
+        <td class="${gdClass}">${gdStr}</td>
+        <td class="pts">${t.pts}</td>
+      </tr>
+    `;
+  });
+  html += `
+      </tbody>
+    </table>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#00c864"></div>32강 진출</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#e6a800"></div>3위권 경쟁</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#444"></div>탈락권</div>
+    </div>
+  </div>`;
+
+  // 결과
+  if (g.results.length > 0) {
+    html += `
+    <div class="card">
+      <div class="card-header"><span class="card-title">✅ 경기 결과</span></div>
+    `;
+    [...g.results].reverse().forEach(r => {
+      const ht = getTeam(r.home, g.teams);
+      const at = getTeam(r.away, g.teams);
+      const liveBadge = r.live
+        ? `<div class="live-badge"><span>●</span> LIVE</div>`
+        : "";
+      html += `
+      <div class="result-row">
+        <div class="team-side">
+          <span class="result-flag">${ht.flag}</span>
+          <span class="result-name">${ht.name}</span>
+        </div>
+        <div class="score-block">
+          ${liveBadge}
+          <div class="score-box">${r.hg} - ${r.ag}</div>
+          <div class="score-date">${r.date}</div>
+        </div>
+        <div class="team-side right">
+          <span class="result-name">${at.name}</span>
+          <span class="result-flag">${at.flag}</span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // 예정
+  if (g.upcoming.length > 0) {
+    html += `
+    <div class="card">
+      <div class="card-header"><span class="card-title">📅 예정 경기</span></div>
+    `;
+    g.upcoming.forEach(u => {
+      const ht = getTeam(u.home, g.teams);
+      const at = getTeam(u.away, g.teams);
+      const badge = u.today
+        ? `<span class="today-badge">🔴 ${u.date}</span>`
+        : `<span class="date-badge">${u.date}</span>`;
+      html += `
+      <div class="upcoming-row">
+        <div class="team-side">
+          <span class="result-flag">${ht.flag}</span>
+          <span class="result-name" style="font-weight:500">${ht.name}</span>
+        </div>
+        <div class="score-block">${badge}</div>
+        <div class="team-side right">
+          <span class="result-name" style="font-weight:500">${at.name}</span>
+          <span class="result-flag">${at.flag}</span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  document.getElementById("groupContent").innerHTML = html;
+}
+
+function checkLive() {
+  const hasLive = Object.values(data).some(g => g.results.some(r=>r.live));
+  document.getElementById("liveDot").style.display = hasLive ? "flex" : "none";
+}
+
+function setGroup(g) {
+  activeGroup = g;
+  render();
+  // 탭 스크롤
+  const tabEl = document.getElementById("tabs");
+  const activeTab = tabEl.querySelector(".active");
+  if (activeTab) activeTab.scrollIntoView({ behavior:"smooth", block:"nearest", inline:"center" });
+}
+
+// ===== AI 업데이트 =====
+async function aiUpdate() {
+  const btn = document.getElementById("updateBtn");
+  const msg = document.getElementById("updateMsg");
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spin">⟳</span> 웹 검색 중...`;
+  msg.textContent = "Anthropic API로 최신 경기 결과를 검색 중입니다...";
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        tools: [{ type: "web_search_20250305", name: "web_search" }],
+        messages: [{
+          role: "user",
+          content: `Search for all 2026 FIFA World Cup group stage results as of today June 19 2026.
+For every COMPLETED match with a FINAL score, output EXACTLY one line in this format:
+RESULT:[GROUP]|[HOME_ID]|[HG]-[AG]|[AWAY_ID]
+
+Team IDs:
+A: MEX KOR CZE RSA | B: CAN SUI QAT BIH | C: BRA SCO MAR HAI
+D: USA AUS PAR TUR | E: GER CIV ECU CUW | F: NED SWE JPN TUN
+G: BEL EGY IRN NZL | H: ESP URU SAU CPV | I: FRA NOR SEN IRQ
+J: ARG AUT ALG JOR | K: COL POR DRC UZB | L: ENG GHA CRO PAN
+
+Only FINAL scores. Output RESULT: lines only, no other text.`
+        }]
+      })
+    });
+
+    const json = await res.json();
+    const text = json.content
+      .filter(b => b.type === "text")
+      .map(b => b.text)
+      .join("\n");
+
+    let updated = 0;
+    text.split("\n").forEach(line => {
+      const m = line.match(/RESULT:([A-L])\|(\w+)\|(\d+)-(\d+)\|(\w+)/);
+      if (!m) return;
+      const [,grp,home,hgStr,agStr,away] = m;
+      const hg = parseInt(hgStr), ag = parseInt(agStr);
+      if (!data[grp]) return;
+
+      const exists = data[grp].results.find(r=>r.home===home&&r.away===away);
+      if (exists) {
+        exists.hg = hg; exists.ag = ag; exists.live = false;
+        updated++;
+      } else {
+        data[grp].results.push({ home, away, hg, ag, date:"업데이트" });
+        data[grp].upcoming = data[grp].upcoming.filter(
+          u => !(u.home===home && u.away===away)
+        );
+        updated++;
+      }
+    });
+
+    const now = new Date().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"});
+    document.getElementById("headerSub").textContent = `마지막 업데이트: ${now}`;
+    msg.style.color = "#00c864";
+    msg.textContent = updated > 0
+      ? `✅ ${updated}개 경기 결과 반영 완료`
+      : "ℹ️ 새로운 결과 없음 (이미 최신 상태)";
+
+    render();
+  } catch(e) {
+    msg.style.color = "#ff6060";
+    msg.textContent = "❌ 업데이트 실패: " + e.message;
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = `🤖 AI로 최신 결과 업데이트`;
+}
+
+// ===== 초기화 =====
+render();
+</script>
+</body>
+</html>
