@@ -271,6 +271,12 @@
         🤖 AI로 최신 결과 업데이트
       </button>
       <div id="updateMsg"></div>
+      <div style="margin-top:10px;text-align:center">
+        <button onclick="localStorage.removeItem('anthropic_key');document.getElementById('updateMsg').textContent='API 키 삭제됨';"
+          style="background:none;border:none;color:#6b7fa3;font-size:11px;cursor:pointer;font-family:inherit;">
+          🔑 API 키 초기화
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -696,10 +702,23 @@ async function aiUpdate() {
   btn.innerHTML = `<span class="spin">⟳</span> 웹 검색 중...`;
   msg.textContent = "Anthropic API로 최신 경기 결과를 검색 중입니다...";
 
+  // API 키 확인 (localStorage 저장)
+  let apiKey = localStorage.getItem("anthropic_key");
+  if (!apiKey) {
+    apiKey = prompt("Anthropic API 키를 입력하세요:\n(입력 후 localStorage에 저장됩니다)");
+    if (!apiKey) { btn.disabled=false; btn.innerHTML=`🤖 AI로 최신 결과 업데이트`; return; }
+    localStorage.setItem("anthropic_key", apiKey.trim());
+  }
+
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
         max_tokens: 1000,
