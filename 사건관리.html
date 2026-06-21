@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>2026 사건관리</title>
+<title>사건관리</title>
 <script src="https://accounts.google.com/gsi/client" async defer onload="gdReady()"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -87,8 +87,17 @@ function load(){
 }
 
 // ── 집계 ──
-const inYear=c=>(c.cn||'').startsWith('26');        // 올해 계약(수임)
-const closedYr=c=>stOf(c)==='종결'&&(c.cls||'').startsWith('2026'); // 올해 종결
+const yy2=()=>String(year).slice(2);
+const inYear=c=>(c.cn||'').startsWith(yy2());        // 선택 연도 계약(수임)
+const closedYr=c=>stOf(c)==='종결'&&(c.cls||'').startsWith(String(year)); // 선택 연도 종결
+function yearsAvail(){
+  const ys=new Set([year,new Date().getFullYear()]);
+  D.cases.forEach(c=>{const cyy=(c.cn||'').slice(0,2);if(/^\d\d$/.test(cyy))ys.add(2000+ +cyy);if(isD(c.cls))ys.add(+String(c.cls).slice(0,4));});
+  return [...ys].filter(Boolean).sort((a,b)=>b-a);
+}
+function hasYear(y){return D.cases.some(c=>(c.cn||'').startsWith(String(y).slice(2))||(isD(c.cls)&&String(c.cls).startsWith(String(y))));}
+function initYear(){const cur=new Date().getFullYear();year=hasYear(cur)?cur:(yearsAvail().filter(hasYear)[0]||cur);D.year=year;}
+function setYear(y){year=+y;D.year=+y;filt='전체';render();}
 const gkey=c=>c.gid||c.id;                          // 같은 사건(가지급 분할) 묶음 키
 const uniq=cs=>new Set(cs.map(gkey)).size;
 function recvReps(){ // 올해 수임: 사건(gkey)별 1건 대표, net·cost는 전 portion(중간지급분 포함) 합산
@@ -145,7 +154,12 @@ function render(){
     <div style="display:flex;justify-content:space-between;align-items:center">
       <div>
         <div style="color:${GOLD};font-size:10px;letter-spacing:.12em;font-weight:600">더함화재특종손해사정</div>
-        <div style="color:#fff;font-size:16px;font-weight:800">${year}년 사건 관리</div>
+        <div style="color:#fff;font-size:16px;font-weight:800;display:flex;align-items:center;gap:5px">
+          <select onchange="setYear(this.value)" style="background:rgba(255,255,255,.18);color:#fff;border:none;border-radius:7px;padding:2px 7px;font-size:15px;font-weight:800;-webkit-appearance:none;appearance:none">
+            ${yearsAvail().map(y=>`<option value="${y}" ${y===year?'selected':''} style="color:#000">${y}</option>`).join('')}
+          </select>
+          <span>년 사건 관리</span>
+        </div>
       </div>
       <div style="display:flex;gap:5px">
         ${[['list','📋 사건'],['todo','✅ 할일'],['perf','📊 실적']].map(([t,l])=>`<button onclick="setTab('${t}')" style="background:${tab===t?GOLD:'rgba(255,255,255,.15)'};color:${tab===t?NAV:'#fff'};border-radius:8px;padding:6px 11px;font-size:12px;font-weight:700">${l}</button>`).join('')}
@@ -636,14 +650,14 @@ async function gdDoLoad(){
     if(!fid){gdSt('⚠️ 드라이브에 저장본 없음 (먼저 저장)','#f97316');return;}
     const r=await gdH(`https://www.googleapis.com/drive/v3/files/${fid}?alt=media`);
     const loaded=await r.json();
-    if(loaded&&loaded.cases){D=loaded;gdSkipSave=true;save();gdSkipSave=false;render();}
+    if(loaded&&loaded.cases){D=loaded;initYear();gdSkipSave=true;save();gdSkipSave=false;render();}
     const t=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});gdSt(`✅ 불러오기 완료 ${t}`,'#16a34a');
   }catch(e){gdSt('❌ 불러오기 실패','#dc2626');}
 }
 function gdAuth(next){if(!gdc){gdSt('⚠️ GIS 미로드 - 인터넷 확인','#f97316');return;}if(!gdtok){gdpend=next;gdc.requestAccessToken({prompt:''});}else{next==='save'?gdDoSave():gdDoLoad();}}
 
 // ── 초기화 ──
-load();render();
+load();initYear();render();
 </script>
 </body>
 </html>
