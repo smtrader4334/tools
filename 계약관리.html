@@ -447,11 +447,11 @@ function openCase(id){
       </div>
       <div class="fg"><label class="lbl" id="objlbl">목적물</label><div id="objchips"></div>
         <input class="inp" id="f_objetc" value="${esc(EF.objEtc)}" placeholder="기타 직접입력" oninput="EF.objEtc=this.value" style="margin-top:7px;font-size:13px"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 10px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 10px">
         <div class="fg"><label class="lbl">사고일</label><input class="inp" id="f_acc" type="date" value="${EF.acc}"></div>
         <div class="fg"><label class="lbl">제출일</label><input class="inp" id="f_sub" type="date" value="${EF.sub}"></div>
-        <div class="fg"><label class="lbl">종결일</label><input class="inp" id="f_cls" type="date" value="${EF.cls}" onchange="efCls(this.value)"><div style="color:${MUTED};font-size:9px;margin-top:2px">날짜 입력 시 자동 종결</div></div>
       </div>
+      <div class="fg"><label class="lbl">종결일</label><input class="inp" id="f_cls" type="date" value="${EF.cls}" onchange="efCls(this.value)"><div style="color:${MUTED};font-size:9px;margin-top:2px">날짜 입력 시 자동 종결 · 비우면 진행중</div></div>
       <div style="height:1px;background:${BORD};margin:6px 0 12px"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 10px">
         ${money('지급보험금','pay','추정/확정')}
