@@ -113,8 +113,8 @@ function stats(){
     total:reps.length,
     closed:uniq(D.cases.filter(closedYr)),
     trans:uniq(D.cases.filter(c=>!inYear(c)&&closedYr(c))),
-    review:uniq(D.cases.filter(c=>inYear(c)&&!c.interim&&stOf(c)==='검토중')),
-    prog:uniq(D.cases.filter(c=>inYear(c)&&!c.interim&&stOf(c)==='진행중')),
+    review:uniq(D.cases.filter(c=>stOf(c)==='검토중')),
+    prog:uniq(D.cases.filter(c=>stOf(c)==='진행중')),
     sun:reps.filter(isSun).length,indep:reps.filter(c=>!isSun(c)).length,
     avgIndep:(()=>{const ind=reps.filter(c=>!isSun(c));return ind.length?Math.round(ind.reduce((s,c)=>s+c._net,0)/ind.length):0;})(),
     cost:reps.reduce((s,c)=>s+c._cost,0)};
@@ -135,13 +135,15 @@ function sortBy(cs){
 }
 // 필터별 사건 집합: 전체/진행중/선임/독립 = 올해 수임(26~), 종결 = 올해 종결(종결일)
 function listFor(){
+  const isOpen=c=>stOf(c)!=='종결';                 // 미결(진행중·검토중)
+  const yv=c=>isOpen(c)||closedYr(c);               // 연도 보기 = 미결(전부) + 당해 종결
   let cs;
   if(filt==='종결')cs=D.cases.filter(closedYr);
-  else if(filt==='진행중')cs=D.cases.filter(c=>inYear(c)&&stOf(c)==='진행중');
-  else if(filt==='검토중')cs=D.cases.filter(c=>inYear(c)&&stOf(c)==='검토중');
-  else if(filt==='선임')cs=D.cases.filter(c=>inYear(c)&&isSun(c));
-  else if(filt==='독립')cs=D.cases.filter(c=>inYear(c)&&!isSun(c));
-  else cs=D.cases.filter(c=>inYear(c)||closedYr(c)); // 전체 = 올해 수임 + 올해 종결
+  else if(filt==='진행중')cs=D.cases.filter(c=>stOf(c)==='진행중');   // 연도 무관 미결
+  else if(filt==='검토중')cs=D.cases.filter(c=>stOf(c)==='검토중');   // 연도 무관 미결
+  else if(filt==='선임')cs=D.cases.filter(c=>yv(c)&&isSun(c));
+  else if(filt==='독립')cs=D.cases.filter(c=>yv(c)&&!isSun(c));
+  else cs=D.cases.filter(yv); // 전체 = 미결(전부) + 당해 종결
   if(q)cs=cs.filter(c=>(c.client+c.cn+c.ins+c.region).toLowerCase().includes(q.toLowerCase()));
   return sortBy(cs);
 }
