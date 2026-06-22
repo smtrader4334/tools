@@ -740,7 +740,7 @@ function syncLink(){
     var outPart=noteParts.find(function(t){return t.indexOf('외주:')===0;});
     var outName=outPart?outPart.slice(3):'김다정';           // note의 '외주:이름'에서 추출, 없으면 김다정
     txs.push({id:P+'fee',label:nm+'(수수료)',contractNo:c.cn,person:payer,type:'수수료',amount:+c.fee,date:cls});
-    if(+c.vat>0) txs.push({id:P+'tax',label:nm+'(계산서)',contractNo:c.cn,person:payer,type:'계산서',amount:-(+c.fee),date:cls});
+    if(+c.vat>0) txs.push({id:P+'tax',label:nm+'(계산서)',contractNo:c.cn,person:'유승민',type:'계산서',amount:-(+c.fee),date:cls});
     if(+c.ref>0) txs.push({id:P+'ref',label:nm+'(소개비)',contractNo:c.cn,person:refName,type:'소개비',amount:-(+c.ref),date:cls});
     if(+c.out>0) txs.push({id:P+'out',label:nm+'(외주비)',contractNo:c.cn,person:outName,type:'외주비',amount:-(+c.out),date:cls});
   });
