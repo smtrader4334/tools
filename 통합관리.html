@@ -406,7 +406,7 @@ function monthlyBreakdown(){
       <span style="color:#16a34a;font-weight:700;font-size:13px">${W(Math.round(totalNet))}</span>
     </div>`;
     if(open){
-      const sorted=[...cs].sort((a,b)=>b._net-a._net);
+      const sorted=[...cs].sort((a,b)=>String(a.cn).localeCompare(String(b.cn)));
       h+=`<div style="background:#f8f9fb;border-radius:8px;padding:4px 10px;margin:3px 0 7px">${sorted.map(c=>`
         <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed ${BORD}">
           <div style="min-width:0;overflow:hidden">
