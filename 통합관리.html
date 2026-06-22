@@ -796,7 +796,7 @@ function renderAppbar(){
    +'<button onclick="gdAuth(\'load\')" style="border:none;border-radius:8px;padding:7px 9px;font-size:13px;cursor:pointer;background:#fff;color:'+NAV+'">📥</button>'
    +'<button onclick="gdAuth(\'save\')" style="border:none;border-radius:8px;padding:7px 9px;font-size:13px;cursor:pointer;background:'+GOLD+';color:'+NAV+'">📤</button>'
    +'</div>'
-   +'<div id="gdst" style="font-size:11px;margin-top:5px;color:'+gdLastCol+'">'+(gdLastMsg||'☁ 드라이브 — 📤 저장으로 로그인')+'</div>';
+   +'<div id="gdst" style="font-size:11px;margin-top:5px;text-align:right;color:'+gdLastCol+'">'+(gdLastMsg||'☁ 드라이브 — 📤 저장으로 로그인')+'</div>';
 }
 function setApp(a){ APP=a; try{closeModal();}catch(e){} render(); }
 
