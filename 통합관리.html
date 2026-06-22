@@ -68,7 +68,7 @@ const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').r
 // ── 상태/타입 판정 ──
 function stOf(c){
   const v=(c.cls||'').toString().trim();
-  if(/\\d{4}-\\d{2}-\\d{2}/.test(v))return'종결';
+  if(/[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(v))return'종결';
   if(v)return'검토중';
   if((c.sub||'').toString().trim())return'검토중';
   return'진행중';
@@ -508,7 +508,7 @@ function renderFirm(){
 }
 function efFirm(v){if(v==='직접입력'){EF.firmMode='custom';if(FIRMS.includes(EF.firm))EF.firm='';}else{EF.firmMode='preset';EF.firm=v;}renderFirm();}
 function efStatus(v){EF.st=v;const d=document.getElementById('f_cls'),su=document.getElementById('f_sub');const t=new Date().toISOString().slice(0,10);if(v==='종결'){if(!EF.cls){EF.cls=t;if(d)d.value=t;}}else if(v==='검토중'){EF.cls='';if(d)d.value='';if(!EF.sub){EF.sub=t;if(su)su.value=t;}}else{EF.cls='';if(d)d.value='';EF.sub='';if(su)su.value='';}}
-function efSub(v){EF.sub=v;const s2=document.getElementById('f_st');if(EF.cls&&/\\d{4}-\\d{2}-\\d{2}/.test(EF.cls))return;if(v){EF.st='검토중';if(s2)s2.value='검토중';}else{EF.st='진행중';if(s2)s2.value='진행중';}}
+function efSub(v){EF.sub=v;const s2=document.getElementById('f_st');if(EF.cls&&/[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(EF.cls))return;if(v){EF.st='검토중';if(s2)s2.value='검토중';}else{EF.st='진행중';if(s2)s2.value='진행중';}}
 function efCls(v){EF.cls=v;const s=document.getElementById('f_st');if(v){EF.st='종결';if(s)s.value='종결';}else{if(EF.st==='종결'){EF.st='진행중';if(s)s.value='진행중';}}}
 function renderVatChips(){
   const fee=+EF.fee||0, calc=Math.round(fee*0.1);
