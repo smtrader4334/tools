@@ -277,6 +277,8 @@ function renderPerf(){
   const recvNet=reps.reduce((a,c)=>a+c._net,0);
   const fixNet=D.cases.filter(c=>inYear(c)&&stOf(c)==='종결').reduce((a,c)=>a+net(c),0);
   const estNet=recvNet-fixNet;
+  // 미결: 연도·계약월 무관, 진행중+검토중 net(추정 포함) 합계
+  const pendNet=(()=>{const g={};D.cases.forEach(c=>{const st=stOf(c);if(st==='진행중'||st==='검토중'){const k=gkey(c);g[k]=(g[k]||0)+net(c);}});return Object.values(g).reduce((a,v)=>a+v,0);})();
   let html=`
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
     <div style="background:#fff;border-radius:11px;padding:12px;text-align:center;box-shadow:0 1px 4px rgba(26,43,74,.07)">
@@ -302,8 +304,10 @@ function renderPerf(){
         ${[['contract','계약금액'],['revenue','매출액']].map(([v,l])=>`<button onclick="chartMode='${v}';renderPerf()" style="background:${chartMode===v?GOLD:BG};color:${chartMode===v?NAV:MUTED};border-radius:7px;padding:4px 12px;font-size:11px;font-weight:${chartMode===v?700:500}">${l}</button>`).join('')}
       </div>
       <div style="text-align:right;flex-shrink:0">
-        <span style="color:${MUTED};font-size:10px">합계</span>
-        <span style="color:${chartMode==='contract'?NAV:'#059669'};font-weight:800;font-size:15px;margin-left:4px">${W((chartMode==='contract'?md:rd).reduce((a,v)=>a+v,0))}</span>
+        <div><span style="color:${MUTED};font-size:10px">합계</span>
+        <span style="color:${chartMode==='contract'?NAV:'#059669'};font-weight:800;font-size:15px;margin-left:4px">${W((chartMode==='contract'?md:rd).reduce((a,v)=>a+v,0))}</span></div>
+        <div style="margin-top:2px"><span style="color:${MUTED};font-size:10px">미결</span>
+        <span style="color:#a16207;font-weight:700;font-size:12px;margin-left:4px">${W(pendNet)}</span></div>
       </div>
     </div>
     ${(()=>{
