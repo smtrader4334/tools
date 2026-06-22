@@ -712,15 +712,23 @@ var gdLastMsg='', gdLastCol='#94a3b8';
 function gdSt(t,col){ gdLastMsg=t; gdLastCol=col||'#94a3b8'; var e=document.getElementById('gdst'); if(e){e.textContent=t;e.style.color=gdLastCol;} }
 
 // ── 계약 종결 → 잔고 자동기록 (계산서면 수수료+계산서 쌍, 현금이면 수수료만) ──
+// ── 종결 취소/종결일 변경 시 → 기존 auto 항목 전 월에서 삭제 후 재추가 ──
 function syncLink(){
   var J=D.jango||(D.jango={});
   (D.cases||[]).forEach(function(c){
+    var P='auto:'+c.id+':';
+    // 1단계: 모든 월에서 이 케이스의 auto 항목 전부 삭제 (종결일 변경·종결 취소 대응)
+    Object.keys(J).forEach(function(mk){
+      var txs=J[mk].transactions;
+      if(!txs)return;
+      for(var i=txs.length-1;i>=0;i--){ if(String(txs[i].id).indexOf(P)===0)txs.splice(i,1); }
+    });
+    // 2단계: 종결이 아닌 경우 → 삭제만 하고 종료
     var cls=c.cls||''; if(!/^\d{4}-\d{2}-\d{2}$/.test(cls))return;
+    // 3단계: 종결인 경우 → 해당 월에 재추가
     var mk=cls.slice(0,7);
     if(!J[mk])J[mk]={carryover:0,transactions:[],bizCosts:[],lifeCosts:[]};
     var txs=J[mk].transactions||(J[mk].transactions=[]);
-    var P='auto:'+c.id+':';
-    for(var i=txs.length-1;i>=0;i--){ if(String(txs[i].id).indexOf(P)===0)txs.splice(i,1); }
     var manual=txs.some(function(t){return t.contractNo===c.cn && t.type==='수수료' && String(t.id).indexOf('auto:')!==0;});
     if(manual)return;
     if(!(+c.fee))return;
