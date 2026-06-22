@@ -732,12 +732,17 @@ function syncLink(){
     var manual=txs.some(function(t){return t.contractNo===c.cn && t.type==='수수료' && String(t.id).indexOf('auto:')!==0;});
     if(manual)return;
     if(!(+c.fee))return;
-    var nm=c.client||'-';
-    var refName=(c.note||'').split(',').map(function(s){return s.trim();}).find(function(t){return t&&['외주','영업','잔여','중간지급','미지급'].indexOf(t)<0&&t.indexOf('외주:')!==0;})||'소개';
-    txs.push({id:P+'fee',label:nm+'(수수료)',contractNo:c.cn,person:nm,type:'수수료',amount:+c.fee,date:cls});
-    if(+c.vat>0) txs.push({id:P+'tax',label:nm+'(계산서)',contractNo:c.cn,person:nm,type:'계산서',amount:-(+c.fee),date:cls});
-    if(+c.ref>0) txs.push({id:P+'ref',label:nm+'(소개)',contractNo:c.cn,person:refName,type:'소개비',amount:-(+c.ref),date:cls});
-    if(+c.out>0) txs.push({id:P+'out',label:nm+'(외주)',contractNo:c.cn,person:'외주',type:'외주비',amount:-(+c.out),date:cls});
+    var parts=(c.client||'').split('/');
+    var nm=parts[0]||'-';                                    // 상호명 (label용)
+    var payer=c.mgr==='선임권'?(c.ins||'보험사'):(parts[1]||parts[0]||'-'); // 수수료 입금자: 선임권→보험사, 일반→계약자명
+    var noteParts=(c.note||'').split(',').map(function(s){return s.trim();});
+    var refName=noteParts.find(function(t){return t&&['외주','영업','잔여','중간지급','미지급'].indexOf(t)<0&&t.indexOf('외주:')!==0;})||'소개';
+    var outPart=noteParts.find(function(t){return t.indexOf('외주:')===0;});
+    var outName=outPart?outPart.slice(3):'김다정';           // note의 '외주:이름'에서 추출, 없으면 김다정
+    txs.push({id:P+'fee',label:nm+'(수수료)',contractNo:c.cn,person:payer,type:'수수료',amount:+c.fee,date:cls});
+    if(+c.vat>0) txs.push({id:P+'tax',label:nm+'(계산서)',contractNo:c.cn,person:payer,type:'계산서',amount:-(+c.fee),date:cls});
+    if(+c.ref>0) txs.push({id:P+'ref',label:nm+'(소개비)',contractNo:c.cn,person:refName,type:'소개비',amount:-(+c.ref),date:cls});
+    if(+c.out>0) txs.push({id:P+'out',label:nm+'(외주비)',contractNo:c.cn,person:outName,type:'외주비',amount:-(+c.out),date:cls});
   });
 }
 
