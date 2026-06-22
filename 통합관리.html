@@ -297,8 +297,14 @@ function renderPerf(){
         ${[['month','월별'],['quarter','분기별']].map(([v,l])=>`<button onclick="perfView='${v}';renderPerf()" style="background:${perfView===v?NAV:BG};color:${perfView===v?'#fff':MUTED};border-radius:7px;padding:4px 10px;font-size:11px;font-weight:${perfView===v?700:400}">${l}</button>`).join('')}
       </div>
     </div>
-    <div style="display:flex;gap:5px;margin-bottom:14px">
-      ${[['contract','계약금액'],['revenue','매출액']].map(([v,l])=>`<button onclick="chartMode='${v}';renderPerf()" style="background:${chartMode===v?GOLD:BG};color:${chartMode===v?NAV:MUTED};border-radius:7px;padding:4px 12px;font-size:11px;font-weight:${chartMode===v?700:500}">${l}</button>`).join('')}
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px">
+      <div style="display:flex;gap:5px">
+        ${[['contract','계약금액'],['revenue','매출액']].map(([v,l])=>`<button onclick="chartMode='${v}';renderPerf()" style="background:${chartMode===v?GOLD:BG};color:${chartMode===v?NAV:MUTED};border-radius:7px;padding:4px 12px;font-size:11px;font-weight:${chartMode===v?700:500}">${l}</button>`).join('')}
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <span style="color:${MUTED};font-size:10px">합계</span>
+        <span style="color:${chartMode==='contract'?NAV:'#059669'};font-weight:800;font-size:15px;margin-left:4px">${W((chartMode==='contract'?md:rd).reduce((a,v)=>a+v,0))}</span>
+      </div>
     </div>
     ${(()=>{
       const src=chartMode==='contract'?md:rd;
