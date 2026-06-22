@@ -227,7 +227,7 @@ function renderListBody(){
         <span class="badge" style="background:${sc.bg};color:${sc.tc}">${st}</span>
         ${partTag}
         <span class="badge" style="background:${sun?'#ede9fe':'#fee2e2'};color:${sun?'#7c3aed':'#dc2626'}">${sun?'선임권':'독립'}</span>
-        <span style="color:${MUTED};font-size:10px">${esc(c.cn)}</span>
+        <span style="color:${TEXT};font-size:10px;font-weight:600">${esc(c.cn)}</span>
         ${c.region?`<span style="color:${GOLD};font-size:10px;font-weight:600">${esc(c.region)}</span>`:''}
         ${st==='검토중'&&dd!=null?`<span class="badge" style="background:#fef3c7;color:#a16207;margin-left:auto">제출 D+${dd}</span>`:st==='진행중'&&dacc!=null?`<span class="badge" style="background:#dbeafe;color:#2563eb;margin-left:auto">사고 D+${dacc}</span>`:st==='종결'&&between(c.acc,c.cls)!=null?`<span class="badge" style="background:#dcfce7;color:#16a34a;margin-left:auto">처리 ${between(c.acc,c.cls)}일</span>`:''}
       </div>
@@ -363,7 +363,7 @@ function refBreakdown(){
       const cs=[...v.cases].sort((a,b)=>b.net-a.net);
       h+=`<div style="background:#f8f9fb;border-radius:8px;padding:4px 10px;margin:3px 0 7px">${cs.map(c=>`
         <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px;border-bottom:1px dashed ${BORD}">
-          <span style="color:${TEXT};min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.client)} <span style="color:${MUTED};font-size:10px">${esc(c.cn)}</span></span>
+          <span style="color:${TEXT};min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.client)} <span style="color:${TEXT};font-size:10px;font-weight:600">${esc(c.cn)}</span></span>
           <span style="color:#16a34a;font-weight:600;flex-shrink:0;margin-left:8px">${W(c.net)}</span>
         </div>`).join('')}</div>`;
     }
@@ -385,7 +385,7 @@ function insBreakdown(){
       const cs=[...v.cases].sort((a,b)=>b.net-a.net);
       h+=`<div style="background:#f8f9fb;border-radius:8px;padding:4px 10px;margin:3px 0 7px">${cs.map(c=>`
         <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px;border-bottom:1px dashed ${BORD}">
-          <span style="color:${TEXT};min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.client)} <span style="color:${MUTED};font-size:10px">${esc(c.cn)}</span></span>
+          <span style="color:${TEXT};min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.client)} <span style="color:${TEXT};font-size:10px;font-weight:600">${esc(c.cn)}</span></span>
           <span style="color:#16a34a;font-weight:600;flex-shrink:0;margin-left:8px">${W(c.net)}</span>
         </div>`).join('')}</div>`;
     }
@@ -421,7 +421,7 @@ function monthlyBreakdown(){
         <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed ${BORD}">
           <div style="min-width:0;overflow:hidden">
             <div style="color:${TEXT};font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.client)}</div>
-            <div style="color:${MUTED};font-size:10px;margin-top:2px">${esc(c.cn)} · ${stBadge(c)}</div>
+            <div style="color:${MUTED};font-size:10px;margin-top:2px"><span style="color:${TEXT};font-weight:600">${esc(c.cn)}</span> · ${stBadge(c)}</div>
           </div>
           <span style="color:#16a34a;font-weight:600;font-size:12px;flex-shrink:0;margin-left:8px">${W(c._net)}</span>
         </div>`).join('')}
@@ -453,7 +453,7 @@ function revenueBreakdown(){
         <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed ${BORD}">
           <div style="min-width:0;overflow:hidden">
             <div style="color:${TEXT};font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.client)}</div>
-            <div style="color:${MUTED};font-size:10px;margin-top:2px">${esc(c.cn)} · 종결 ${esc(c.cls)}</div>
+            <div style="color:${MUTED};font-size:10px;margin-top:2px"><span style="color:${TEXT};font-weight:600">${esc(c.cn)}</span> · 종결 ${esc(c.cls)}</div>
           </div>
           <span style="color:#16a34a;font-weight:600;font-size:12px;flex-shrink:0;margin-left:8px">${W(net(c))}</span>
         </div>`).join('')}
@@ -480,7 +480,7 @@ function renderTodo(){
       <div style="color:${MUTED};font-size:11px;margin-bottom:8px">${desc}</div>
       ${arr.map(c=>{const dd=dsince(c.sub);const dacc=dsince(c.acc);return`<div class="card" onclick='openCase("${c.id}")' style="cursor:pointer;padding:9px 12px;display:flex;justify-content:space-between;align-items:center">
         <div style="min-width:0"><div style="color:${TEXT};font-weight:600;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.client)}</div>
-        <div style="color:${MUTED};font-size:10px">${esc(c.cn)} · ${esc(c.region)} · ${esc(c.firm||c.ins)}${follow&&c.mgr?' · '+esc(c.mgr):''}</div></div>
+        <div style="color:${MUTED};font-size:10px"><span style="color:${TEXT};font-weight:600">${esc(c.cn)}</span> · ${esc(c.region)} · ${esc(c.firm||c.ins)}${follow&&c.mgr?' · '+esc(c.mgr):''}</div></div>
         <div style="flex-shrink:0;margin-left:8px;display:flex;align-items:center;gap:6px">
           ${follow&&dd!=null?`<span class="badge" style="background:${color}22;color:${color}">제출 D+${dd}</span>`:''}
           ${showAcc&&dacc!=null?`<span class="badge" style="background:${color}22;color:${color}">사고 D+${dacc}</span>`:''}
