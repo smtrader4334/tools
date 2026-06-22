@@ -68,9 +68,10 @@ const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').r
 // ── 상태/타입 판정 ──
 function stOf(c){
   const v=(c.cls||'').toString().trim();
-  if(!v||v==='-')return'진행중';
-  if(/\d{4}-\d{2}-\d{2}/.test(v))return'종결';
-  return'검토중';
+  if(/\\d{4}-\\d{2}-\\d{2}/.test(v))return'종결';
+  if(v)return'검토중';
+  if((c.sub||'').toString().trim())return'검토중';
+  return'진행중';
 }
 const ST={'진행중':{bg:'#dbeafe',tc:'#2563eb'},'검토중':{bg:'#fef9c3',tc:'#a16207'},'종결':{bg:'#dcfce7',tc:'#16a34a'}};
 const isSun=c=>(c.cn||'').toUpperCase().includes('S'); // 선임권
@@ -457,7 +458,7 @@ function openCase(id){
         <input class="inp" id="f_objetc" value="${esc(EF.objEtc)}" placeholder="기타 직접입력" oninput="EF.objEtc=this.value" style="margin-top:7px;font-size:13px"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 10px">
         <div class="fg"><label class="lbl">사고일</label><input class="inp" id="f_acc" type="date" value="${EF.acc}"></div>
-        <div class="fg"><label class="lbl">제출일</label><input class="inp" id="f_sub" type="date" value="${EF.sub}"></div>
+        <div class="fg"><label class="lbl">제출일</label><input class="inp" id="f_sub" type="date" value="${EF.sub}" onchange="efSub(this.value)"></div>
       </div>
       <div class="fg"><label class="lbl">종결일</label><input class="inp" id="f_cls" type="date" value="${EF.cls}" onchange="efCls(this.value)"><div style="color:${MUTED};font-size:9px;margin-top:2px">날짜 입력 시 자동 종결 · 비우면 진행중</div></div>
       <div style="height:1px;background:${BORD};margin:6px 0 12px"></div>
@@ -506,7 +507,8 @@ function renderFirm(){
   document.getElementById('firmsel').innerHTML=h;
 }
 function efFirm(v){if(v==='직접입력'){EF.firmMode='custom';if(FIRMS.includes(EF.firm))EF.firm='';}else{EF.firmMode='preset';EF.firm=v;}renderFirm();}
-function efStatus(v){EF.st=v;const d=document.getElementById('f_cls');if(v==='종결'){if(!EF.cls){const t=new Date().toISOString().slice(0,10);EF.cls=t;if(d)d.value=t;}}else{EF.cls='';if(d)d.value='';}}
+function efStatus(v){EF.st=v;const d=document.getElementById('f_cls'),su=document.getElementById('f_sub');const t=new Date().toISOString().slice(0,10);if(v==='종결'){if(!EF.cls){EF.cls=t;if(d)d.value=t;}}else if(v==='검토중'){EF.cls='';if(d)d.value='';if(!EF.sub){EF.sub=t;if(su)su.value=t;}}else{EF.cls='';if(d)d.value='';EF.sub='';if(su)su.value='';}}
+function efSub(v){EF.sub=v;const s2=document.getElementById('f_st');if(EF.cls&&/\\d{4}-\\d{2}-\\d{2}/.test(EF.cls))return;if(v){EF.st='검토중';if(s2)s2.value='검토중';}else{EF.st='진행중';if(s2)s2.value='진행중';}}
 function efCls(v){EF.cls=v;const s=document.getElementById('f_st');if(v){EF.st='종결';if(s)s.value='종결';}else{if(EF.st==='종결'){EF.st='진행중';if(s)s.value='진행중';}}}
 function renderVatChips(){
   const fee=+EF.fee||0, calc=Math.round(fee*0.1);
