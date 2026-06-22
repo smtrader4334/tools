@@ -1102,7 +1102,7 @@ function J_openModal(s,item){
       <div>
         <label style="color:${MUTED};font-size:12px;display:block;margin-bottom:4px">금액 (원, 양수 입력)</label>
         <div style="position:relative">
-          <input name="amount" type="number" class="inp" value="${Math.abs(iv.amount||0)||''}" placeholder="0" style="padding-right:28px" required>
+          <input name="amount" type="text" inputmode="numeric" class="inp" value="${Math.abs(iv.amount||0)?Math.abs(iv.amount).toLocaleString():''}" placeholder="0" style="padding-right:28px" required oninput="this.value=this.value.replace(/[^0-9]/g,'').replace(/\\B(?=(\\d{3})+(?!\\d))/g,',')">
           <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:${MUTED};font-size:12px">원</span>
         </div>
       </div>
@@ -1113,7 +1113,7 @@ function J_openModal(s,item){
     e.preventDefault();
     const fd=new FormData(this);
     const label=fd.get('label')||'';
-    const rawAmt=parseFloat(fd.get('amount')||0);
+    const rawAmt=parseFloat((fd.get('amount')||'0').toString().replace(/,/g,''));
     const person=fd.get('person')||'';
     const contractNo=fd.get('contractNo')||'';
     const type=fd.get('type')||'수수료';
