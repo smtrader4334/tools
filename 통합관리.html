@@ -688,18 +688,26 @@ function render(){
   }
 }
 function renderAppbar(){
-  var on=(typeof gdtok!=='undefined'&&gdtok)?'#16a34a':'#64748b';
+  var on=(typeof gdtok!=='undefined'&&gdtok)?'#22c55e':'#64748b';
   var ab=document.getElementById('appbar');
+  ab.style.display='block';
   ab.innerHTML=''
+   +'<div style="display:flex;align-items:center;gap:6px">'
    +'<div style="flex:1;display:flex;gap:5px">'
    +'<button onclick="setApp(\'cases\')" style="flex:1;border:none;border-radius:9px;padding:9px 0;font-size:14px;font-weight:800;cursor:pointer;background:'+(APP==='cases'?GOLD:'rgba(255,255,255,.15)')+';color:'+(APP==='cases'?NAV:'#fff')+'">📋 계약관리</button>'
    +'<button onclick="setApp(\'jango\')" style="flex:1;border:none;border-radius:9px;padding:9px 0;font-size:14px;font-weight:800;cursor:pointer;background:'+(APP==='jango'?GOLD:'rgba(255,255,255,.15)')+';color:'+(APP==='jango'?NAV:'#fff')+'">💰 잔고관리</button>'
    +'</div>'
-   +'<span id="gdot" style="width:8px;height:8px;border-radius:50%;background:'+on+';flex-shrink:0"></span>'
+   +'<span style="width:8px;height:8px;border-radius:50%;background:'+on+';flex-shrink:0"></span>'
    +'<button onclick="gdAuth(\'load\')" style="border:none;border-radius:8px;padding:7px 9px;font-size:13px;cursor:pointer;background:#fff;color:'+NAV+'">📥</button>'
-   +'<button onclick="gdAuth(\'save\')" style="border:none;border-radius:8px;padding:7px 9px;font-size:13px;cursor:pointer;background:'+GOLD+';color:'+NAV+'">📤</button>';
+   +'<button onclick="gdAuth(\'save\')" style="border:none;border-radius:8px;padding:7px 9px;font-size:13px;cursor:pointer;background:'+GOLD+';color:'+NAV+'">📤</button>'
+   +'</div>'
+   +'<div id="gdst" style="font-size:11px;margin-top:5px;color:'+gdLastCol+'">'+(gdLastMsg||'☁ 드라이브 — 📤 저장으로 로그인')+'</div>';
 }
 function setApp(a){ APP=a; try{closeModal();}catch(e){} render(); }
+
+// 드라이브 상태 문구 유지(재렌더 시에도 보존) + 앱바에 표시
+var gdLastMsg='', gdLastCol='#94a3b8';
+function gdSt(t,col){ gdLastMsg=t; gdLastCol=col||'#94a3b8'; var e=document.getElementById('gdst'); if(e){e.textContent=t;e.style.color=gdLastCol;} }
 
 // ── 계약 종결 → 잔고 자동기록 (계산서면 수수료+계산서 쌍, 현금이면 수수료만) ──
 function syncLink(){
