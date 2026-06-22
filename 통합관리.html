@@ -334,8 +334,8 @@ function renderPerf(){
         <div style="color:${MUTED};font-size:10px">${l}</div><div style="color:${cl};font-weight:800;font-size:13px;margin-top:3px">${v}</div></div>`).join('')}
   </div>
   <div class="card" style="padding:13px 14px">
-    <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
-      ${[['monthly','월별 계약건'],['revenue','월별 매출액'],['ins','보험사별 순위'],['ref','손사소개 순위']].map(([v,l])=>`<button onclick="breakView='${v}';renderPerf()" style="background:${breakView===v?NAV:BG};color:${breakView===v?'#fff':MUTED};border-radius:18px;padding:5px 12px;font-size:12px;font-weight:${breakView===v?700:500}">${l}</button>`).join('')}
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px">
+      ${[['monthly','월별 계약건'],['revenue','월별 매출액'],['ins','보험사별 순위'],['ref','손사소개 순위']].map(([v,l])=>`<button onclick="breakView='${v}';renderPerf()" style="flex-shrink:0;white-space:nowrap;background:${breakView===v?NAV:BG};color:${breakView===v?'#fff':MUTED};border-radius:18px;padding:5px 12px;font-size:12px;font-weight:${breakView===v?700:500}">${l}</button>`).join('')}
     </div>
     ${breakView==='ins'?insBreakdown():breakView==='ref'?refBreakdown():breakView==='revenue'?revenueBreakdown():monthlyBreakdown()}
   </div>`;
