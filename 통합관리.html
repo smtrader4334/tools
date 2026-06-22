@@ -266,9 +266,9 @@ function renderPerf(){
   const md=Array(12).fill(0); const mset=Array.from({length:12},()=>new Set());
   reps.forEach(c=>{const mm=parseInt(String(c.cn).substring(2,4));if(mm>=1&&mm<=12){md[mm-1]+=c._net;mset[mm-1].add(gkey(c));}});
   const mc=mset.map(s=>s.size);
-  // 월별 매출액: 종결일(cls) 월 기준, 해당 월 종결건 net(소개·외주 차감 수수료) 합산
+  // 월별 매출액: 종결일(cls) 월 기준, 해당 연도 종결건 net(소개·외주 차감 수수료) 합산
   const rd=Array(12).fill(0); const rset=Array.from({length:12},()=>new Set());
-  D.cases.filter(c=>inYear(c)&&stOf(c)==='종결'&&isD(c.cls)).forEach(c=>{
+  D.cases.filter(c=>stOf(c)==='종결'&&isD(c.cls)&&new Date(c.cls).getFullYear()===year).forEach(c=>{
     const mm=new Date(c.cls).getMonth();
     rd[mm]+=net(c); rset[mm].add(gkey(c));
   });
@@ -424,7 +424,7 @@ function toggleMonth(m){monthOpen=monthOpen===m?null:m;renderPerf();}
 function revenueBreakdown(){
   // 종결일(cls) 월 기준으로 종결건 그룹화, net(소개·외주 차감 수수료)
   const groups=Array.from({length:12},()=>[]);
-  D.cases.filter(c=>inYear(c)&&stOf(c)==='종결'&&isD(c.cls)).forEach(c=>{
+  D.cases.filter(c=>stOf(c)==='종결'&&isD(c.cls)&&new Date(c.cls).getFullYear()===year).forEach(c=>{
     groups[new Date(c.cls).getMonth()].push(c);
   });
   const hasAny=groups.some(g=>g.length);
