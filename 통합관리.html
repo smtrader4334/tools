@@ -378,7 +378,7 @@ function renderTodo(){
   const noPolice=open.filter(c=>!isSun(c)&&(c.police||'').trim().toUpperCase()==='X');
   const noDraw=open.filter(c=>!isSun(c)&&((c.draw||'').trim().toUpperCase()==='X'||!(c.draw||'').trim()));
   const review=D.cases.filter(c=>stOf(c)==='검토중');
-  const block=(title,arr,color,desc,follow)=>{
+  const block=(title,arr,color,desc,follow,showAcc)=>{
     if(!arr.length)return'';
     return`<div style="margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px">
@@ -386,20 +386,21 @@ function renderTodo(){
         <span class="badge" style="background:${color}22;color:${color}">${arr.length}건</span>
       </div>
       <div style="color:${MUTED};font-size:11px;margin-bottom:8px">${desc}</div>
-      ${arr.map(c=>{const dd=dsince(c.sub);return`<div class="card" onclick='openCase("${c.id}")' style="cursor:pointer;padding:9px 12px;display:flex;justify-content:space-between;align-items:center">
+      ${arr.map(c=>{const dd=dsince(c.sub);const dacc=dsince(c.acc);return`<div class="card" onclick='openCase("${c.id}")' style="cursor:pointer;padding:9px 12px;display:flex;justify-content:space-between;align-items:center">
         <div style="min-width:0"><div style="color:${TEXT};font-weight:600;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.client)}</div>
         <div style="color:${MUTED};font-size:10px">${esc(c.cn)} · ${esc(c.region)} · ${esc(c.firm||c.ins)}${follow&&c.mgr?' · '+esc(c.mgr):''}</div></div>
         <div style="flex-shrink:0;margin-left:8px;display:flex;align-items:center;gap:6px">
           ${follow&&dd!=null?`<span class="badge" style="background:${color}22;color:${color}">제출 D+${dd}</span>`:''}
+          ${showAcc&&dacc!=null?`<span class="badge" style="background:${color}22;color:${color}">사고 D+${dacc}</span>`:''}
           <span style="color:${color};font-size:18px">›</span>
         </div>
       </div>`;}).join('')}
     </div>`;
   };
-  let html=block('🔔 보험사 검토중 — 팔로업',review,'#a16207','자료 제출 후 승인 대기. 진행 상황 확인이 필요합니다.',true)
-    +block('🚒 소방 정보공개 미청구',noFire,'#dc2626','진행 중인데 소방서 정보공개 청구가 안 된 건입니다.')
-    +block('👮 경찰 정보공개 미청구',noPolice,'#ea580c','진행 중인데 경찰서 정보공개 청구가 안 된 건입니다.')
-    +block('📐 도면 미확보',noDraw,'#7c3aed','실측·관리실 도면 등 자료가 아직 없는 건입니다.');
+  let html=block('🔔 보험사 검토중 — 팔로업',review,'#a16207','자료 제출 후 승인 대기. 진행 상황 확인이 필요합니다.',true,false)
+    +block('🚒 소방 정보공개 미청구',noFire,'#dc2626','진행 중인데 소방서 정보공개 청구가 안 된 건입니다.',false,true)
+    +block('👮 경찰 정보공개 미청구',noPolice,'#ea580c','진행 중인데 경찰서 정보공개 청구가 안 된 건입니다.',false,true)
+    +block('📐 도면 미확보',noDraw,'#7c3aed','실측·관리실 도면 등 자료가 아직 없는 건입니다.',false,true);
   if(!html)html='<div style="text-align:center;padding:50px;color:'+MUTED+'">🎉 처리할 할 일이 없습니다</div>';
   document.getElementById('content').innerHTML=html;
 }
