@@ -732,7 +732,7 @@ function syncLink(){
     var manual=txs.some(function(t){return t.contractNo===c.cn && t.type==='수수료' && String(t.id).indexOf('auto:')!==0;});
     if(manual)return;
     if(!(+c.fee))return;
-    var nm=(c.client||'').split('/')[0]||c.client||'-';
+    var nm=c.client||'-';
     var refName=(c.note||'').split(',').map(function(s){return s.trim();}).find(function(t){return t&&['외주','영업','잔여','중간지급','미지급'].indexOf(t)<0&&t.indexOf('외주:')!==0;})||'소개';
     txs.push({id:P+'fee',label:nm+'(수수료)',contractNo:c.cn,person:nm,type:'수수료',amount:+c.fee,date:cls});
     if(+c.vat>0) txs.push({id:P+'tax',label:nm+'(계산서)',contractNo:c.cn,person:nm,type:'계산서',amount:-(+c.fee),date:cls});
