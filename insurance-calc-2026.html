@@ -995,7 +995,7 @@ function BuildingCalc({onArea}){
             {multiMode?(
               <div>
                 <div style={{fontSize:10.5,color:MU,marginBottom:8,lineHeight:1.6,background:"#F8FAFC",padding:"8px 10px",borderRadius:6}}>
-                  용도·구조·급수·면적·건축시기가 다른 부분을 행으로 추가하면 <strong style={{color:N}}>면적가중 평균감가율</strong>로 보험가액을 산출합니다 (본문 291조).<br/>
+                  용도·구조·급수·면적·건축시기가 다른 부분을 행으로 추가하면 <strong style={{color:N}}>면적가중 평균감가율</strong>로 보험가액을 산출합니다.<br/>
                   <span style={{color:"#9A3412"}}>※ 면적 비중 20% 이하인 부분은 자동 무시됩니다.</span>
                 </div>
                 {rows.map((r,i)=>{
@@ -1068,7 +1068,7 @@ function BuildingCalc({onArea}){
                 )}
 
                 <div style={{fontSize:10,color:MU,marginTop:8,lineHeight:1.5}}>
-                  ※ 한쪽이 간이목조·컨테이너·간이철재면 무시 규정 없이 각각 적용(본문 291조 단서)
+                  ※ 한쪽이 간이목조·컨테이너·간이철재면 무시 규정 없이 각각 적용
                 </div>
               </div>
             ):(
@@ -1265,7 +1265,7 @@ function BuildingCalc({onArea}){
                   </div>
 
                   <div style={{marginTop:10,fontSize:10,color:"#bbb",lineHeight:1.7}}>
-                    ※ 본문 291조 · 가중치=총감가율×면적<br/>
+                    ※ 가중치=총감가율×면적<br/>
                     ※ 평균감가율=가중치합÷면적합 · 20%이하 무시<br/>
                     ※ 재조달가액=건축공사비 + 부대설비 · 부대설비도 평균감가율 적용
                   </div>
