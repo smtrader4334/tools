@@ -551,7 +551,7 @@ function FacilityCalc({bldgArea}){
 
           <label style={s.lb}>예시 단가 선택 <span style={{fontSize:10,color:"#aaa",fontWeight:400}}>(평당 기준 · 선택 시 자동입력·수정가능)</span></label>
           <select style={s.sl} value={priceSel} onChange={e=>onPriceSel(e.target.value)}>
-            <option value="">── 직접 입력 ──</option>
+            <option value="">── 예시 선택 ──</option>
             {FAC_PRICE.map(p=>{
               const py=fmt(p/10000), m2=fmt(Math.round(p/PYUNG/10000));
               return <option key={p} value={p}>{unitMode==="m2"?`㎡당 ${m2}만 (평당 ${py}만)`:`평당 ${py}만 (㎡당 ${m2}만)`}</option>;
@@ -559,7 +559,7 @@ function FacilityCalc({bldgArea}){
           </select>
 
           <label style={s.lb}>{unitMode==="m2"?"㎡당":"평당"} 단가 (원)</label>
-          <input style={s.ip} type="text" inputMode="numeric" placeholder={unitMode==="m2"?"예: 605,000":"예: 2,000,000"} value={unitPrice?fmt(unitPrice):""} onChange={e=>{const raw=e.target.value.replace(/[^0-9]/g,"");setUnitPrice(raw);setPriceSel("");}}/>
+          <input style={s.ip} type="text" inputMode="numeric" placeholder={unitMode==="m2"?"예: 605,000 (직접입력 가능)":"예: 2,000,000 (직접입력 가능)"} value={unitPrice?fmt(unitPrice):""} onChange={e=>{const raw=e.target.value.replace(/[^0-9]/g,"");setUnitPrice(raw);setPriceSel("");}}/>
           {unitPrice&&parseFloat(unitPrice)>0&&(
             <div style={{fontSize:11,color:B,fontWeight:700,marginTop:4,background:"#F0F4FF",padding:"5px 10px",borderRadius:5}}>
               {unitMode==="m2"
