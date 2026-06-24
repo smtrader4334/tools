@@ -891,26 +891,23 @@ function BuildingCalc({onArea}){
 
   const buildMultiText=()=>{
     if(!multiCalc||multiCalc.error)return"";
-    const lines=[`[건물 보험가액 산출 - 복합구조]`,``,`■ 부분별 내역`];
+    const lines=[`[건물 보험가액 산출 - 복합구조]`,`사고년월: ${aYear}년 ${aMonth}월`,``,`■ 부분별 내역`];
     multiCalc.detail.forEach((d,i)=>{
       if(d.incomplete)return;
       lines.push(`[부분${i+1}] ${d.btLabel} · ${d.dep?d.dep.label:""}${d.ignored?" (20%↓ 무시)":""}`);
-      lines.push(`  면적 ${d.A}㎡ · 단가 ${fmt(d.up)}원/㎡ · 재조달 ${fmt(d.rowTc)}원`);
-      lines.push(`  경년감가율 ${d.dep?(d.dep.rate*100).toFixed(2):"-"}%/년 · 경과 ${(d.em/12).toFixed(1)}년 · 총감가율 ${(d.totDep*100).toFixed(2)}%`);
-      if(!d.ignored)lines.push(`  가중치 = ${(d.totDep*100).toFixed(2)} × ${d.A} = ${fmt(d.weight)}`);
+      lines.push(` ${d.A}㎡ × ${fmt(d.up)}원 = ${fmt(d.rowTc)}원`);
+      lines.push(` 감가 ${(d.totDep*100).toFixed(2)}% (경과 ${(d.em/12).toFixed(1)}년) · 가중치 ${fmt(d.weight)}`);
     });
-    lines.push(``,`■ 면적가중 평균감가율`);
-    lines.push(`사고년월: ${aYear}년 ${aMonth}월`);
-    lines.push(`유효 면적합계: ${fmt(multiCalc.usedArea)} ㎡ · 가중치 합계: ${fmt(multiCalc.usedWeight)}`);
-    lines.push(`평균감가율 = ${fmt(multiCalc.usedWeight)} ÷ ${fmt(multiCalc.usedArea)} = ${(multiCalc.avgDep*100).toFixed(2)}%`);
-    lines.push(`잔가율: ${(multiCalc.res*100).toFixed(2)}%${multiCalc.cap?" (최저30%)":""}`);
-    lines.push(``,`■ 보험가액 산출`);
-    lines.push(`건축공사비: ${fmt(multiCalc.cc)} 원`);
-    if(multiCalc.ec>0)lines.push(`부대설비: ${fmt(multiCalc.ec)} 원`);
-    lines.push(`▶ 재조달가액: ${fmt(multiCalc.tc)} 원`);
-    lines.push(`▶ 감가상각액: ${fmt(multiCalc.tc*(1-multiCalc.res))} 원`);
-    lines.push(`▶ 건물 보험가액: ${fmt(multiCalc.iv)} 원`);
-    lines.push(`▶ 보험가액의 20%: ${fmt(multiCalc.c2)} 원`);
+    lines.push(``,`■ 평균감가율`);
+    lines.push(`${fmt(multiCalc.usedWeight)} ÷ ${fmt(multiCalc.usedArea)}㎡ = ${(multiCalc.avgDep*100).toFixed(2)}%`);
+    lines.push(`잔가율 ${(multiCalc.res*100).toFixed(2)}%${multiCalc.cap?" (최저30%)":""}`);
+    lines.push(``,`■ 보험가액`);
+    lines.push(`건축공사비 ${fmt(multiCalc.cc)}원`);
+    if(multiCalc.ec>0)lines.push(`부대설비 ${fmt(multiCalc.ec)}원`);
+    lines.push(`▶ 재조달가액 ${fmt(multiCalc.tc)}원`);
+    lines.push(`▶ 감가상각액 ${fmt(multiCalc.tc*(1-multiCalc.res))}원`);
+    lines.push(`▶ 건물 보험가액 ${fmt(multiCalc.iv)}원`);
+    lines.push(`▶ 보험가액의 20% ${fmt(multiCalc.c2)}원`);
     return lines.join("\n");
   };
 
