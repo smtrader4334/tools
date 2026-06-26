@@ -1060,23 +1060,23 @@ function runCalc(){
     var bWall=sv.balcony_wall||'수성페인트';
     // 천장 마감
     if(bCeil==='수성페인트'){
-      c5.push(it('바탕만들기','콘크리트면/천장','㎡',balcArea,0,2703,81,basisRooms(balcs,'발코니천장'),fxRooms(balcs)));
-      c5.push(it('수성페인트','천장 붓칠2회','㎡',balcArea,1797,15010,300,basisRooms(balcs,'발코니천장'),fxRooms(balcs)));
+      c5.push(it('바탕만들기','콘크리트면/천장','㎡',balcArea,0,2703,81,basisRooms(balcs,''),fxRooms(balcs)));
+      c5.push(it('수성페인트','천장 붓칠2회','㎡',balcArea,1797,15010,300,basisRooms(balcs,''),fxRooms(balcs)));
     } else if(bCeil==='무늬코트'){
-      c5.push(it('바탕만들기','콘크리트면/천장','㎡',balcArea,0,2802,84,basisRooms(balcs,'발코니천장'),fxRooms(balcs)));
-      c5.push(it('무늬코트','천장 뿜칠2회','㎡',balcArea,1567,19945,398,basisRooms(balcs,'발코니천장'),fxRooms(balcs)));
+      c5.push(it('바탕만들기','콘크리트면/천장','㎡',balcArea,0,2802,84,basisRooms(balcs,''),fxRooms(balcs)));
+      c5.push(it('무늬코트','천장 뿜칠2회','㎡',balcArea,1567,19945,398,basisRooms(balcs,''),fxRooms(balcs)));
     } else if(bCeil==='타일'){
-      balcTileJobs.push({label:'발코니천장',area:balcArea,basis:basisRooms(balcs,'발코니천장'),fx:fxRooms(balcs)});
+      balcTileJobs.push({label:'발코니천장',area:balcArea,basis:basisRooms(balcs,''),fx:fxRooms(balcs)});
     }
     // 벽체 마감
     if(bWall==='수성페인트'){
-      c5.push(it('바탕만들기','콘크리트면/벽체','㎡',balcWallArea,0,2703,81,basisPerim(balcs,'발코니벽체',2.3),fxPerim(balcs,2.3)));
-      c5.push(it('수성페인트','벽체 붓칠2회','㎡',balcWallArea,1797,12508,250,basisPerim(balcs,'발코니벽체',2.3),fxPerim(balcs,2.3)));
+      c5.push(it('바탕만들기','콘크리트면/벽체','㎡',balcWallArea,0,2703,81,basisPerim(balcs,'',2.3),fxPerim(balcs,2.3)));
+      c5.push(it('수성페인트','벽체 붓칠2회','㎡',balcWallArea,1797,12508,250,basisPerim(balcs,'',2.3),fxPerim(balcs,2.3)));
     } else if(bWall==='무늬코트'){
-      c5.push(it('바탕만들기','콘크리트면/벽체','㎡',balcWallArea,0,2802,84,basisPerim(balcs,'발코니벽체',2.3),fxPerim(balcs,2.3)));
-      c5.push(it('무늬코트','벽체 뿜칠2회','㎡',balcWallArea,1567,16621,332,basisPerim(balcs,'발코니벽체',2.3),fxPerim(balcs,2.3)));
+      c5.push(it('바탕만들기','콘크리트면/벽체','㎡',balcWallArea,0,2802,84,basisPerim(balcs,'',2.3),fxPerim(balcs,2.3)));
+      c5.push(it('무늬코트','벽체 뿜칠2회','㎡',balcWallArea,1567,16621,332,basisPerim(balcs,'',2.3),fxPerim(balcs,2.3)));
     } else if(bWall==='타일'){
-      balcTileJobs.push({label:'발코니벽체',area:balcWallArea,basis:basisPerim(balcs,'발코니벽체',2.3),fx:fxPerim(balcs,2.3)});
+      balcTileJobs.push({label:'발코니벽체',area:balcWallArea,basis:basisPerim(balcs,'',2.3),fx:fxPerim(balcs,2.3)});
     }
   }
   if(c5.length)cats.push({no:5,name:'도장공사',rows:c5});
