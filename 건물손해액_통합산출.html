@@ -889,7 +889,7 @@ function runCalc(){
   var baseboard = Math.max(0, moldingTotal - baseDeduct);
   var wallArea = lifePerim*2.3;
   // 벽지도배바름: 창고·거실 제외 방 그룹식 + 몰딩길이*2.3
-  var WALL_EXCL=['창고','거실'];
+  var WALL_EXCL=['창고','거실','주방'];
   var wallRooms=lives.filter(function(r){return !WALL_EXCL.some(function(k){return r.name.indexOf(k)>=0;});});
   var wallRoomPerim=wallRooms.reduce(function(s,r){return s+PF(r.w)+PF(r.d);},0);
   var wallPaperArea=wallRoomPerim*2*2.3+moldingTotal*2.3;
