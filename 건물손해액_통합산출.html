@@ -182,35 +182,19 @@ function downloadState(ext){
 }
 function openShare(){ openShareModal(); }
 function tryNativeShare(){
-  var json=buildStateJSON();
+  // 파일 자동 다운로드 후 카톡 첨부 안내
+  downloadState('txt');
   var msg=document.getElementById('share-msg');
-  function setMsg(t,c){ if(msg){msg.textContent=t;msg.style.color=c||'#16a34a';} }
-  // text/plain .txt 로 공유 (Android Chrome은 application/json 미지원)
-  var txtName=shareFileName('txt');
-  if(navigator.canShare){
-    try{
-      var file=new File([json],txtName,{type:'text/plain'});
-      if(navigator.canShare({files:[file]})){
-        navigator.share({files:[file],title:'건물손해액 산출 데이터'})
-          .then(function(){setMsg('✓ 공유 완료!');})
-          .catch(function(e){if(e.name!=='AbortError')setMsg('공유 실패 → .txt 파일 저장 후 카톡으로 보내세요','#dc2626');});
-        return;
-      }
-    }catch(e){}
+  if(msg){
+    msg.style.color='#2563eb';
+    msg.innerHTML='✅ 파일이 저장됐습니다!<br>카카오톡 → <b>+</b> → <b>파일</b> 에서 선택 후 전송하세요.';
   }
-  if(navigator.share){
-    navigator.share({title:'건물손해액 데이터',text:json})
-      .then(function(){setMsg('✓ 공유 완료!');})
-      .catch(function(e){if(e.name!=='AbortError')setMsg('공유 실패 → 파일 저장 후 카톡으로 보내세요','#dc2626');});
-    return;
-  }
-  setMsg('이 브라우저는 바로공유를 지원하지 않습니다. .txt 저장 후 카톡으로 보내세요.','#dc2626');
 }
 function openShareModal(){
   var json=buildStateJSON();
   var supportsShare=!!(navigator.share||navigator.canShare);
   var shareBtn=supportsShare
-    ? '<button onclick="tryNativeShare()" style="width:100%;background:#f59e0b;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px">📲 카톡 바로 공유 (파일)</button>'
+    ? '<button onclick="tryNativeShare()" style="width:100%;background:#f59e0b;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px">📲 파일 저장 → 카톡 전송</button>'
     : '';
   var html='<div style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeAppModal()">'+
     '<div style="background:#fff;border-radius:12px;max-width:480px;width:100%;max-height:85vh;overflow:auto;padding:18px">'+
