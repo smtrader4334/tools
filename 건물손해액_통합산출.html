@@ -7,10 +7,10 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Malgun Gothic',sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;}
-header{background:#1e293b;color:white;padding:12px 16px;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;}
+header{background:#1e293b;color:white;padding:10px 16px;position:sticky;top:0;z-index:100;display:flex;flex-direction:column;gap:8px;}
 header h1{font-size:15px;font-weight:700;}
 header p{font-size:11px;color:#94a3b8;margin-top:2px;}
-.tabs{display:flex;overflow-x:auto;background:white;border-bottom:1px solid #e2e8f0;position:sticky;top:56px;z-index:99;}
+.tabs{display:flex;overflow-x:auto;background:white;border-bottom:1px solid #e2e8f0;position:sticky;z-index:99;}
 .tab{padding:10px 14px;font-size:12px;font-weight:500;white-space:nowrap;border-bottom:2px solid transparent;color:#64748b;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;border-bottom:2px solid transparent;}
 .tab.active{border-bottom-color:#3b82f6;color:#2563eb;}
 .content{max-width:560px;margin:0 auto;padding:12px;}
@@ -84,10 +84,10 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 <body>
 <header>
   <div><h1>&#128293; 화재손해 건물손해액 산출</h1><p>현장정보 입력 &#8594; 산출결과 탭에서 즉시 확인</p></div>
-  <div style="display:flex;gap:6px;flex-wrap:wrap">
-    <button onclick="openShare()" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">&#128228; 공유</button>
-    <button onclick="openLoad()" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">&#128229; 불러오기</button>
-    <button onclick="resetAll()" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">&#128260; 초기화</button>
+  <div style="display:flex;gap:6px;flex-wrap:nowrap;">
+    <button onclick="openShare()" style="flex:1;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:7px 0;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">&#128228; 공유</button>
+    <button onclick="openLoad()" style="flex:1;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:7px 0;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">&#128229; 불러오기</button>
+    <button onclick="resetAll()" style="flex:1;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:7px 0;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">&#128260; 초기화</button>
   </div>
 </header>
 <div class="tabs" id="tab-bar"></div>
@@ -301,6 +301,9 @@ function buildTabs(){
   bar.innerHTML = TABS.map(function(t,i){
     return '<button class="tab'+(i===0?' active':'')+'" onclick="showTab('+i+')">'+t+'</button>';
   }).join('');
+  // 헤더 높이에 맞춰 sticky top 동적 설정
+  var hh = document.querySelector('header').offsetHeight;
+  bar.style.top = hh + 'px';
 }
 function showTab(n){
   curTab = n;
