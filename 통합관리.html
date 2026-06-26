@@ -529,7 +529,7 @@ function openCase(id){
     objSet:po.set,objEtc:po.etc,acc:c.acc,sub:c.sub,
     cls:isD(c.cls)?c.cls:'',pay:c.pay||0,rate:c.rate?+(c.rate*100).toFixed(2):'',fee:c.fee||0,
     vatMode:isLeakCn(c.cn)?'계산서':((c.vat>0)?'계산서':'현금'),vatManual:false,ref,out,note:c.note,firm:c.firm,mgr:c.mgr,
-    refOn:!!_refName,refName:_refName,refPay:_refPay,refManual:!!id,outOn:_outOn,outName:_outName,
+    refOn:!!_refName,refName:_refName,refPay:_refPay,refManual:false,outOn:_outOn,outName:_outName,
     firmMode:(FIRMS.includes(c.firm))?'preset':(c.firm?'custom':'preset'),
     fire:c.fire||'',police:c.police||'',draw:c.draw||'',
     fireMode:fpMode(c.fire,FP_PRE),policeMode:fpMode(c.police,FP_PRE),drawMode:fpMode(c.draw,DR_PRE),feeManual:false};
@@ -632,7 +632,7 @@ function autoFee(){
     EF.fee=f;
     const el=document.getElementById('m_fee');if(el)el.value=f?cma(f):'';
   }
-  updateRefAuto(true);renderVatChips();recalcNet();
+  updateRefAuto();renderVatChips();recalcNet();
 }
 function autoRefCalc(){return Math.floor((+EF.pay||0)*(+EF.rate||0)/100*0.2/10000)*10000;}
 function floor20(fee){return Math.floor((fee*0.2)/100000)*100000;}
