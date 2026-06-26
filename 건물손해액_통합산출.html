@@ -1032,7 +1032,7 @@ function runCalc(){
   var floorArea=floorAllRooms.reduce(function(s,r){return s+roomArea(r);},0);
   var fxFloor='='+floorAllRooms.filter(function(r){return roomArea(r)>0;}).map(function(r){return roomAreaBasis(r);}).join('+');
   cats.push({no:3,name:'수장공사',rows:[
-    it('천장도배바름',(sv.ceil_main||'실크벽지')+'/'+(sv.ceil_surface||'석고보드면'),'㎡',excArea-bathArea,5100,9584,0,basisRooms(lives),fxExclNoBath),
+    it('천장도배바름',sv.ceil_surface||'석고보드면','㎡',excArea-bathArea,5100,9584,0,basisRooms(lives),fxExclNoBath),
     (function(){
       // 방 그룹식: ((방1(w+d))+(방2(w+d))+...)*2*2.3
       var wRooms=wallRooms.filter(function(r){return PF(r.w)>0;});
@@ -1042,7 +1042,7 @@ function runCalc(){
       var moldInner=moldFx.slice(1);
       var wallBasis=(wBasisParts.length?'ㅇ ('+wBasisParts.join('+')+')*2*2.3':'')+(moldInner?'+('+moldInner+')*2.3':'');
       var wallFxStr=(wFxParts.length?'=('+wFxParts.join('+')+')*2*2.3+('+moldInner+')*2.3':'=('+moldInner+')*2.3');
-      return it('벽지도배바름',(sv.wall_main||'실크벽지')+'/'+(sv.wall_surface||'석고보드면'),'㎡',wallPaperArea,5100,7380,0,wallBasis,wallFxStr);
+      return it('벽지도배바름',sv.wall_surface||'석고보드면','㎡',wallPaperArea,5100,7380,0,wallBasis,wallFxStr);
     })(),
     it('리빙우드','욕실천장재','㎡',bathArea,41667,15241,457,basisRooms(bathRooms),fxRooms(bathRooms)),
     it('바닥재',floorSp,'㎡',floorArea,24000,17146,0,basisRooms(floorAllRooms),fxFloor)
