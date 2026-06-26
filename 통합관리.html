@@ -624,7 +624,7 @@ function renderFPD(f){
 function efFPD(f,v){EF[f]=v;EF[f+'Mode']='preset';renderFPD(f);}
 function efFPDcustom(f){EF[f+'Mode']='custom';const pre=f==='draw'?DR_PRE:FP_PRE;if(pre.some(p=>p[0]===EF[f]))EF[f]='';renderFPD(f);}
 function efMoney(k,el){const n=el.value.replace(/[^\d]/g,'');EF[k]=+n||0;el.value=n?(+n).toLocaleString('ko-KR'):'';if(k==='fee'){if(n){EF.feeManual=true;updateRefAuto();renderVatChips();}}if(k==='ref'){if(n)EF.refManual=true;}if(k==='pay'){autoFee();}recalcNet();}
-function efMoneyKey(k,el,evt){if(evt.key!=='Backspace'||el.value!=='')return;if(k==='fee'){EF.feeManual=false;autoFee();}if(k==='ref'){EF.refManual=false;updateRefAuto(true);}recalcNet();}
+function efMoneyKey(k,el,evt){if(evt.key!=='Backspace'||el.value!=='')return;evt.preventDefault();if(k==='fee'){EF.feeManual=false;autoFee();}if(k==='ref'){EF.refManual=false;updateRefAuto(true);}recalcNet();}
 function efRate(el){EF.rate=el.value;autoFee();}
 function autoFee(){
   const rate=+EF.rate||0, pay=+EF.pay||0;
