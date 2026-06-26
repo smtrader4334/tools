@@ -1089,11 +1089,12 @@ function runCalc(){
     var lU=area<2.4?95002:area<4.0?108804:117746;
     var eU=Math.round(lU*0.02);
     var loc=w.locs.length?w.locs.join('·'):'창호';
-    c6.push(it(w.type,w.w+'*'+w.h,'개소',cnt,mU,lU,eU,'ㅇ '+loc+' '+w.w+'*'+w.h+' '+cnt+'개소','='+cnt));
+    var winBasis=w.type.indexOf('하이샤시')>=0?'ㅇ '+loc+' '+cnt+'개소':'ㅇ '+loc+' '+w.w+'*'+w.h+' '+cnt+'개소';
+    c6.push(it(w.type,w.w+'*'+w.h,'개소',cnt,mU,lU,eU,winBasis,'='+cnt));
   });
   if(sv.middle_door){
     var mw=sv.middle_door_w||'1500', mh=sv.middle_door_h||'2100';
-    c6.push(it('현관3연동중문',mw+'*'+mh,'개소',1,1230000,115553,3466,'ㅇ 3연동중문 '+mw+'*'+mh+' 1개소','=1'));
+    c6.push(it('현관3연동중문',mw+'*'+mh,'개소',1,1230000,115553,3466,'ㅇ 현관 1개소','=1'));
   }
   var edW=sv.entry_door_w||'1000', edH=sv.entry_door_h||'2100';
   c6.push(it(sv.entry_door_type||'현관문',edW+'*'+edH,'개소',1,819950,124508,3735,'ㅇ 현관문 1개소','=1'));
