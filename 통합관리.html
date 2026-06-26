@@ -580,7 +580,7 @@ function openCase(id){
       </div>
       ${id&&!EF.gid?`<button onclick="splitInterim('${id}')" style="width:100%;margin-top:8px;background:#fff;color:#a21caf;border:1.5px solid #e9d5ff;border-radius:11px;padding:11px;font-weight:700;font-size:13px">✂ 중간지급 분할 (이번분 종결 + 잔여분 생성)</button>`:''}
     </div>`;
-  document.getElementById('overlay').style.display='flex';
+  openOverlay();
   renderObjChips();renderVatChips();renderRefOut();renderFirm();renderFPD('fire');renderFPD('police');renderFPD('draw');recalcNet();
 }
 const chip=(label,active,onclick,extra='')=>`<button onclick="${onclick}" style="background:${active?NAV:BG};color:${active?'#fff':MUTED};border:1px solid ${active?NAV:BORD};border-radius:18px;padding:6px 12px;font-size:12px;font-weight:${active?700:500};margin:0 5px 6px 0;${extra}">${label}</button>`;
@@ -719,7 +719,26 @@ function splitInterim(id){
   openCase(B.id); // 잔여분 입력 화면 열기
 }
 function delCase(id){if(!confirm('이 계약을 삭제할까요?'))return;D.cases=D.cases.filter(x=>x.id!==id);save();closeModal();render();}
-function closeModal(){document.getElementById('overlay').style.display='none';}
+function openOverlay(){
+  const ov=document.getElementById('overlay');
+  ov.style.display='flex';
+  // 모달 열릴 때 history 상태 추가 (뒤로가기로 닫기 위함)
+  if(!history.state||!history.state.modalOpen){
+    history.pushState({modalOpen:true},'');
+  }
+}
+function closeModal(fromPop){
+  const ov=document.getElementById('overlay');
+  if(ov.style.display==='none')return;
+  ov.style.display='none';
+  // X·오버레이클릭 등으로 닫을 때는 pushState한 history도 되감기
+  if(!fromPop&&history.state&&history.state.modalOpen){history.back();}
+}
+// 뒤로가기(popstate) 시 모달이 열려있으면 모달만 닫기
+window.addEventListener('popstate',function(){
+  const ov=document.getElementById('overlay');
+  if(ov&&ov.style.display!=='none'){closeModal(true);}
+});
 document.getElementById('overlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
 
 function setTab(t){tab=t;document.getElementById('secnav').style.display=t==='list'?'flex':'none';render();}
@@ -1252,7 +1271,7 @@ function J_openModal(s,item){
     J_render();
   };
 
-  ov.style.display='flex';
+  openOverlay();
 }
 function J_getTypeHint(t){
   const h={'수수료':'✅ 순매출에 포함','소개비':'📤 순매출에서 차감','외주비':'🔧 순매출에서 차감','선임소개비':'🔵 순매출 차감 (잔고 영향 없음)','생활비':'🏠 잔고만 차감','계산서':'📄 잔고만 차감','기타지출':'💸 잔고만 차감'};
