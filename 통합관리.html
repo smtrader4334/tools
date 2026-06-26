@@ -329,7 +329,7 @@ function renderPerf(){
     })()}
   </div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px">
-    ${[['선임권',s.sun+'건','#7c3aed'],['독립계약',s.indep+'건','#475569'],chartMode==='revenue'?['월평균매출',W((()=>{const tot=rd.reduce((a,v)=>a+v,0);const mo=rd.filter(v=>v>0).length;return mo?Math.round(tot/mo):0;})()),'#16a34a']:['평균수수료',W(s.avgIndep),'#16a34a'],['소개·외주비',W(s.cost),'#dc2626']].map(([l,v,cl])=>`
+    ${[['선임권',s.sun+'건','#7c3aed'],['독립계약',s.indep+'건','#475569'],chartMode==='revenue'?(perfView==='quarter'?['분기평균매출',W((()=>{const q=[rd[0]+rd[1]+rd[2],rd[3]+rd[4]+rd[5],rd[6]+rd[7]+rd[8],rd[9]+rd[10]+rd[11]];const tot=q.reduce((a,v)=>a+v,0);const n=q.filter(v=>v>0).length;return n?Math.round(tot/n):0;})()),'#16a34a']:['월평균매출',W((()=>{const tot=rd.reduce((a,v)=>a+v,0);const mo=rd.filter(v=>v>0).length;return mo?Math.round(tot/mo):0;})()),'#16a34a']):['평균수수료',W(s.avgIndep),'#16a34a'],['소개·외주비',W(s.cost),'#dc2626']].map(([l,v,cl])=>`
       <div style="background:#fff;border-radius:11px;padding:10px 6px;text-align:center;box-shadow:0 1px 4px rgba(26,43,74,.07)">
         <div style="color:${MUTED};font-size:10px">${l}</div><div style="color:${cl};font-weight:800;font-size:13px;margin-top:3px">${v}</div></div>`).join('')}
   </div>
