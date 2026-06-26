@@ -1156,7 +1156,7 @@ function BuildingCalc({onArea}){
                   <input style={{...s.ip,flex:1}} type="number" placeholder="월" value={rMonth} onChange={e=>setRMonth(e.target.value)} min="1" max="12"/>
                 </div>
                 {renovPct==="50to80" && calc && !calc.error && calc.renovInfo && calc.renovInfo.avgY && (
-                  <div style={{fontSize:11,color:N,marginTop:6,background:"#EEF2F8",padding:"6px 10px",borderRadius:5}}>
+                  <div style={{fontSize:11,color:"#9A3412",marginTop:6,background:"#FFF7ED",border:"1px solid #FED7AA",padding:"6px 10px",borderRadius:5}}>
                     합산평균 적용 년월 <strong>{calc.renovInfo.avgY}년 {calc.renovInfo.avgM}월</strong> <span style={{color:MU}}>(경과 {(calc.em/12).toFixed(1)}년)</span>
                   </div>
                 )}
