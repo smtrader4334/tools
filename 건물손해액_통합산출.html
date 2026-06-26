@@ -182,16 +182,18 @@ function downloadState(ext){
 }
 function openShare(){ openShareModal(); }
 function tryNativeShare(){
-  var json=buildStateJSON(); var fname=shareFileName('json');
+  var json=buildStateJSON();
   var msg=document.getElementById('share-msg');
   function setMsg(t,c){ if(msg){msg.textContent=t;msg.style.color=c||'#16a34a';} }
+  // text/plain .txt 로 공유 (Android Chrome은 application/json 미지원)
+  var txtName=shareFileName('txt');
   if(navigator.canShare){
     try{
-      var file=new File([json],fname,{type:'application/json'});
+      var file=new File([json],txtName,{type:'text/plain'});
       if(navigator.canShare({files:[file]})){
         navigator.share({files:[file],title:'건물손해액 산출 데이터'})
           .then(function(){setMsg('✓ 공유 완료!');})
-          .catch(function(e){if(e.name!=='AbortError')setMsg('공유 실패 → 파일 저장 후 카톡으로 보내세요','#dc2626');});
+          .catch(function(e){if(e.name!=='AbortError')setMsg('공유 실패 → .txt 파일 저장 후 카톡으로 보내세요','#dc2626');});
         return;
       }
     }catch(e){}
@@ -202,7 +204,7 @@ function tryNativeShare(){
       .catch(function(e){if(e.name!=='AbortError')setMsg('공유 실패 → 파일 저장 후 카톡으로 보내세요','#dc2626');});
     return;
   }
-  setMsg('이 브라우저는 바로공유를 지원하지 않습니다. 파일 저장 후 카톡으로 보내세요.','#dc2626');
+  setMsg('이 브라우저는 바로공유를 지원하지 않습니다. .txt 저장 후 카톡으로 보내세요.','#dc2626');
 }
 function openShareModal(){
   var json=buildStateJSON();
