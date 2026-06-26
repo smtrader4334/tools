@@ -178,29 +178,36 @@ function downloadState(ext){
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(function(){URL.revokeObjectURL(url);},1000);
 }
-function openShare(){
-  var json=buildStateJSON();
-  var fname=shareFileName('json');
-  // ① 모바일 파일 공유 (Web Share API Level 2) → OS 공유 시트 바로 호출
+function openShare(){ openShareModal(); }
+function tryNativeShare(){
+  var json=buildStateJSON(); var fname=shareFileName('json');
+  var msg=document.getElementById('share-msg');
+  function setMsg(t,c){ if(msg){msg.textContent=t;msg.style.color=c||'#16a34a';} }
   if(navigator.canShare){
-    var file=new File([json],fname,{type:'application/json'});
-    if(navigator.canShare({files:[file]})){
-      navigator.share({files:[file],title:'건물손해액 산출 데이터',text:fname}).catch(function(){});
-      return;
-    }
+    try{
+      var file=new File([json],fname,{type:'application/json'});
+      if(navigator.canShare({files:[file]})){
+        navigator.share({files:[file],title:'건물손해액 산출 데이터'})
+          .then(function(){setMsg('✓ 공유 완료!');})
+          .catch(function(e){if(e.name!=='AbortError')setMsg('공유 실패 → 파일 저장 후 카톡으로 보내세요','#dc2626');});
+        return;
+      }
+    }catch(e){}
   }
-  // ② Web Share 텍스트만 지원 (일부 구형 모바일)
   if(navigator.share){
-    navigator.share({title:'건물손해액 데이터',text:json}).catch(function(){});
+    navigator.share({title:'건물손해액 데이터',text:json})
+      .then(function(){setMsg('✓ 공유 완료!');})
+      .catch(function(e){if(e.name!=='AbortError')setMsg('공유 실패 → 파일 저장 후 카톡으로 보내세요','#dc2626');});
     return;
   }
-  // ③ PC 폴백 → 기존 모달
-  openShareModal();
+  setMsg('이 브라우저는 바로공유를 지원하지 않습니다. 파일 저장 후 카톡으로 보내세요.','#dc2626');
 }
 function openShareModal(){
   var json=buildStateJSON();
-  var fname=shareFileName('json');
-  var shareBtn=navigator.canShare ? '<button onclick="openShare();closeAppModal();" style="width:100%;background:#f59e0b;color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:8px">📲 카톡 바로 공유 (파일)</button>' : '';
+  var supportsShare=!!(navigator.share||navigator.canShare);
+  var shareBtn=supportsShare
+    ? '<button onclick="tryNativeShare()" style="width:100%;background:#f59e0b;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px">📲 카톡 바로 공유 (파일)</button>'
+    : '';
   var html='<div style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeAppModal()">'+
     '<div style="background:#fff;border-radius:12px;max-width:480px;width:100%;max-height:85vh;overflow:auto;padding:18px">'+
       '<div style="font-size:16px;font-weight:700;color:#1a3650;margin-bottom:4px">📤 입력값 공유</div>'+
@@ -211,7 +218,7 @@ function openShareModal(){
         '<button onclick="downloadState(\'txt\')" style="flex:1;min-width:120px;background:#0891b2;color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer">📄 .txt 파일 저장</button>'+
       '</div>'+
       '<button onclick="copyStateText()" style="width:100%;background:#16a34a;color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:8px">📋 텍스트 복사 (카톡 메시지용)</button>'+
-      '<div id="share-msg" style="font-size:12px;color:#16a34a;text-align:center;min-height:16px;margin-bottom:8px"></div>'+
+      '<div id="share-msg" style="font-size:12px;text-align:center;min-height:16px;margin-bottom:8px"></div>'+
       '<textarea id="share-text" readonly style="width:100%;height:120px;font-size:10px;font-family:monospace;border:1px solid #e2e8f0;border-radius:6px;padding:8px;resize:vertical">'+json.replace(/</g,'&lt;')+'</textarea>'+
       '<button onclick="closeAppModal()" style="width:100%;background:#e2e8f0;color:#475569;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px">닫기</button>'+
     '</div></div>';
