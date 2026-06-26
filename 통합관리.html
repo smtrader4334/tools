@@ -629,10 +629,10 @@ function autoFee(){
   const f=Math.floor(pay*rate/100/10000)*10000;
   EF.fee=f;
   const el=document.getElementById('m_fee');if(el)el.value=f?cma(f):'';
-  updateRefAuto();renderVatChips();recalcNet();
+  updateRefAuto(true);renderVatChips();recalcNet();
 }
 function floor20(fee){return Math.floor((fee*0.2)/100000)*100000;}
-function updateRefAuto(){if(EF.refOn&&EF.refPay&&!EF.refManual){EF.ref=floor20(+EF.fee||0);const e=document.getElementById('m_ref');if(e)e.value=EF.ref?cma(EF.ref):'';}}
+function updateRefAuto(force){if(EF.refOn&&EF.refPay&&(!EF.refManual||force)){EF.ref=floor20(+EF.fee||0);const e=document.getElementById('m_ref');if(e)e.value=EF.ref?cma(EF.ref):'';}}
 function efRefToggle(on){EF.refOn=on;if(on){EF.refPay=true;EF.refManual=false;EF.ref=floor20(+EF.fee||0);}else{EF.ref=0;EF.refName='';}renderRefOut();recalcNet();}
 function efRefPay(pay){EF.refPay=pay;EF.refManual=false;EF.ref=pay?floor20(+EF.fee||0):0;renderRefOut();recalcNet();}
 function efOutToggle(on){EF.outOn=on;if(on){if(!(+EF.out))EF.out=500000;if(!EF.outName)EF.outName='김다정';}else{EF.out=0;EF.outName='';}renderRefOut();recalcNet();}
