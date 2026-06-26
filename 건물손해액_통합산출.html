@@ -1071,9 +1071,9 @@ function runCalc(){
     it('바닥재',floorSp,'㎡',floorArea,24000,17146,0,basisRooms(floorAllRooms),fxFloor)
   ]});
   // ④ 가구 (입력 반영)
-  var sinkBase={'ㅡ':2632200,'ㄱ':2744487,'ㄷ':4116730};
+  var sinkBase={'ㅡ자':2632200,'ㄱ자':2744487,'ㄷ자':4116730};
   var sinkLen=PF(sv.sink_len)||2.7;
-  var c4=[it('싱크대',(sv.sink_type||'ㅡ')+'자형/'+sinkLen+'m','식',1,sinkBase[sv.sink_type]||2632200,0,0,'ㅇ 싱크대 1식 (시중가)','=1')];
+  var c4=[it('싱크대',(sv.sink_type||'ㅡ자')+'형/'+sinkLen+'m','식',1,sinkBase[sv.sink_type]||2632200,0,0,'ㅇ 싱크대 1식 (시중가)','=1')];
   if(sv.island_yn&&PF(sv.island_len)>0)c4.push(it('아일랜드식탁',sv.island_len+'m','식',1,800000,0,0,'ㅇ 아일랜드식탁 1식 (시중가)','=1'));
   closets.forEach(function(c){ if(c.room&&c.len){ var ja=Math.round(PF(c.len)); c4.push(it('붙박이장('+c.room+')',c.len+'자','자',ja,195000,0,0,'ㅇ '+c.room+' '+c.len+'자','='+ja)); } });
   if(PF(sv.shoecab_len)>0){ var sja=Math.round(PF(sv.shoecab_len)); c4.push(it('현관신발장','-','자',sja,195000,0,0,'ㅇ 현관신발장 '+sv.shoecab_len+'자','='+sja)); }
