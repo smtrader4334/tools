@@ -84,7 +84,11 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 <body>
 <header>
   <div><h1>&#128293; 화재손해 건물손해액 산출</h1><p>현장정보 입력 &#8594; 산출결과 탭에서 즉시 확인</p></div>
-  <button onclick="resetAll()" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">&#128260; 초기화</button>
+  <div style="display:flex;gap:6px;flex-wrap:wrap">
+    <button onclick="openShare()" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">&#128228; 공유</button>
+    <button onclick="openLoad()" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">&#128229; 불러오기</button>
+    <button onclick="resetAll()" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">&#128260; 초기화</button>
+  </div>
 </header>
 <div class="tabs" id="tab-bar"></div>
 <div class="content">
@@ -136,6 +140,7 @@ function defaultSv(){ return {
   door_cnt:0,entry_door_type:'현관문 (스틸)',entry_door_w:'',entry_door_h:'',
   middle_door:false,middle_door_w:'1500',middle_door_h:'2100',
   molding_manual:'',molding_basis:'',
+  base_door_cnt:'',base_door_extra:'',
   iv_btKey:'아파트', iv_strId:'', iv_grade:'', iv_area:'', iv_aptArea:'',
   iv_cYear:'', iv_cMonth:'', iv_aYear:'', iv_aMonth:'',
   iv_name:'', iv_insurer:'',
@@ -152,6 +157,88 @@ function resetAll(){
   calcResult=null;
   showTab(0);
 }
+
+// ━━━ 공유(내보내기) / 불러오기 ━━━
+function buildStateJSON(){
+  syncIn();
+  var state={ _type:'건물손해액산출', _ver:1, ts:new Date().toISOString(),
+    rooms:rooms, windows:windows, closets:closets, baths:baths, wpChecks:wpChecks, sv:sv };
+  return JSON.stringify(state, null, 1);
+}
+function shareFileName(ext){
+  var nm=(sv.iv_name||'현장').replace(/[\\/:*?"<>|]/g,'').replace(/\s+/g,'_').slice(0,30);
+  var d=new Date(); var ymd=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  return nm+'_'+ymd+'.'+ext;
+}
+function downloadState(ext){
+  var json=buildStateJSON();
+  var blob=new Blob([json],{type:'application/json;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a'); a.href=url; a.download=shareFileName(ext);
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(url);},1000);
+}
+function openShare(){
+  var json=buildStateJSON();
+  var html='<div style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeAppModal()">'+
+    '<div style="background:#fff;border-radius:12px;max-width:480px;width:100%;max-height:85vh;overflow:auto;padding:18px">'+
+      '<div style="font-size:16px;font-weight:700;color:#1a3650;margin-bottom:4px">📤 입력값 공유</div>'+
+      '<div style="font-size:12px;color:#64748b;margin-bottom:12px">파일로 저장해 카톡 "파일 보내기"로 공유하거나, 텍스트를 복사해 메시지로 보낼 수 있습니다. 받은 쪽은 "불러오기"로 그대로 복원됩니다.</div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">'+
+        '<button onclick="downloadState(\'json\')" style="flex:1;min-width:120px;background:#2563eb;color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer">💾 .json 파일 저장</button>'+
+        '<button onclick="downloadState(\'txt\')" style="flex:1;min-width:120px;background:#0891b2;color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer">📄 .txt 파일 저장</button>'+
+      '</div>'+
+      '<button onclick="copyStateText()" style="width:100%;background:#16a34a;color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:8px">📋 텍스트 복사 (카톡 메시지용)</button>'+
+      '<div id="share-msg" style="font-size:12px;color:#16a34a;text-align:center;min-height:16px;margin-bottom:8px"></div>'+
+      '<textarea id="share-text" readonly style="width:100%;height:120px;font-size:10px;font-family:monospace;border:1px solid #e2e8f0;border-radius:6px;padding:8px;resize:vertical">'+json.replace(/</g,'&lt;')+'</textarea>'+
+      '<button onclick="closeAppModal()" style="width:100%;background:#e2e8f0;color:#475569;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px">닫기</button>'+
+    '</div></div>';
+  showAppModal(html);
+}
+function copyStateText(){
+  var json=buildStateJSON();
+  var msg=document.getElementById('share-msg');
+  function done(){ if(msg)msg.textContent='✓ 복사 완료! 카톡에 붙여넣으세요.'; }
+  if(navigator.clipboard){ navigator.clipboard.writeText(json).then(done).catch(function(){fbCopy(json,done);}); }
+  else fbCopy(json,done);
+}
+function fbCopy(txt,cb){ var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta); cb(); }
+function openLoad(){
+  var html='<div style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeAppModal()">'+
+    '<div style="background:#fff;border-radius:12px;max-width:480px;width:100%;max-height:85vh;overflow:auto;padding:18px">'+
+      '<div style="font-size:16px;font-weight:700;color:#1a3650;margin-bottom:4px">📥 입력값 불러오기</div>'+
+      '<div style="font-size:12px;color:#64748b;margin-bottom:12px">카톡으로 받은 파일을 선택하거나, 복사한 텍스트를 붙여넣어 복원합니다. (현재 입력값은 덮어쓰여집니다)</div>'+
+      '<label style="display:block;background:#2563eb;color:#fff;border-radius:8px;padding:11px;font-size:13px;font-weight:600;text-align:center;cursor:pointer;margin-bottom:12px">📂 파일 선택 (.json / .txt)'+
+        '<input type="file" accept=".json,.txt,application/json,text/plain" style="display:none" onchange="loadFromFile(event)"></label>'+
+      '<div style="font-size:12px;color:#64748b;margin-bottom:4px">또는 텍스트 붙여넣기:</div>'+
+      '<textarea id="load-text" placeholder="복사한 JSON을 여기에 붙여넣으세요" style="width:100%;height:120px;font-size:10px;font-family:monospace;border:1px solid #e2e8f0;border-radius:6px;padding:8px;resize:vertical"></textarea>'+
+      '<div id="load-msg" style="font-size:12px;color:#dc2626;text-align:center;min-height:16px;margin:6px 0"></div>'+
+      '<button onclick="loadFromText()" style="width:100%;background:#16a34a;color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer">✓ 텍스트에서 복원</button>'+
+      '<button onclick="closeAppModal()" style="width:100%;background:#e2e8f0;color:#475569;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px">닫기</button>'+
+    '</div></div>';
+  showAppModal(html);
+}
+function applyState(json){
+  var st=JSON.parse(json);
+  if(!st || st._type!=='건물손해액산출') throw new Error('형식이 올바르지 않습니다');
+  rooms=st.rooms||[]; windows=st.windows||[]; closets=st.closets||[]; baths=st.baths||[]; wpChecks=st.wpChecks||{};
+  sv=Object.assign(defaultSv(), st.sv||{});
+  calcResult=null;
+  closeAppModal();
+  showTab(0);
+}
+function loadFromFile(ev){
+  var f=ev.target.files&&ev.target.files[0]; if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){ try{ applyState(String(rd.result)); }catch(e){ var m=document.getElementById('load-msg'); if(m)m.textContent='✗ '+e.message; } };
+  rd.readAsText(f);
+}
+function loadFromText(){
+  var t=document.getElementById('load-text'); var m=document.getElementById('load-msg');
+  try{ applyState((t&&t.value||'').trim()); }catch(e){ if(m)m.textContent='✗ 복원 실패: '+e.message; }
+}
+function showAppModal(html){ var d=document.createElement('div'); d.id='app-modal'; d.innerHTML=html; document.body.appendChild(d); }
+function closeAppModal(){ var d=document.getElementById('app-modal'); if(d)d.remove(); }
 
 // ━━━ 보험가액 데이터 (insurance-calc-2026) ━━━
 var DEP={
@@ -223,7 +310,7 @@ function showTab(n){
 
 // ── 값 동기화 ──
 function syncIn(){  // DOM → sv
-  ['address','unit','floor','artwall_loc','artwall_len','artwall_h','kitchen_tile_len','kitchen_tile_h','molding_manual','sink_len','island_len','shoecab_len',
+  ['address','unit','floor','artwall_loc','artwall_len','artwall_h','kitchen_tile_len','kitchen_tile_h','molding_manual','base_door_cnt','base_door_extra','sink_len','island_len','shoecab_len',
    'ac_rooms','balcony_cnt','circuit_cnt','led_living','led_room','led_kitchen','led_balcony','led_bath','led_entry',
    'entry_door_w','entry_door_h','middle_door_w','middle_door_h','molding_basis',
    'iv_insurer','iv_name','iv_area','iv_cYear','iv_cMonth','iv_aYear','iv_aMonth','iv_grade'].forEach(function(id){
@@ -467,6 +554,7 @@ function renderFinish(){
   '<div class="section"><div class="section-title">천장몰딩 (거실+주방 통합구간)</div><div class="section-body">'+
     row('몰딩 총길이','<div class="inline"><input type="text" id="molding_manual" value="'+(sv.molding_manual||'')+'" placeholder="도면 벽면길이 직접입력" oninput="onChange()"><span class="unit">m</span></div>','거실·주방이 트인 경우 도면에서 벽면 길이를 직접 더해 입력 (비우면 실별 둘레 자동합산)')+
     '<div id="molding-hint" style="font-size:11px;color:#2563eb;padding:0 2px"></div>'+
+    row('걸레받이 도어차감','<div class="inline"><input type="text" id="base_door_cnt" value="'+(sv.base_door_cnt||'')+'" placeholder="도어 개수" oninput="onChange()" style="max-width:80px"><span class="unit">개 ×0.9 +</span><input type="text" id="base_door_extra" value="'+(sv.base_door_extra||'')+'" placeholder="추가식 예: 1.5+0.8" oninput="onChange()"><span class="unit">m</span></div>','걸레받이 = 몰딩 − (도어개수×0.9 + 추가차감)')+
   '</div></div>'+
   '<div class="section"><div class="section-title">특수 마감</div><div class="section-body">'+
     row('아트월','<label class="ck-label"><input type="checkbox" id="artwall" onchange="toggleArtwall()"'+(sv.artwall?' checked':'')+'> 있음</label>','')+
@@ -763,7 +851,11 @@ function runCalc(){
   var moldingIsManual = moldManual>0;
   var mdW = sv.middle_door ? (PF(sv.middle_door_w)||1500)/1000 : 0;
   var doorW = 0.9*PI(sv.door_cnt)+1.0+mdW;
-  var baseboard = Math.max(0,moldingTotal-doorW);
+  // 걸레받이 도어차감: (도어개수×0.9) + 추가차감식
+  var bdCnt = PI(sv.base_door_cnt);
+  var bdExtra = safeEval(sv.base_door_extra);
+  var baseDeduct = bdCnt*0.9 + bdExtra;
+  var baseboard = Math.max(0, moldingTotal - baseDeduct);
   var wallArea = lifePerim*2.3;
   var bathWall = bathPerim*2.3;
   var bathFloor = bathArea;
@@ -849,7 +941,7 @@ function runCalc(){
     it('반자틀설치','널천장','㎡',excArea,10377,29484,884,basisRooms(allExcl),fxExcl),
     it('석고판설치','천장/9.5T','㎡',excArea-bathArea,2963,15241,152,basisRooms(lives),fxExclNoBath),
     it('천장몰딩','30*20','m',moldingTotal,6685,8990,359,moldBasis,moldFx),
-    it('걸레받이','90*9','m',baseboard,4830,4157,83,'ㅇ 몰딩('+R2(moldingTotal)+')-도어('+R2(doorW)+')','='+R2(moldingTotal)+'-'+R2(doorW))
+    it('걸레받이','90*9','m',baseboard,4830,4157,83,'ㅇ 몰딩('+R2(moldingTotal)+')-도어('+bdCnt+'*0.9'+(bdExtra>0?'+'+(sv.base_door_extra||''):'')+')','=MAX(0,'+R2(moldingTotal)+'-('+bdCnt+'*0.9'+(bdExtra>0?'+'+(sv.base_door_extra||''):'')+'))')
   ];
   // 커튼박스: 안방·침실에 설치된 창호의 가로길이 합
   var curtainWins=validWins.filter(function(w){
@@ -862,18 +954,32 @@ function runCalc(){
     c2.push(it('커튼박스설치','안방·침실','m',curtainLen2,2800,10960,219,cwBasis,cwFx));
   }
   cats.push({no:2,name:'목공사',rows:c2});
-  // ③ 수장 (바닥재=전유-욕실, 발코니는 마루/비닐 마감일 때만 포함)
+  // ③ 수장 (바닥재: 창고 제외, 현관·발코니는 타일 마감이면 제외)
   var floorSp=sv.floor_main||'강마루';
   var balcFloor=sv.floor_balcony||'데코타일';
-  var balcIsTile=(balcFloor.indexOf('타일')>=0);  // 타일·데코타일이면 마루 제외
+  var entryFloor=sv.floor_entry||'데코타일';
+  // 타일공사 대상 판정: 순수 '타일' 또는 '대리석'만 (데코타일=비닐계 바닥재이므로 마루 바닥재에 포함)
+  function isTileFinish(f){
+    if(f.indexOf('데코')>=0)return false;   // 데코타일 = 비닐시트류, 마루 바닥재
+    return f.indexOf('타일')>=0 || f.indexOf('대리석')>=0;
+  }
+  var balcIsTile=isTileFinish(balcFloor);
+  var entryIsTile=isTileFinish(entryFloor);
+  // 마루 바닥재 대상: lives에서 창고 제외 + (현관은 타일/대리석 아니면 포함)
+  var floorRooms=lives.filter(function(r){
+    if(r.name.indexOf('창고')>=0)return false;       // 창고 제외
+    if(r.name.indexOf('현관')>=0)return !entryIsTile; // 현관: 타일/대리석이면 제외
+    return true;
+  });
   var floorBalcs=balcIsTile?[]:balcs;
-  var floorBalcArea=floorBalcs.reduce(function(s,r){return s+roomArea(r);},0);
-  var fxFloor=fxExclNoBath+(floorBalcs.length?('+'+floorBalcs.filter(function(r){return roomArea(r)>0;}).map(function(r){return roomAreaBasis(r);}).join('+')):'');
+  var floorAllRooms=floorRooms.concat(floorBalcs);
+  var floorArea=floorAllRooms.reduce(function(s,r){return s+roomArea(r);},0);
+  var fxFloor='='+floorAllRooms.filter(function(r){return roomArea(r)>0;}).map(function(r){return roomAreaBasis(r);}).join('+');
   cats.push({no:3,name:'수장공사',rows:[
     it('천장도배바름',sv.ceil_main||'실크벽지','㎡',excArea-bathArea,5100,9584,0,basisRooms(lives),fxExclNoBath),
     it('벽지도배바름',sv.wall_main||'실크벽지','㎡',wallArea,5100,7380,0,basisPerim(lives,'',2.3),fxPerim(lives,2.3)),
     it('리빙우드','욕실천장재','㎡',bathArea,41667,15241,457,basisRooms(bathRooms),fxRooms(bathRooms)),
-    it('바닥재',floorSp,'㎡',excArea-bathArea+floorBalcArea,24000,17146,0,basisRooms(lives.concat(floorBalcs)),fxFloor)
+    it('바닥재',floorSp,'㎡',floorArea,24000,17146,0,basisRooms(floorAllRooms),fxFloor)
   ]});
   // ④ 가구 (입력 반영)
   var sinkBase={'ㅡ':2632200,'ㄱ':2744487,'ㄷ':4116730};
@@ -1014,6 +1120,22 @@ function runCalc(){
   balcTileJobs.forEach(function(j){
     c8.push(it(j.label+' 타일','자기질','㎡',j.area,18000,50263,1507,j.basis,j.fx));
   });
+  // 현관 바닥 타일 (현관 마감이 타일/대리석일 때)
+  if(entryIsTile){
+    var entryRooms=lives.filter(function(r){return r.name.indexOf('현관')>=0;});
+    var entryArea=entryRooms.reduce(function(s,r){return s+roomArea(r);},0);
+    if(entryArea>0){
+      var spLabel=entryFloor.indexOf('대리석')>=0?'대리석':'자기질';
+      c8.push(it('현관바닥 '+(entryFloor.indexOf('대리석')>=0?'대리석':'타일'),spLabel,'㎡',entryArea,(entryFloor.indexOf('대리석')>=0?35000:18000),50263,1507,basisRooms(entryRooms),fxRooms(entryRooms)));
+    }
+  }
+  // 발코니 바닥 타일 (발코니 바닥 마감이 타일일 때)
+  if(balcIsTile&&balcs.length){
+    var balcFloorArea=balcs.reduce(function(s,r){return s+roomArea(r);},0);
+    if(balcFloorArea>0){
+      c8.push(it('발코니바닥 타일','자기질','㎡',balcFloorArea,18000,41886,1256,basisRooms(balcs,'발코니바닥'),fxRooms(balcs)));
+    }
+  }
   if(c8.length)cats.push({no:8,name:'타일공사',rows:c8});
   // ⑨ 위생 (욕실 욕조/샤워 반영)
   var c9=[];
