@@ -1100,13 +1100,13 @@ function runCalc(){
   if(PI(sv.door_cnt)>0)c6.push(it('목재여닫이문(문틀포함)','900*2100','개소',PI(sv.door_cnt),275500,88382,2651,'ㅇ 여닫이문 '+PI(sv.door_cnt)+'개소','='+PI(sv.door_cnt)));
   c6.push(it('디지털도어락','-','개소',1,187000,106290,2125,'ㅇ 도어락 1개소','=1'));
   if(glassArea>0){
-    var glBasis='ㅇ '+validWins.map(function(w){return '('+R2(PF(w.w)/1000)+'*'+R2(PF(w.h)/1000)+'*'+PI(w.qty)+')';}).join('+');
-    var glFx='='+validWins.map(function(w){return R2(PF(w.w)/1000)+'*'+R2(PF(w.h)/1000)+'*'+PI(w.qty);}).join('+');
+    var glBasis='ㅇ '+validWins.map(function(w){var q=PI(w.qty);return '('+R2(PF(w.w)/1000)+'*'+R2(PF(w.h)/1000)+(q>1?'*'+q:'')+')';}).join('+');
+    var glFx='='+validWins.map(function(w){var q=PI(w.qty);return R2(PF(w.w)/1000)+'*'+R2(PF(w.h)/1000)+(q>1?'*'+q:'');}).join('+');
     c6.push(it('복층유리','22mm','㎡',glassArea,38100,34880,0,glBasis,glFx));
   }
   var sL=winPerim/10;
   if(sL>0){
-    var perimParts=validWins.map(function(w){return '('+R2(PF(w.w)/1000)+'+'+R2(PF(w.h)/1000)+')*2*'+PI(w.qty);});
+    var perimParts=validWins.map(function(w){var q=PI(w.qty);return '('+R2(PF(w.w)/1000)+'+'+R2(PF(w.h)/1000)+')*2'+(q>1?'*'+q:'');});
     var wpBasis='ㅇ 창호둘레합('+perimParts.join('+')+') /10';
     var wpFx='=('+perimParts.join('+')+')/10';
     c6.push(it('창호주위충전','발포우레탄','10m',sL,0,27344,0,wpBasis,wpFx));
