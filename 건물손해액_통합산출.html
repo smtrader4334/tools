@@ -857,9 +857,10 @@ function runCalc(){
   var wallArea = lifePerim*2.3;
   var bathWall = bathPerim*2.3;
   var bathFloor = bathArea;
+  // 방 개수: 거주실 중 거실·주방·식당·현관·창고·다용도실 등 비침실 공간 제외
+  var NONROOM=['거실','주방','식당','주방식당','현관','창고','다용도','펜트리','보일러','복도','베란다'];
   var roomCnt = lives.filter(function(r){
-    if(r.name.indexOf('주방')>=0)return false;  // 주방 제외 (방 포함되지만 침실 아님)
-    return r.name.indexOf('침실')>=0||r.name.indexOf('안방')>=0||r.name.indexOf('건넌방')>=0||r.name.indexOf('작은방')>=0||r.name.indexOf('큰방')>=0;
+    return !NONROOM.some(function(k){return r.name.indexOf(k)>=0;});
   }).length||1;
 
   // 창호
