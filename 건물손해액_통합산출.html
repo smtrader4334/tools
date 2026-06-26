@@ -581,8 +581,7 @@ function renderFinish(){
     row('벽체','<select id="wall_main" onchange="onChange()"><option>실크벽지</option><option>합지벽지</option><option>타일</option><option>도장(페인트)</option><option>석재</option></select>','')+
     row('벽체 마감면','<select id="wall_surface" onchange="onChange()"><option>석고보드면</option><option>모르타르면</option></select>','')+
     row('천장','<select id="ceil_main" onchange="onChange()"><option>실크벽지</option><option>합지벽지</option><option>도장(페인트)</option><option>루버</option><option>MDF</option></select>','')+
-    row('천장 마감면','<select id="ceil_surface" onchange="onChange()"><option>석고보드면</option><option>모르타르면</option></select>','')+"
-
+    row('천장 마감면','<select id="ceil_surface" onchange="onChange()"><option>석고보드면</option><option>모르타르면</option></select>','')+
   '</div></div>'+
   '<div class="section"><div class="section-title">발코니 마감 (천장·벽체)</div><div class="section-body">'+
     row('발코니 천장',balcOpt('balcony_ceil',sv.balcony_ceil||'수성페인트'),'기본 수성페인트')+
