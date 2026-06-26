@@ -363,8 +363,9 @@ function updateMoldingHint(){
   var baths=rooms.filter(function(r){return r.name&&r.w&&r.d&&r.name.indexOf('욕실')>=0;});
   var auto=lives.concat(baths).reduce(function(s,r){return s+2*(parseFloat(r.w)+parseFloat(r.d));},0);
   var manual=safeEval(sv.molding_manual);
-  if(manual>0) el.innerHTML='✏️ 입력식 = '+manual.toFixed(2)+'m 적용 (자동합산값: '+auto.toFixed(2)+'m)';
-  else el.innerHTML='자동합산 예상값: '+auto.toFixed(2)+'m (실별 둘레 합)';
+  var total=auto+manual;
+  if(manual>0) el.innerHTML='실별둘레합: '+auto.toFixed(2)+'m + 추가입력: '+manual.toFixed(2)+'m = <b>합계: '+total.toFixed(2)+'m</b>';
+  else el.innerHTML='자동합산: '+auto.toFixed(2)+'m (실별 둘레 합) — 추가 입력 시 합산됩니다';
 }
 
 // ── 면적 계산 ──
@@ -869,12 +870,12 @@ function runCalc(){
   var cleanArea = excArea+balcArea;
   var lifePerim = lives.reduce(function(s,r){return s+2*(PF(r.w)+PF(r.d));},0);
   var bathPerim = bathRooms.reduce(function(s,r){return s+2*(PF(r.w)+PF(r.d));},0);
-  // 천장몰딩: 직접입력 덧셈식 있으면 우선 (식 그대로 계산·표기), 없으면 실별 둘레 자동합산
+  // 천장몰딩: 실별 둘레 자동합산 + 수동입력 항상 합산
   var moldManualStr = (sv.molding_manual||'').trim();
   var moldManual = safeEval(moldManualStr);
   var moldingAuto = lifePerim+bathPerim;
   var moldingIsManual = moldManual>0;
-  var moldingTotal = moldingIsManual ? moldManual : moldingAuto;
+  var moldingTotal = moldingAuto + moldManual;
   // 걸레받이 차감: 입력한 차감식 (도어너비 합 등)
   var baseDeductStr = (sv.base_door_extra||'').trim();
   var baseDeduct = safeEval(baseDeductStr);
@@ -962,14 +963,16 @@ function runCalc(){
     it('그을음세척·그라인딩','특별인부','인',4,0,226122,0,'ㅇ 특별인부 4인','=4')
   ]});
   // ② 목공 (반자틀=전유 욕실포함, 석고판=전유-욕실, 걸레받이=몰딩식-차감식)
-  var moldBasis = moldingIsManual ? ('ㅇ '+moldManualStr) : basisPerim(allExcl,'',null);
-  var moldFx = moldingIsManual ? ('='+moldManualStr) : fxPerim(allExcl,null);
-  // 걸레받이 산출근거·계산식: 몰딩식 − 차감식 (둘 다 입력식 그대로 전개)
-  var moldExpr = moldingIsManual ? moldManualStr : R2(moldingTotal);
+  // 산출근거/계산식: 실별둘레 자동합산 + 수동입력 항상 합산
+  var autoPerimFx = fxPerim(allExcl,null);  // '=(w+d)*2+...'
+  var moldBasis = basisPerim(allExcl,'',null) + (moldManual>0 ? ' + 추가('+moldManualStr+')' : '');
+  var moldFx = autoPerimFx + (moldManual>0 ? '+('+moldManualStr+')' : '');
+  // 걸레받이 산출근거·계산식
+  var moldExpr = R2(moldingTotal);
   var bbBasis, bbFx;
   if(baseDeductStr){
     bbBasis = 'ㅇ 몰딩('+moldExpr+') - 차감('+baseDeductStr+')';
-    bbFx = '=MAX(0,('+moldExpr+')-('+baseDeductStr+'))';
+    bbFx = '=MAX(0,'+moldExpr+'-('+baseDeductStr+'))';
   } else {
     bbBasis = 'ㅇ 몰딩('+moldExpr+')';
     bbFx = '=MAX(0,'+moldExpr+')';
