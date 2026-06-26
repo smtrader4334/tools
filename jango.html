@@ -46,12 +46,13 @@ input,select,textarea{font-family:inherit;outline:none}
 const NAV='#1a2b4a',GOLD='#c9a84c',BG='#f0f2f7',BORD='#e2e8f0',TEXT='#1a2b4a',MUTED='#8593b0';
 const MN=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 const TT={
-  '수수료':  {bg:'#dcfce7',tc:'#16a34a',affects:'net'},
-  '소개비':  {bg:'#fef9c3',tc:'#92400e',affects:'net'},
-  '외주비':  {bg:'#ffedd5',tc:'#c2410c',affects:'net'},
-  '생활비':  {bg:'#fee2e2',tc:'#dc2626',affects:'bal'},
-  '계산서':  {bg:'#f1f5f9',tc:'#475569',affects:'bal'},
-  '기타지출':{bg:'#fdf4ff',tc:'#9333ea',affects:'bal'},
+  '수수료':   {bg:'#dcfce7',tc:'#16a34a',affects:'net'},
+  '소개비':   {bg:'#fef9c3',tc:'#92400e',affects:'net'},
+  '외주비':   {bg:'#ffedd5',tc:'#c2410c',affects:'net'},
+  '선임소개비':{bg:'#e0f2fe',tc:'#0369a1',affects:'net_only'}, // 순매출 차감, 잔고 무관
+  '생활비':   {bg:'#fee2e2',tc:'#dc2626',affects:'bal'},
+  '계산서':   {bg:'#f1f5f9',tc:'#475569',affects:'bal'},
+  '기타지출': {bg:'#fdf4ff',tc:'#9333ea',affects:'bal'},
 };
 
 // ── 포맷 ──────────────────────────────────
@@ -68,9 +69,12 @@ const SC=n=>n>0?'#16a34a':n<0?'#dc2626':MUTED;
 function calcM(m){
   if(!m)return{net:0,bal:0,biz:0,life:0,pl:0};
   const txs=m.transactions||[];
-  const net=txs.filter(t=>TT[t.type]?.affects==='net').reduce((s,t)=>s+(+t.amount||0),0);
+  // 순매출: net + net_only 항목 모두 포함
+  const net=txs.filter(t=>TT[t.type]?.affects==='net'||TT[t.type]?.affects==='net_only').reduce((s,t)=>s+(+t.amount||0),0);
+  // 잔고: net 항목만 (선임소개비 제외), bal 항목 포함
+  const balNet=txs.filter(t=>TT[t.type]?.affects==='net').reduce((s,t)=>s+(+t.amount||0),0);
   const badj=txs.filter(t=>TT[t.type]?.affects==='bal').reduce((s,t)=>s+(+t.amount||0),0);
-  const bal=(+m.carryover||0)+net+badj;
+  const bal=(+m.carryover||0)+balNet+badj;
   const biz=(m.bizCosts||[]).reduce((s,c)=>s+(+c.amount||0),0);
   const life=(m.lifeCosts||[]).reduce((s,c)=>s+(+c.amount||0),0);
   return{net,bal,biz,life,pl:net-biz-life};
@@ -663,7 +667,7 @@ function openModal(s,item){
 }
 
 function getTypeHint(t){
-  const h={'수수료':'✅ 순매출에 포함','소개비':'📤 순매출에서 차감','외주비':'🔧 순매출에서 차감','생활비':'🏠 잔고만 차감','계산서':'📄 잔고만 차감','기타지출':'💸 잔고만 차감'};
+  const h={'수수료':'✅ 순매출에 포함','소개비':'📤 순매출에서 차감','외주비':'🔧 순매출에서 차감','선임소개비':'🔵 순매출 차감 (잔고 영향 없음 - 통장 미입금)','생활비':'🏠 잔고만 차감','계산서':'📄 잔고만 차감','기타지출':'💸 잔고만 차감'};
   return h[t]||'';
 }
 
