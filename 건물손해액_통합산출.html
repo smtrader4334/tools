@@ -183,7 +183,7 @@ function downloadState(ext){
 function openShare(){ openShareModal(); }
 function tryNativeShare(){
   // 파일 자동 다운로드 후 카톡 첨부 안내
-  downloadState('txt');
+  downloadState('json');
   var msg=document.getElementById('share-msg');
   if(msg){
     msg.style.color='#2563eb';
