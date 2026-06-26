@@ -1234,30 +1234,30 @@ function runCalc(){
       });
     }
   }
-  // 통합 출력
-  if(tWallSum>0||tFloorSum>0){
-    var bW=tileWallParts.length?'ㅇ '+tileWallParts.join('+'):'';
-    var bWfx=tileWallFx.length?'='+tileWallFx.join('+'):'';
-    var bF=tileFloorParts.length?'ㅇ '+tileFloorParts.join('+'):'';
-    var bFfx=tileFloorFx.length?'='+tileFloorFx.join('+'):'';
-    if(tWallSum>0){
-      c8.push(it('바탕고르기','벽체','㎡',tWallSum,0,16147,322,bW,bWfx));
-      c8.push(it('타일압착붙이기','벽체/도기질','㎡',tWallSum,12000,50263,1507,bW,bWfx));
-      c8.push(it('벽체줄눈','압착붙이기','㎡',tWallSum,1171,4233,0,bW,bWfx));
-    }
-    if(tFloorSum>0){
-      c8.push(it('바탕고르기','바닥','㎡',tFloorSum,0,11720,234,bF,bFfx));
-      c8.push(it('타일압착붙이기','바닥/자기질','㎡',tFloorSum,12000,41886,1256,bF,bFfx));
-      c8.push(it('바닥줄눈','압착붙이기','㎡',tFloorSum,234,3386,0,bF,bFfx));
-    }
-  }
-  // 주방타일 (별도 항목 유지)
+  // ⑤ 주방타일 → 벽체 합산
   var ktH=PF(sv.kitchen_tile_h), ktL=PF(sv.kitchen_tile_len);
   if(ktH>0||ktL>0){
     var kit=lives.filter(function(r){return r.name.indexOf('주방')>=0||r.name.indexOf('식당')>=0;})[0];
     var kLen=ktL>0?ktL:(kit?PF(kit.w):0);
     var kHt=ktH>0?ktH:0.9;
-    if(kLen>0)c8.push(it('주방타일','벽체','㎡',kLen*kHt,12000,50263,1507,'ㅇ 주방벽('+R2(kLen)+'*'+R2(kHt)+')','='+R2(kLen)+'*'+R2(kHt)));
+    if(kLen>0){
+      tWallSum+=kLen*kHt;
+      tileWallParts.push('주방벽('+R2(kLen)+'*'+R2(kHt)+')');
+      tileWallFx.push(R2(kLen)+'*'+R2(kHt));
+    }
+  }
+  // 통합 출력: 바탕고르기벽→바탕고르기바닥→압착벽→압착바닥→줄눈벽→줄눈바닥
+  if(tWallSum>0||tFloorSum>0){
+    var bW=tileWallParts.length?'ㅇ '+tileWallParts.join('+'):'';
+    var bWfx=tileWallFx.length?'='+tileWallFx.join('+'):'';
+    var bF=tileFloorParts.length?'ㅇ '+tileFloorParts.join('+'):'';
+    var bFfx=tileFloorFx.length?'='+tileFloorFx.join('+'):'';
+    if(tWallSum>0) c8.push(it('바탕고르기','벽체','㎡',tWallSum,0,16147,322,bW,bWfx));
+    if(tFloorSum>0) c8.push(it('바탕고르기','바닥','㎡',tFloorSum,0,11720,234,bF,bFfx));
+    if(tWallSum>0) c8.push(it('타일압착붙이기','벽체/도기질','㎡',tWallSum,12000,50263,1507,bW,bWfx));
+    if(tFloorSum>0) c8.push(it('타일압착붙이기','바닥/자기질','㎡',tFloorSum,12000,41886,1256,bF,bFfx));
+    if(tWallSum>0) c8.push(it('벽체줄눈','압착붙이기','㎡',tWallSum,1171,4233,0,bW,bWfx));
+    if(tFloorSum>0) c8.push(it('바닥줄눈','압착붙이기','㎡',tFloorSum,234,3386,0,bF,bFfx));
   }
   // 아트월 (별도 항목 유지)
   if(sv.artwall&&PF(sv.artwall_len)>0){
