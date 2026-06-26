@@ -240,7 +240,10 @@ function renderListBody(){
         <div style="text-align:right;flex-shrink:0">
           <div style="color:#16a34a;font-weight:800;font-size:15px">${W(nv)}</div>
           <div style="color:${MUTED};font-size:10px">보험금 ${W(c.pay)}</div>
-          ${c.rate?`<div style="color:${MUTED};font-size:10px">요율 ${pct(c.rate)}</div>`:''}
+          <div style="display:flex;gap:6px;align-items:center">
+            ${+c.ref>0?`<div style="color:#f59e0b;font-size:10px;font-weight:600">소개 ${W(+c.ref)}</div>`:''}
+            ${c.rate?`<div style="color:${MUTED};font-size:10px">요율 ${pct(c.rate)}</div>`:''}
+          </div>
         </div>
       </div>
       <div style="display:flex;gap:10px;margin-top:6px;padding-top:6px;border-top:1px dashed ${BORD};font-size:10px;color:${MUTED}">
