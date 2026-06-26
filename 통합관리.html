@@ -241,7 +241,7 @@ function renderListBody(){
           <div style="color:#16a34a;font-weight:800;font-size:15px">${W(nv)}</div>
           <div style="color:${MUTED};font-size:10px">보험금 ${W(c.pay)}</div>
           <div style="display:flex;gap:6px;align-items:center">
-            ${+c.ref>0?`<div style="color:#f59e0b;font-size:10px;font-weight:600">소개 ${W(+c.ref)}</div>`:''}
+            <div style="color:#f59e0b;font-size:10px;font-weight:600;min-width:28px">${+c.ref>0?W(+c.ref):''}</div>
             ${c.rate?`<div style="color:${MUTED};font-size:10px">요율 ${pct(c.rate)}</div>`:''}
           </div>
         </div>
