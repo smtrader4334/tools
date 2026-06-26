@@ -798,7 +798,7 @@ function renderAppbar(){
    +'</div>'
    +'<div id="gdst" style="font-size:11px;margin-top:5px;text-align:right;color:'+gdLastCol+'">'+(gdLastMsg||'☁ 드라이브 — 📤 저장으로 로그인')+'</div>';
 }
-function setApp(a){ APP=a; try{closeModal();}catch(e){} render(); }
+function setApp(a){ APP=a; if(a==='jango') jTab='jMonth'; try{closeModal();}catch(e){} render(); }
 
 // 드라이브 상태 문구 유지(재렌더 시에도 보존) + 앱바에 표시
 var gdLastMsg='', gdLastCol='#94a3b8';
