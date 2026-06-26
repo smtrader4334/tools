@@ -132,6 +132,7 @@ function defaultSv(){ return {
   balcony_ceil:'수성페인트',balcony_wall:'수성페인트',
   wall_main:'실크벽지',ceil_main:'실크벽지',
   wall_surface:'석고보드면',ceil_surface:'석고보드면',
+  balc_win_deduct:{},
   artwall:false,artwall_loc:'',artwall_len:'',artwall_h:'2.3',
   kitchen_tile_len:'',kitchen_tile_h:'',
   sink_type:'ㅡ자',sink_len:'',island_yn:false,island_len:'',shoecab_len:'',
@@ -356,6 +357,14 @@ function syncIn(){  // DOM → sv
     var el=document.getElementById(id); if(el) sv[id]=el.value;
   });
   var dc=document.getElementById('door_cnt'); if(dc) sv.door_cnt=parseInt(dc.value)||0;
+  // 발코니 창호 차감 체크
+  var bwd={};
+  windows.forEach(function(w,i){
+    var el=document.getElementById('balc_wd_'+i);
+    if(el) bwd[i]=el.checked;
+    else if(sv.balc_win_deduct&&sv.balc_win_deduct[i]!==undefined) bwd[i]=sv.balc_win_deduct[i];
+  });
+  sv.balc_win_deduct=bwd;
 }
 function syncOut(){  // sv → DOM
   Object.keys(sv).forEach(function(id){
@@ -586,6 +595,21 @@ function renderFinish(){
   '<div class="section"><div class="section-title">발코니 마감 (천장·벽체)</div><div class="section-body">'+
     row('발코니 천장',balcOpt('balcony_ceil',sv.balcony_ceil||'수성페인트'),'기본 수성페인트')+
     row('발코니 벽체',balcOpt('balcony_wall',sv.balcony_wall||'수성페인트'),'기본 수성페인트')+
+    (function(){
+      var validW=windows.filter(function(w){return w.type&&w.w&&w.h;});
+      if(!validW.length) return '';
+      var items=windows.map(function(w,i){
+        if(!w.type||!w.w||!w.h) return '';
+        var isBalc=(w.locs||[]).some(function(l){return BALCONIES.indexOf(l)>=0;});
+        var cur=sv.balc_win_deduct&&sv.balc_win_deduct[i]!==undefined?sv.balc_win_deduct[i]:isBalc;
+        var loc=(w.locs||[]).length?w.locs.join('·'):'미지정';
+        var wm=PF(w.w)/1000,hm=PF(w.h)/1000,cnt=PI(w.qty)||1;
+        var area=String(parseFloat((wm*hm*cnt).toFixed(2)));
+        return '<label class="ck-label" style="width:100%;padding:3px 0"><input type="checkbox" id="balc_wd_'+i+'" onchange="onChange()"'+(cur?' checked':'')+'>'+loc+' '+w.type+' '+w.w+'×'+w.h+(cnt>1?' ×'+cnt:'')+' ('+area+'㎡)</label>';
+      }).join('');
+      return '<div style="margin-top:10px;border-top:1px solid #e2e8f0;padding-top:8px">'+
+        '<div style="font-size:11px;font-weight:700;color:#475569;margin-bottom:6px">🔲 벽체 창호 차감 (체크 항목 면적 차감)</div>'+items+'</div>';
+    })()+
   '</div></div>'+
   '<div class="section"><div class="section-title">천장몰딩 (거실+주방 통합구간)</div><div class="section-body">'+
     row('몰딩 총길이','<div class="inline"><input type="text" id="molding_manual" value="'+(sv.molding_manual||'')+'" placeholder="예: 3.5+2.8+4.2 (벽면길이 덧셈식)" oninput="onChange()"><span class="unit">m</span></div>','거실·주방 통합구간 등 도면 벽면 길이를 덧셈식으로 입력 (비우면 실별 둘레 자동합산)')+
@@ -1059,6 +1083,21 @@ function runCalc(){
   var balcTileJobs=[];  // 타일 선택 시 타일공사로 넘길 작업 {label, area, basis, fx}
   if(balcArea>0){
     var balcWallArea=balcs.reduce(function(s,r){return s+2*(PF(r.w)+PF(r.d));},0)*2.3;
+    // 창호 차감
+    var bwd=sv.balc_win_deduct||{};
+    var deductArea=0,deductBasisParts=[],deductFxParts=[];
+    windows.forEach(function(w,i){
+      if(!bwd[i]||!w.w||!w.h) return;
+      var wm=PF(w.w)/1000,hm=PF(w.h)/1000,cnt=PI(w.qty)||1;
+      var a=wm*hm*cnt;
+      deductArea+=a;
+      var loc=(w.locs||[]).length?w.locs.join('·'):'창호';
+      deductBasisParts.push(loc+'('+R2(wm)+'×'+R2(hm)+(cnt>1?'×'+cnt:'')+')');
+      deductFxParts.push(R2(wm)+'*'+R2(hm)+(cnt>1?'*'+cnt:''));
+    });
+    var balcWallNet=Math.max(0,balcWallArea-deductArea);
+    var bwBasis=basisPerim(balcs,'',2.3)+(deductBasisParts.length?' - 창호('+deductBasisParts.join('+')+')'  :'');
+    var bwFx=fxPerim(balcs,2.3)+(deductFxParts.length?'-('+deductFxParts.join('+')+')'  :'');
     var bCeil=sv.balcony_ceil||'수성페인트';
     var bWall=sv.balcony_wall||'수성페인트';
     // 천장 마감
@@ -1071,15 +1110,15 @@ function runCalc(){
     } else if(bCeil==='타일'){
       balcTileJobs.push({label:'발코니천장',area:balcArea,basis:basisRooms(balcs,''),fx:fxRooms(balcs)});
     }
-    // 벽체 마감
+    // 벽체 마감 (창호 차감 적용)
     if(bWall==='수성페인트'){
-      c5.push(it('바탕만들기','콘크리트면/벽체','㎡',balcWallArea,0,2703,81,basisPerim(balcs,'',2.3),fxPerim(balcs,2.3)));
-      c5.push(it('수성페인트','벽체 붓칠2회','㎡',balcWallArea,1797,12508,250,basisPerim(balcs,'',2.3),fxPerim(balcs,2.3)));
+      c5.push(it('바탕만들기','콘크리트면/벽체','㎡',balcWallNet,0,2703,81,bwBasis,bwFx));
+      c5.push(it('수성페인트','벽체 붓칠2회','㎡',balcWallNet,1797,12508,250,bwBasis,bwFx));
     } else if(bWall==='무늬코트'){
-      c5.push(it('바탕만들기','콘크리트면/벽체','㎡',balcWallArea,0,2802,84,basisPerim(balcs,'',2.3),fxPerim(balcs,2.3)));
-      c5.push(it('무늬코트','벽체 뿜칠2회','㎡',balcWallArea,1567,16621,332,basisPerim(balcs,'',2.3),fxPerim(balcs,2.3)));
+      c5.push(it('바탕만들기','콘크리트면/벽체','㎡',balcWallNet,0,2802,84,bwBasis,bwFx));
+      c5.push(it('무늬코트','벽체 뿜칠2회','㎡',balcWallNet,1567,16621,332,bwBasis,bwFx));
     } else if(bWall==='타일'){
-      balcTileJobs.push({label:'발코니벽체',area:balcWallArea,basis:basisPerim(balcs,'',2.3),fx:fxPerim(balcs,2.3)});
+      balcTileJobs.push({label:'발코니벽체',area:balcWallNet,basis:bwBasis,fx:bwFx});
     }
   }
   if(c5.length)cats.push({no:5,name:'도장공사',rows:c5});
