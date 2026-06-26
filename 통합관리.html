@@ -623,21 +623,21 @@ function renderFPD(f){
 }
 function efFPD(f,v){EF[f]=v;EF[f+'Mode']='preset';renderFPD(f);}
 function efFPDcustom(f){EF[f+'Mode']='custom';const pre=f==='draw'?DR_PRE:FP_PRE;if(pre.some(p=>p[0]===EF[f]))EF[f]='';renderFPD(f);}
-function efMoney(k,el){const n=el.value.replace(/[^\d]/g,'');EF[k]=+n||0;el.value=n?(+n).toLocaleString('ko-KR'):'';if(k==='fee'){EF.feeManual=true;updateRefAuto();renderVatChips();}if(k==='ref')EF.refManual=true;if(k==='pay')autoFee();recalcNet();}
+function efMoney(k,el){const n=el.value.replace(/[^\d]/g,'');EF[k]=+n||0;el.value=n?(+n).toLocaleString('ko-KR'):'';if(k==='fee'){if(!n){EF.feeManual=false;autoFee();}else{EF.feeManual=true;updateRefAuto();renderVatChips();}}if(k==='ref'){if(!n){EF.refManual=false;updateRefAuto(true);}else EF.refManual=true;}if(k==='pay'){autoFee();}recalcNet();}
 function efRate(el){EF.rate=el.value;autoFee();}
 function autoFee(){
-  if(EF.feeManual)return;
   const rate=+EF.rate||0, pay=+EF.pay||0;
-  if(rate<=0)return;
-  const f=Math.floor(pay*rate/100/10000)*10000;
-  EF.fee=f;
-  const el=document.getElementById('m_fee');if(el)el.value=f?cma(f):'';
+  if(!EF.feeManual&&rate>0){
+    const f=Math.floor(pay*rate/100/10000)*10000;
+    EF.fee=f;
+    const el=document.getElementById('m_fee');if(el)el.value=f?cma(f):'';
+  }
   updateRefAuto(true);renderVatChips();recalcNet();
 }
+function autoRefCalc(){return Math.floor((+EF.pay||0)*(+EF.rate||0)/100*0.2/10000)*10000;}
 function floor20(fee){return Math.floor((fee*0.2)/100000)*100000;}
-function updateRefAuto(force){if(EF.refOn&&EF.refPay&&(!EF.refManual||force)){EF.ref=floor20(+EF.fee||0);const e=document.getElementById('m_ref');if(e)e.value=EF.ref?cma(EF.ref):'';}}
-function efRefToggle(on){EF.refOn=on;if(on){EF.refPay=true;EF.refManual=false;EF.ref=floor20(+EF.fee||0);}else{EF.ref=0;EF.refName='';}renderRefOut();recalcNet();}
-function efRefPay(pay){EF.refPay=pay;EF.refManual=false;EF.ref=pay?floor20(+EF.fee||0):0;renderRefOut();recalcNet();}
+function updateRefAuto(force){if(EF.refOn&&EF.refPay&&(!EF.refManual||force)){EF.ref=autoRefCalc();const e=document.getElementById('m_ref');if(e)e.value=EF.ref?cma(EF.ref):'';}}function efRefToggle(on){EF.refOn=on;if(on){EF.refPay=true;EF.refManual=false;EF.ref=autoRefCalc();}else{EF.ref=0;EF.refName='';}renderRefOut();recalcNet();}
+function efRefPay(pay){EF.refPay=pay;EF.refManual=false;EF.ref=pay?autoRefCalc():0;renderRefOut();recalcNet();}
 function efOutToggle(on){EF.outOn=on;if(on){if(!(+EF.out))EF.out=500000;if(!EF.outName)EF.outName='김다정';}else{EF.out=0;EF.outName='';}renderRefOut();recalcNet();}
 function renderRefOut(){
   const box=document.getElementById('refoutbox');if(!box)return;
