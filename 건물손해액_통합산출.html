@@ -852,7 +852,7 @@ function calcInsurance(){
 // ━━━━━━━━━━━━━━━━━━━━━━━━━
 function PF(v){return parseFloat(v)||0;}
 function PI(v){return parseInt(v)||0;}
-function R2(n){return PF(n).toFixed(2);}
+function R2(n){var s=PF(n).toFixed(2);return s.replace(/0+$/,"").replace(/\.$/,"");}
 function FMT(n){return Math.round(n||0).toLocaleString('ko-KR');}
 function RUP(v,u){return Math.ceil(v/u)*u;}
 
@@ -888,6 +888,11 @@ function runCalc(){
   var baseDeduct = safeEval(baseDeductStr);
   var baseboard = Math.max(0, moldingTotal - baseDeduct);
   var wallArea = lifePerim*2.3;
+  // 벽지도배바름: 창고·거실 제외 방 그룹식 + 몰딩길이*2.3
+  var WALL_EXCL=['창고','거실'];
+  var wallRooms=lives.filter(function(r){return !WALL_EXCL.some(function(k){return r.name.indexOf(k)>=0;});});
+  var wallRoomPerim=wallRooms.reduce(function(s,r){return s+PF(r.w)+PF(r.d);},0);
+  var wallPaperArea=wallRoomPerim*2*2.3+moldingTotal*2.3;
   var bathWall = bathPerim*2.3;
   var bathFloor = bathArea;
   // 방 개수: 거주실 중 거실·주방·식당·현관·창고·다용도실 등 비침실 공간 제외
@@ -1024,7 +1029,17 @@ function runCalc(){
   var fxFloor='='+floorAllRooms.filter(function(r){return roomArea(r)>0;}).map(function(r){return roomAreaBasis(r);}).join('+');
   cats.push({no:3,name:'수장공사',rows:[
     it('천장도배바름',sv.ceil_main||'실크벽지','㎡',excArea-bathArea,5100,9584,0,basisRooms(lives),fxExclNoBath),
-    it('벽지도배바름',sv.wall_main||'실크벽지','㎡',wallArea,5100,7380,0,basisPerim(lives,'',2.3),fxPerim(lives,2.3)),
+    (function(){
+      // 방 그룹식: ((방1(w+d))+(방2(w+d))+...)*2*2.3
+      var wRooms=wallRooms.filter(function(r){return PF(r.w)>0;});
+      var wBasisParts=wRooms.map(function(r){return r.name+'('+R2(r.w)+'+'+R2(r.d)+')';});
+      var wFxParts=wRooms.map(function(r){return '('+R2(r.w)+'+'+R2(r.d)+')';});
+      // 몰딩 내부식 (= 제거)
+      var moldInner=moldFx.slice(1);
+      var wallBasis=(wBasisParts.length?'ㅇ ('+wBasisParts.join('+')+')*2*2.3':'')+(moldInner?'+('+moldInner+')*2.3':'');
+      var wallFxStr=(wFxParts.length?'=('+wFxParts.join('+')+')*2*2.3+('+moldInner+')*2.3':'=('+moldInner+')*2.3');
+      return it('벽지도배바름',sv.wall_main||'실크벽지','㎡',wallPaperArea,5100,7380,0,wallBasis,wallFxStr);
+    })(),
     it('리빙우드','욕실천장재','㎡',bathArea,41667,15241,457,basisRooms(bathRooms),fxRooms(bathRooms)),
     it('바닥재',floorSp,'㎡',floorArea,24000,17146,0,basisRooms(floorAllRooms),fxFloor)
   ]});
