@@ -562,7 +562,7 @@ function openCase(id){
         ${money('지급보험금','pay','추정/확정')}
         <div class="fg"><label class="lbl">수수료율(%)</label><input class="inp" inputmode="decimal" value="${EF.rate}" placeholder="8 / 선임은 0" oninput="efRate(this)"></div>
       </div>
-      <div class="fg"><label class="lbl">수수료 <span style="color:${MUTED};font-weight:400">· 자동(지급보험금×요율, 만 절사) · 직접입력 가능</span></label><input class="inp" id="m_fee" inputmode="numeric" value="${EF.fee?cma(EF.fee):''}" oninput="efMoney('fee',this)"></div>
+      <div class="fg"><label class="lbl">수수료 <span style="color:${MUTED};font-weight:400">· 자동(지급보험금×요율, 만 절사) · 직접입력 가능</span></label><input class="inp" id="m_fee" inputmode="numeric" value="${EF.fee?cma(EF.fee):''}" oninput="efMoney('fee',this)" onkeydown="efMoneyKey('fee',this,event)"></div>
       <div class="fg"><label class="lbl">부가세</label><div id="vatchips"></div></div>
       <div id="refoutbox"></div>
       <div class="fg"><label class="lbl">손사법인</label><div id="firmsel"></div></div>
@@ -623,7 +623,8 @@ function renderFPD(f){
 }
 function efFPD(f,v){EF[f]=v;EF[f+'Mode']='preset';renderFPD(f);}
 function efFPDcustom(f){EF[f+'Mode']='custom';const pre=f==='draw'?DR_PRE:FP_PRE;if(pre.some(p=>p[0]===EF[f]))EF[f]='';renderFPD(f);}
-function efMoney(k,el){const n=el.value.replace(/[^\d]/g,'');EF[k]=+n||0;el.value=n?(+n).toLocaleString('ko-KR'):'';if(k==='fee'){if(!n){EF.feeManual=false;autoFee();}else{EF.feeManual=true;updateRefAuto();renderVatChips();}}if(k==='ref'){if(!n){EF.refManual=false;updateRefAuto(true);}else EF.refManual=true;}if(k==='pay'){autoFee();}recalcNet();}
+function efMoney(k,el){const n=el.value.replace(/[^\d]/g,'');EF[k]=+n||0;el.value=n?(+n).toLocaleString('ko-KR'):'';if(k==='fee'){if(n){EF.feeManual=true;updateRefAuto();renderVatChips();}}if(k==='ref'){if(n)EF.refManual=true;}if(k==='pay'){autoFee();}recalcNet();}
+function efMoneyKey(k,el,evt){if(evt.key!=='Backspace'||el.value!=='')return;if(k==='fee'){EF.feeManual=false;autoFee();}if(k==='ref'){EF.refManual=false;updateRefAuto(true);}recalcNet();}
 function efRate(el){EF.rate=el.value;autoFee();}
 function autoFee(){
   const rate=+EF.rate||0, pay=+EF.pay||0;
@@ -643,7 +644,7 @@ function renderRefOut(){
   const box=document.getElementById('refoutbox');if(!box)return;
   const chip=(label,active,onclick)=>`<button onclick="${onclick}" style="background:${active?NAV:BG};color:${active?'#fff':MUTED};border-radius:16px;padding:7px 18px;font-size:13px;font-weight:${active?700:500}">${label}</button>`;
   const chipS=(label,active,onclick)=>`<button onclick="${onclick}" style="background:${active?'#16a34a':BG};color:${active?'#fff':MUTED};border-radius:14px;padding:6px 13px;font-size:12px;font-weight:${active?700:500}">${label}</button>`;
-  const mi=(lbl,key,ph)=>`<div class="fg"><label class="lbl">${lbl}</label><input class="inp" id="m_${key}" inputmode="numeric" value="${EF[key]?cma(EF[key]):''}" placeholder="${ph}" oninput="efMoney('${key}',this)"></div>`;
+  const mi=(lbl,key,ph)=>`<div class="fg"><label class="lbl">${lbl}</label><input class="inp" id="m_${key}" inputmode="numeric" value="${EF[key]?cma(EF[key]):''}" placeholder="${ph}" oninput="efMoney('${key}',this)" onkeydown="efMoneyKey('${key}',this,event)"></div>`;
   box.innerHTML=`
     <div class="fg"><label class="lbl">소개자</label>
       <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
