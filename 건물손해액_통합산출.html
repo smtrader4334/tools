@@ -1181,33 +1181,77 @@ function runCalc(){
     it('시멘트액체방수','벽체','㎡',wpWall,5555,18859,565,basisPerim(wpWallRooms,'',WPH),fxPerim(wpWallRooms,WPH)),
     it('시멘트액체방수','바닥','㎡',wpArea,5555,24004,720,basisRooms(wpRooms),fxRooms(wpRooms))
   ]});
-  // ⑧ 타일 (욕실 합산 산출, 품명에 욕실명 미표기)
+  // ⑧ 타일 (욕실·발코니·현관 벽체/바닥 통합 합산)
   var c8=[];
-  // 욕실별 벽/바닥 합산
   var tileWallParts=[], tileWallFx=[], tileFloorParts=[], tileFloorFx=[];
   var tWallSum=0, tFloorSum=0;
+  // ① 욕실 벽/바닥
   bathRooms.forEach(function(b){
     var bd=baths.filter(function(x){return x.name===b.name;})[0];
     var fullWall=bd?bd.tiles:true;
     var wallH=fullWall?2.3:1.2;
-    var tW=2*(PF(b.w)+PF(b.d))*wallH;
-    var tF=PF(b.w)*PF(b.d);
-    tWallSum+=tW; tFloorSum+=tF;
+    tWallSum+=2*(PF(b.w)+PF(b.d))*wallH;
+    tFloorSum+=PF(b.w)*PF(b.d);
     tileWallParts.push(b.name+'(('+R2(b.w)+'+'+R2(b.d)+')*2*'+wallH+')');
     tileWallFx.push('('+R2(b.w)+'+'+R2(b.d)+')*2*'+wallH);
     tileFloorParts.push(b.name+'('+R2(b.w)+'*'+R2(b.d)+')');
     tileFloorFx.push(R2(b.w)+'*'+R2(b.d));
   });
-  if(bathRooms.length){
-    var bW='ㅇ '+tileWallParts.join('+'), bWfx='='+tileWallFx.join('+');
-    var bF='ㅇ '+tileFloorParts.join('+'), bFfx='='+tileFloorFx.join('+');
-    c8.push(it('바탕고르기','벽체','㎡',tWallSum,0,16147,322,bW,bWfx));
-    c8.push(it('바탕고르기','바닥','㎡',tFloorSum,0,11720,234,bF,bFfx));
-    c8.push(it('타일압착붙이기','벽체/도기질','㎡',tWallSum,12000,50263,1507,bW,bWfx));
-    c8.push(it('타일압착붙이기','바닥/자기질','㎡',tFloorSum,12000,41886,1256,bF,bFfx));
-    c8.push(it('벽체줄눈','압착붙이기','㎡',tWallSum,1171,4233,0,bW,bWfx));
-    c8.push(it('바닥줄눈','압착붙이기','㎡',tFloorSum,234,3386,0,bF,bFfx));
+  // ② 발코니 타일 (balcTileJobs → 벽체/천장은 벽체 합산, 바닥은 바닥 합산)
+  balcTileJobs.forEach(function(j){
+    var isFloor=j.label.indexOf('바닥')>=0;
+    var fxInner=j.fx.replace(/^=/,'');
+    if(isFloor){
+      tFloorSum+=j.area;
+      tileFloorParts.push(j.basis.replace(/^ㅇ\s*/,''));
+      tileFloorFx.push(fxInner);
+    } else {
+      tWallSum+=j.area;
+      tileWallParts.push(j.basis.replace(/^ㅇ\s*/,''));
+      tileWallFx.push(fxInner);
+    }
+  });
+  // ③ 현관 바닥 타일 (*식으로 산출근거 표기)
+  if(entryIsTile){
+    var entryRooms=lives.filter(function(r){return r.name.indexOf('현관')>=0;});
+    var entryArea=entryRooms.reduce(function(s,r){return s+roomArea(r);},0);
+    if(entryArea>0){
+      tFloorSum+=entryArea;
+      var eFxArr=entryRooms.filter(function(r){return roomArea(r)>0;}).map(function(r){return R2(r.w)+'*'+R2(r.d);});
+      tileFloorParts.push('현관('+eFxArr.join('+')+')')
+      tileFloorFx.push(eFxArr.join('+'));
+    }
   }
+  // ④ 발코니 바닥 타일
+  if(balcIsTile&&balcs.length){
+    var balcFloorArea=balcs.reduce(function(s,r){return s+roomArea(r);},0);
+    if(balcFloorArea>0){
+      tFloorSum+=balcFloorArea;
+      var bfArr=balcs.filter(function(r){return roomArea(r)>0;});
+      bfArr.forEach(function(r){
+        tileFloorParts.push(r.name+'('+R2(r.w)+'*'+R2(r.d)+')');
+        tileFloorFx.push(R2(r.w)+'*'+R2(r.d));
+      });
+    }
+  }
+  // 통합 출력
+  if(tWallSum>0||tFloorSum>0){
+    var bW=tileWallParts.length?'ㅇ '+tileWallParts.join('+'):'';
+    var bWfx=tileWallFx.length?'='+tileWallFx.join('+'):'';
+    var bF=tileFloorParts.length?'ㅇ '+tileFloorParts.join('+'):'';
+    var bFfx=tileFloorFx.length?'='+tileFloorFx.join('+'):'';
+    if(tWallSum>0){
+      c8.push(it('바탕고르기','벽체','㎡',tWallSum,0,16147,322,bW,bWfx));
+      c8.push(it('타일압착붙이기','벽체/도기질','㎡',tWallSum,12000,50263,1507,bW,bWfx));
+      c8.push(it('벽체줄눈','압착붙이기','㎡',tWallSum,1171,4233,0,bW,bWfx));
+    }
+    if(tFloorSum>0){
+      c8.push(it('바탕고르기','바닥','㎡',tFloorSum,0,11720,234,bF,bFfx));
+      c8.push(it('타일압착붙이기','바닥/자기질','㎡',tFloorSum,12000,41886,1256,bF,bFfx));
+      c8.push(it('바닥줄눈','압착붙이기','㎡',tFloorSum,234,3386,0,bF,bFfx));
+    }
+  }
+  // 주방타일 (별도 항목 유지)
   var ktH=PF(sv.kitchen_tile_h), ktL=PF(sv.kitchen_tile_len);
   if(ktH>0||ktL>0){
     var kit=lives.filter(function(r){return r.name.indexOf('주방')>=0||r.name.indexOf('식당')>=0;})[0];
@@ -1215,31 +1259,11 @@ function runCalc(){
     var kHt=ktH>0?ktH:0.9;
     if(kLen>0)c8.push(it('주방타일','벽체','㎡',kLen*kHt,12000,50263,1507,'ㅇ 주방벽('+R2(kLen)+'*'+R2(kHt)+')','='+R2(kLen)+'*'+R2(kHt)));
   }
-  // 아트월 (있는 경우 길이×높이, 기본높이 2.3m)
+  // 아트월 (별도 항목 유지)
   if(sv.artwall&&PF(sv.artwall_len)>0){
     var awL=PF(sv.artwall_len), awH=PF(sv.artwall_h)||2.3;
     var awLoc=sv.artwall_loc||'아트월';
     c8.push(it('아트월('+awLoc+')','포세린/대리석','㎡',awL*awH,55000,50263,1507,'ㅇ '+awLoc+'('+R2(awL)+'*'+R2(awH)+')','='+R2(awL)+'*'+R2(awH)));
-  }
-  // 발코니 타일 마감 (천장/벽체 중 타일 선택분)
-  balcTileJobs.forEach(function(j){
-    c8.push(it(j.label+' 타일','자기질','㎡',j.area,18000,50263,1507,j.basis,j.fx));
-  });
-  // 현관 바닥 타일 (현관 마감이 타일/대리석일 때)
-  if(entryIsTile){
-    var entryRooms=lives.filter(function(r){return r.name.indexOf('현관')>=0;});
-    var entryArea=entryRooms.reduce(function(s,r){return s+roomArea(r);},0);
-    if(entryArea>0){
-      var spLabel=entryFloor.indexOf('대리석')>=0?'대리석':'자기질';
-      c8.push(it('현관바닥 '+(entryFloor.indexOf('대리석')>=0?'대리석':'타일'),spLabel,'㎡',entryArea,(entryFloor.indexOf('대리석')>=0?35000:18000),50263,1507,basisRooms(entryRooms),fxRooms(entryRooms)));
-    }
-  }
-  // 발코니 바닥 타일 (발코니 바닥 마감이 타일일 때)
-  if(balcIsTile&&balcs.length){
-    var balcFloorArea=balcs.reduce(function(s,r){return s+roomArea(r);},0);
-    if(balcFloorArea>0){
-      c8.push(it('발코니바닥 타일','자기질','㎡',balcFloorArea,18000,41886,1256,basisRooms(balcs,'발코니바닥'),fxRooms(balcs)));
-    }
   }
   if(c8.length)cats.push({no:8,name:'타일공사',rows:c8});
   // ⑨ 위생 (욕실 욕조/샤워 반영)
