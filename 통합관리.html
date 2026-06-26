@@ -635,7 +635,7 @@ function autoFee(){
   }
   updateRefAuto();renderVatChips();recalcNet();
 }
-function autoRefCalc(){return Math.floor((+EF.pay||0)*(+EF.rate||0)/100*0.2/10000)*10000;}
+function autoRefCalc(){return Math.floor((+EF.pay||0)*(+EF.rate||0)/100*0.2/100000)*100000;}
 function floor20(fee){return Math.floor((fee*0.2)/100000)*100000;}
 function updateRefAuto(force){if(EF.refOn&&EF.refPay&&(!EF.refManual||force)){EF.ref=autoRefCalc();const e=document.getElementById('m_ref');if(e)e.value=EF.ref?cma(EF.ref):'';}}function efRefToggle(on){EF.refOn=on;if(on){EF.refPay=true;EF.refManual=false;EF.ref=autoRefCalc();}else{EF.ref=0;EF.refName='';}renderRefOut();recalcNet();}
 function efRefPay(pay){EF.refPay=pay;EF.refManual=false;EF.ref=pay?autoRefCalc():0;renderRefOut();recalcNet();}
