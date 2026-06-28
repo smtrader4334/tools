@@ -9,7 +9,8 @@
 html,body{height:100%;overflow:hidden}
 body{background:#060a14;color:#fff;font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;max-width:480px;margin:0 auto}
 
-#mainApp{height:100vh;display:flex;flex-direction:column}
+/* --rvh: JS가 실제 innerHeight 기준으로 세팅 (카카오 인앱브라우저 대응) */
+#mainApp{height:calc(var(--rvh,1px) * 100);display:flex;flex-direction:column}
 
 .header{flex-shrink:0;display:flex;justify-content:space-between;align-items:center;padding:14px 16px 10px}
 .h-title{font-size:16px;font-weight:800;letter-spacing:-0.5px}
@@ -221,6 +222,13 @@ function makeCard(city,errs){
   <div class="stats-wrap">${statsHtml}</div>`;
   return card;
 }
+
+/* ── 실제 뷰포트 높이 (카카오·네이버 인앱브라우저 100vh 버그 대응) ── */
+function setRVH(){
+  document.documentElement.style.setProperty("--rvh", (window.innerHeight*0.01)+"px");
+}
+setRVH();
+window.addEventListener("resize",setRVH);
 
 /* ── 바로 시작 ── */
 initClock();
