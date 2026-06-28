@@ -257,21 +257,50 @@ function tickClock(){
   });
 }
 
-/* ── API ── */
+/* ── API (다중 프록시 폴백) ── */
 async function acuFetch(url){
-  // CORS 프록시 경유 (AccuWeather는 브라우저 직접 호출 불가)
-  const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-  const res=await fetch(proxy,{cache:'no-cache'});
-  if(!res.ok)throw new Error('프록시 연결 실패');
-  const wrap=await res.json();
-  // HTTP 오류 체크
-  const code=wrap?.status?.http_code;
-  if(code&&code!==200){
-    if(code===401||code===403)throw new Error('API 키 오류 ('+code+') — 키를 확인해주세요');
-    if(code===503)throw new Error('AccuWeather 서버 오류');
-    throw new Error('오류 '+code);
-  }
-  return JSON.parse(wrap.contents);
+  const TIMEOUT=9000;
+  const tid=ms=>new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),ms));
+
+  // 1순위: corsproxy.io — raw 응답 직접 반환
+  try{
+    const res=await Promise.race([
+      fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`),
+      tid(TIMEOUT)
+    ]);
+    if(res.ok){
+      const data=await res.json();
+      if(data&&!data.Code) return data; // Code 필드 = AccuWeather 오류
+      if(data?.Code==='Unauthorized'||data?.Code==='InvalidApiKey')
+        throw new Error('API 키 오류 — 키를 확인해주세요');
+    }
+  }catch(e){if(e.message.includes('API'))throw e;console.warn('proxy1:',e.message);}
+
+  // 2순위: allorigins.win — JSON 래퍼 형식
+  try{
+    const res=await Promise.race([
+      fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`),
+      tid(TIMEOUT)
+    ]);
+    if(res.ok){
+      const wrap=await res.json();
+      const code=wrap?.status?.http_code;
+      if(code===401||code===403) throw new Error('API 키 오류 — 키를 확인해주세요');
+      if(code&&code!==200) throw new Error('AccuWeather 오류 '+code);
+      return JSON.parse(wrap.contents);
+    }
+  }catch(e){if(e.message.includes('API')||e.message.includes('AccuWeather'))throw e;console.warn('proxy2:',e.message);}
+
+  // 3순위: thingproxy — 최종 폴백
+  try{
+    const res=await Promise.race([
+      fetch(`https://thingproxy.freeboard.io/fetch/${url}`),
+      tid(TIMEOUT)
+    ]);
+    if(res.ok) return await res.json();
+  }catch(e){console.warn('proxy3:',e.message);}
+
+  throw new Error('날씨 연결 실패 — 갱신 버튼을 눌러 재시도');
 }
 
 async function getLocKey(city){
