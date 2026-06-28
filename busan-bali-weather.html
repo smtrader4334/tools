@@ -3,66 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🌏 부산 · 발리 날씨</title>
+<title>🌏 발리 · 부산 날씨</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:#060a14;color:#fff;font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;min-height:100vh;max-width:480px;margin:0 auto}
+html,body{height:100%;overflow:hidden}
+body{background:#060a14;color:#fff;font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;max-width:480px;margin:0 auto}
 
 /* ── Setup ── */
-#setupScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 28px;text-align:center}
-.setup-logo{font-size:52px;margin-bottom:20px;animation:float 3s ease-in-out infinite}
+#setupScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;padding:40px 28px;text-align:center}
+.setup-logo{font-size:52px;margin-bottom:16px;animation:float 3s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.setup-title{font-size:24px;font-weight:900;letter-spacing:-0.5px;margin-bottom:8px}
-.setup-desc{font-size:13px;color:#64748b;line-height:1.8;margin-bottom:28px}
-.setup-badge{display:inline-block;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#4ade80;font-size:11px;font-weight:700;border-radius:8px;padding:4px 10px;margin-bottom:24px;letter-spacing:.5px}
-
+.setup-title{font-size:22px;font-weight:900;margin-bottom:6px}
+.setup-desc{font-size:13px;color:#64748b;line-height:1.8;margin-bottom:10px}
+.setup-badge{display:inline-block;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#4ade80;font-size:11px;font-weight:700;border-radius:8px;padding:3px 10px;margin-bottom:22px}
 .input-wrap{position:relative;width:100%;margin-bottom:12px}
-.input-wrap input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:15px 44px 15px 16px;color:#fff;font-size:14px;letter-spacing:1px;outline:none;transition:border .2s}
+.input-wrap input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 44px 14px 16px;color:#fff;font-size:14px;letter-spacing:1px;outline:none;transition:border .2s}
 .input-wrap input:focus{border-color:rgba(96,165,250,.5)}
 .input-wrap input::placeholder{color:#475569;letter-spacing:0}
 .toggle-vis{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:#64748b;cursor:pointer;font-size:16px}
-
-.btn-start{width:100%;background:linear-gradient(135deg,#2563eb,#1d4ed8);border:none;border-radius:14px;padding:15px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:16px;box-shadow:0 8px 24px rgba(37,99,235,.4)}
-.setup-footer{font-size:12px;color:#334155;line-height:1.9}
+.btn-start{width:100%;background:linear-gradient(135deg,#2563eb,#1d4ed8);border:none;border-radius:14px;padding:14px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:14px;box-shadow:0 8px 24px rgba(37,99,235,.4)}
+.setup-footer{font-size:12px;color:#334155;line-height:1.8}
 .setup-footer a{color:#60a5fa;text-decoration:none}
 
-/* ── Main ── */
-#mainApp{display:none}
-#mainApp.on{display:block}
+/* ── Main (full viewport, no scroll) ── */
+#mainApp{display:none;height:100vh;flex-direction:column}
+#mainApp.on{display:flex}
 
-.header{display:flex;justify-content:space-between;align-items:center;padding:22px 18px 14px}
-.h-title{font-size:18px;font-weight:800;letter-spacing:-0.5px}
-.h-sub{font-size:11px;color:#475569;margin-top:2px}
-.h-btns{display:flex;gap:8px}
-.h-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:7px 12px;color:#94a3b8;font-size:12px;cursor:pointer;white-space:nowrap}
+.header{flex-shrink:0;display:flex;justify-content:space-between;align-items:center;padding:14px 16px 10px}
+.h-title{font-size:16px;font-weight:800;letter-spacing:-0.5px}
+.h-sub{font-size:10px;color:#475569;margin-top:1px}
+.h-btns{display:flex;gap:6px}
+.h-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:6px 11px;color:#94a3b8;font-size:11px;cursor:pointer;white-space:nowrap}
 
-.cards{padding:0 14px 28px;display:flex;flex-direction:column;gap:16px}
-.card{border-radius:24px;overflow:hidden}
-.card-body{padding:20px 22px 8px}
+/* 카드 영역 — 남은 공간 전부 사용 */
+.cards{flex:1;padding:0 12px 10px;display:flex;flex-direction:column;gap:9px;overflow:hidden;min-height:0}
+
+/* 각 카드 — 동일 비율로 공간 분할 */
+.card{flex:1;display:flex;flex-direction:column;border-radius:20px;overflow:hidden;min-height:0}
+
+.card-body{flex:1;padding:13px 18px 4px;display:flex;flex-direction:column;min-height:0}
 .card-top{display:flex;justify-content:space-between;align-items:flex-start}
-.city-country{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-.city-name{font-size:34px;font-weight:900;letter-spacing:-1px;line-height:1.1;margin-top:2px}
-.city-tag{font-size:11px;color:rgba(255,255,255,.33);margin-top:3px}
-.wx-icon{font-size:54px;line-height:1;text-align:right}
-.wx-text{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;text-align:right;max-width:84px;line-height:1.4}
-.card-date{font-size:12px;color:rgba(255,255,255,.33);margin-top:8px}
-.clock{display:flex;align-items:flex-end;gap:2px;margin:8px 0 16px}
-.c-hm{font-size:58px;font-weight:700;font-family:monospace;letter-spacing:2px;line-height:1;color:#f1f5f9}
-.c-sec{font-size:29px;font-weight:400;font-family:monospace;line-height:1;margin-bottom:4px}
-.daynight{display:inline-block;font-size:10px;padding:2px 7px;border-radius:6px;margin-left:6px;font-weight:600;vertical-align:middle}
+.city-country{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.city-name{font-size:26px;font-weight:900;letter-spacing:-1px;line-height:1.1;margin-top:1px}
+.city-tag{font-size:10px;color:rgba(255,255,255,.33);margin-top:2px}
+.wx-icon{font-size:42px;line-height:1;text-align:right}
+.wx-text{font-size:10px;color:rgba(255,255,255,.5);margin-top:2px;text-align:right;max-width:74px;line-height:1.4}
+.card-date{font-size:10px;color:rgba(255,255,255,.3);margin-top:5px}
+.clock{display:flex;align-items:flex-end;gap:1px;margin:4px 0 0;flex:1;align-items:center}
+.c-hm{font-size:50px;font-weight:700;font-family:monospace;letter-spacing:2px;line-height:1;color:#f1f5f9}
+.c-sec{font-size:25px;font-weight:400;font-family:monospace;line-height:1;margin-bottom:3px}
+.daynight{display:inline-block;font-size:9px;padding:2px 6px;border-radius:5px;margin-left:5px;font-weight:600;vertical-align:middle}
 
-.stats-wrap{padding:14px 22px;background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.05)}
-.stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
-.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05)}
-.s-lbl{font-size:10px;color:rgba(255,255,255,.32);letter-spacing:.5px;margin-bottom:4px;text-align:center}
-.s-val{font-size:15px;font-weight:700;color:#f1f5f9;text-align:center}
-.s-sub{font-size:9px;color:rgba(255,255,255,.28);margin-top:2px;text-align:center}
-.s-val.sm{font-size:13px}
+.stats-wrap{flex-shrink:0;padding:9px 18px 10px;background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.05)}
+.stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:3px}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:7px;padding-top:7px;border-top:1px solid rgba(255,255,255,.05)}
+.s-lbl{font-size:9px;color:rgba(255,255,255,.32);letter-spacing:.4px;margin-bottom:3px;text-align:center}
+.s-val{font-size:14px;font-weight:700;color:#f1f5f9;text-align:center}
+.s-sub{font-size:9px;color:rgba(255,255,255,.28);margin-top:1px;text-align:center}
+.s-val.sm{font-size:12px}
 
-.skel{background:rgba(255,255,255,.07);border-radius:4px;animation:sk 1.4s ease-in-out infinite}
+.skel{background:rgba(255,255,255,.07);border-radius:3px;animation:sk 1.4s ease-in-out infinite}
 @keyframes sk{0%,100%{opacity:.4}50%{opacity:.9}}
-.err-msg{font-size:12px;color:rgba(255,80,80,.75);text-align:center;padding:8px 0;line-height:1.6}
-.footer{text-align:center;font-size:11px;color:#1e293b;padding:0 0 24px}
+.err-msg{font-size:11px;color:rgba(255,80,80,.75);text-align:center;padding:6px 0;line-height:1.5}
+
+/* update time — 헤더에 통합 */
+#updateTime{font-size:9px;color:#1e3a5f;text-align:right;margin-top:1px}
 </style>
 </head>
 <body>
@@ -70,23 +75,16 @@ body{background:#060a14;color:#fff;font-family:'Apple SD Gothic Neo','Noto Sans 
 <!-- ── Setup ── -->
 <div id="setupScreen">
   <div class="setup-logo">🌏</div>
-  <div class="setup-title">부산 · 발리 날씨</div>
-  <div class="setup-badge">✓ 프록시 없음 · 직접 연결 · 안정적</div>
-  <div class="setup-desc">
-    WeatherAPI.com 무료 API 키를 입력하세요<br>
-    <span style="color:#475569">월 100만 콜 무료 · 한국어 지원</span>
-  </div>
-
+  <div class="setup-title">발리 · 부산 날씨</div>
+  <div class="setup-badge">✓ CORS 직접 연결 · 프록시 없음</div>
+  <div class="setup-desc">WeatherAPI.com 무료 API 키 입력<br><span style="color:#475569">월 100만 콜 무료 · 한국어 지원</span></div>
   <div class="input-wrap">
-    <input type="password" id="keyInput" placeholder="WeatherAPI Key 입력" autocomplete="off" spellcheck="false">
+    <input type="password" id="keyInput" placeholder="WeatherAPI Key" autocomplete="off" spellcheck="false">
     <button class="toggle-vis" onclick="toggleVis()">👁</button>
   </div>
   <button class="btn-start" onclick="startApp()">시작하기 →</button>
-
   <div class="setup-footer">
-    무료 키 발급 →
-    <a href="https://www.weatherapi.com/signup.aspx" target="_blank">weatherapi.com/signup</a><br>
-    이메일 가입 → 대시보드 → API Key 복사
+    무료 키 발급 → <a href="https://www.weatherapi.com/signup.aspx" target="_blank">weatherapi.com/signup</a>
   </div>
 </div>
 
@@ -94,72 +92,62 @@ body{background:#060a14;color:#fff;font-family:'Apple SD Gothic Neo','Noto Sans 
 <div id="mainApp">
   <div class="header">
     <div>
-      <div class="h-title">🌏 부산 · 발리</div>
-      <div class="h-sub">부산 UTC+9 &nbsp;·&nbsp; 발리 UTC+8 &nbsp;·&nbsp; 시차 1시간</div>
+      <div class="h-title">🌏 발리 · 부산</div>
+      <div class="h-sub">발리 UTC+8 &nbsp;·&nbsp; 부산 UTC+9 &nbsp;·&nbsp; 시차 1시간</div>
     </div>
-    <div class="h-btns">
-      <button class="h-btn" onclick="refresh()">↻ 갱신</button>
-      <button class="h-btn" onclick="resetKey()">🔑</button>
+    <div style="text-align:right">
+      <div class="h-btns">
+        <button class="h-btn" onclick="refresh()">↻</button>
+        <button class="h-btn" onclick="resetKey()">🔑</button>
+      </div>
+      <div id="updateTime"></div>
     </div>
   </div>
   <div class="cards" id="cards"></div>
-  <div class="footer" id="footer"></div>
 </div>
 
 <script>
-/* ── 도시 설정 ── */
 const CITIES=[
-  {id:'busan', name:'부산', country:'대한민국', tz:'Asia/Seoul', flag:'🇰🇷',
-   q:'35.1796,129.0756', tagline:'해운대 · 광안리 · 한국 제2도시',
-   accent:'#60a5fa', sec:'#93c5fd',
-   bg:'linear-gradient(160deg,#071b3e 0%,#0a2e60 50%,#071b3e 100%)',
-   bdr:'rgba(59,130,246,.3)', sdw:'rgba(37,99,235,.3)'},
-  {id:'bali', name:'발리', country:'인도네시아', tz:'Asia/Makassar', flag:'🇮🇩',
+  /* 발리 먼저 */
+  {id:'bali',  name:'발리', country:'인도네시아', tz:'Asia/Makassar', flag:'🇮🇩',
    q:'-8.6705,115.2126', tagline:'신들의 섬 · 덴파사르 · WITA',
    accent:'#fb923c', sec:'#fdba74',
    bg:'linear-gradient(160deg,#2a0d02 0%,#7c2d12 50%,#2a0d02 100%)',
    bdr:'rgba(234,88,12,.3)', sdw:'rgba(194,65,12,.3)'},
+  /* 부산 아래 */
+  {id:'busan', name:'부산', country:'대한민국',  tz:'Asia/Seoul',    flag:'🇰🇷',
+   q:'35.1796,129.0756',   tagline:'해운대 · 광안리 · 한국 제2도시',
+   accent:'#60a5fa', sec:'#93c5fd',
+   bg:'linear-gradient(160deg,#071b3e 0%,#0a2e60 50%,#071b3e 100%)',
+   bdr:'rgba(59,130,246,.3)', sdw:'rgba(37,99,235,.3)'},
 ];
 
-/* ── 날씨 코드 → 이모지 ── */
-function wxEmoji(code, isDay){
-  if(code===1000) return isDay?'☀️':'🌙';
-  if(code<=1009)  return isDay?'⛅':'🌤️';
-  if([1030,1135,1147].includes(code)) return '🌫️';
-  if(code>=1063&&code<=1072) return '🌦️';
-  if(code===1087||(code>=1273&&code<=1282)) return '⛈️';
-  if(code>=1114&&code<=1117) return '❄️';
-  if(code>=1150&&code<=1153) return '🌦️';
-  if(code>=1168&&code<=1171) return '🌨️';
-  if(code>=1180&&code<=1195) return '🌧️';
-  if(code>=1198&&code<=1225) return '🌨️';
-  if(code>=1240&&code<=1246) return '🌧️';
-  if(code>=1249&&code<=1264) return '🌨️';
-  return '🌡️';
+function wxEmoji(code,isDay){
+  if(code===1000)return isDay?'☀️':'🌙';
+  if(code<=1009) return isDay?'⛅':'🌤️';
+  if([1030,1135,1147].includes(code))return'🌫️';
+  if(code>=1063&&code<=1072)return'🌦️';
+  if(code===1087||(code>=1273&&code<=1282))return'⛈️';
+  if(code>=1114&&code<=1117)return'❄️';
+  if(code>=1150&&code<=1153)return'🌦️';
+  if(code>=1168&&code<=1171)return'🌨️';
+  if(code>=1180&&code<=1195)return'🌧️';
+  if(code>=1198&&code<=1225)return'🌨️';
+  if(code>=1240&&code<=1246)return'🌧️';
+  if(code>=1249&&code<=1264)return'🌨️';
+  return'🌡️';
 }
-
-const WDIR={'N':'북','NNE':'북북동','NE':'북동','ENE':'동북동','E':'동','ESE':'동남동',
-  'SE':'남동','SSE':'남남동','S':'남','SSW':'남남서','SW':'남서','WSW':'서남서',
-  'W':'서','WNW':'서북서','NW':'북서','NNW':'북북서'};
-const UV_LV=['','낮음','낮음','보통','보통','보통','높음','높음','매우 높음','매우 높음','매우 높음','위험'];
+const WDIR={N:'북',NNE:'북북동',NE:'북동',ENE:'동북동',E:'동',ESE:'동남동',SE:'남동',SSE:'남남동',S:'남',SSW:'남남서',SW:'남서',WSW:'서남서',W:'서',WNW:'서북서',NW:'북서',NNW:'북북서'};
+const UV_LV=['','낮음','낮음','보통','보통','보통','높음','높음','매우높음','매우높음','매우높음','위험'];
 function uvColor(v){return v<=2?'#4ade80':v<=5?'#facc15':v<=7?'#f97316':v<=10?'#ef4444':'#a855f7'}
 
-/* ── State ── */
-let KEY='';
-let cache={};  // {id: {data, ts}}
-let clockId=null;
+let KEY='', cache={}, clockId=null;
 
-/* ── Setup ── */
-function toggleVis(){
-  const i=document.getElementById('keyInput');
-  i.type=i.type==='password'?'text':'password';
-}
+function toggleVis(){const i=document.getElementById('keyInput');i.type=i.type==='password'?'text':'password';}
 function startApp(){
   const k=document.getElementById('keyInput').value.trim();
   if(!k){alert('API 키를 입력해주세요.');return;}
-  KEY=k;
-  localStorage.setItem('wapi_key',k);
-  launch();
+  KEY=k; localStorage.setItem('wapi_key',k); launch();
 }
 function resetKey(){
   if(!confirm('API 키를 초기화할까요?'))return;
@@ -172,15 +160,10 @@ function resetKey(){
 function launch(){
   document.getElementById('setupScreen').style.display='none';
   document.getElementById('mainApp').classList.add('on');
-  initClock();
-  loadWeather();
+  initClock(); loadWeather();
 }
 
-/* ── Clock ── */
-function initClock(){
-  if(clockId)clearInterval(clockId);
-  tick(); clockId=setInterval(tick,1000);
-}
+function initClock(){if(clockId)clearInterval(clockId);tick();clockId=setInterval(tick,1000);}
 function tick(){
   const now=new Date();
   CITIES.forEach(c=>{
@@ -197,27 +180,22 @@ function tick(){
   });
 }
 
-/* ── API (WeatherAPI.com — CORS 직접 지원) ── */
 async function wFetch(city){
-  const url=`https://api.weatherapi.com/v1/current.json?key=${KEY}&q=${city.q}&lang=ko&aqi=no`;
-  const res=await fetch(url);
+  const res=await fetch(`https://api.weatherapi.com/v1/current.json?key=${KEY}&q=${city.q}&lang=ko&aqi=no`);
   if(!res.ok){
     const e=await res.json().catch(()=>({}));
-    const msg=e?.error?.message||'';
-    if(res.status===401||res.status===403) throw new Error('API 키 오류 — 키를 확인해주세요');
-    throw new Error(msg||`오류 ${res.status}`);
+    if(res.status===401||res.status===403)throw new Error('API 키 오류 — 키를 확인하세요');
+    throw new Error(e?.error?.message||`오류 ${res.status}`);
   }
   return await res.json();
 }
 
-/* ── Load ── */
 function refresh(){cache={};loadWeather();}
 
 async function loadWeather(){
-  const now=Date.now(), TTL=30*60*1000;
+  const now=Date.now(),TTL=30*60*1000;
   const allOK=CITIES.every(c=>cache[c.id]&&(now-cache[c.id].ts)<TTL);
   if(allOK){renderCards({});return;}
-
   renderCards(null);
   const errs={};
   await Promise.all(CITIES.map(async c=>{
@@ -228,11 +206,12 @@ async function loadWeather(){
   }));
   renderCards(errs);
   const ts=Math.max(...CITIES.map(c=>cache[c.id]?.ts||0));
-  if(ts>0)document.getElementById('footer').textContent=
-    `WeatherAPI.com · 기준 ${new Date(ts).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})}`;
+  if(ts>0){
+    document.getElementById('updateTime').textContent=
+      `${new Date(ts).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})} 기준`;
+  }
 }
 
-/* ── Render ── */
 function renderCards(errs){
   const el=document.getElementById('cards');
   el.innerHTML='';
@@ -241,59 +220,47 @@ function renderCards(errs){
 }
 
 function makeCard(city,errs){
-  const loading=errs===null;
-  const err=errs?errs[city.id]:null;
-  const raw=cache[city.id]?.data;
-  const cur=raw?.current;
-  const loc=raw?.location;
-
+  const loading=errs===null, err=errs?errs[city.id]:null;
+  const cur=cache[city.id]?.data?.current;
   const isDay=cur?cur.is_day===1:true;
   const code=cur?.condition?.code||1000;
   const icon=cur?wxEmoji(code,isDay):'';
   const wxTxt=cur?cur.condition.text:'';
-
   const dayBadge=cur!=null
-    ?`<span class="daynight" style="background:${isDay?'rgba(251,191,36,.18)':'rgba(99,102,241,.18)'};color:${isDay?'#fbbf24':'#818cf8'}">${isDay?'낮':'밤'}</span>`
-    :'';
+    ?`<span class="daynight" style="background:${isDay?'rgba(251,191,36,.18)':'rgba(99,102,241,.18)'};color:${isDay?'#fbbf24':'#818cf8'}">${isDay?'낮':'밤'}</span>`:'';
 
-  /* stats */
   let statsHtml='';
   if(loading){
     statsHtml=`<div class="stats4">${[0,1,2,3].map(()=>`<div>
-      <div class="skel" style="height:9px;margin-bottom:6px"></div>
-      <div class="skel" style="height:15px"></div></div>`).join('')}</div>`;
+      <div class="skel" style="height:8px;margin-bottom:5px"></div>
+      <div class="skel" style="height:13px"></div></div>`).join('')}</div>`;
   }else if(err){
     statsHtml=`<div class="err-msg">⚠️ ${err}</div>`;
   }else if(cur){
-    const t=Math.round(cur.temp_c);
-    const f=Math.round(cur.feelslike_c);
-    const hum=cur.humidity;
-    const ws=Math.round(cur.wind_kph);
+    const t=Math.round(cur.temp_c), f=Math.round(cur.feelslike_c);
+    const hum=cur.humidity, ws=Math.round(cur.wind_kph);
     const wd=WDIR[cur.wind_dir]||cur.wind_dir;
     const wg=cur.gust_kph?Math.round(cur.gust_kph):null;
-    const uv=cur.uv||0;
-    const uvTxt=UV_LV[Math.min(Math.floor(uv),11)]||'';
-    const vis=Math.round(cur.vis_km);
-    const precip=cur.precip_mm;
+    const uv=cur.uv||0, vis=Math.round(cur.vis_km);
     const dew=cur.dewpoint_c!=null?Math.round(cur.dewpoint_c)+'°C':'-';
-
+    const precip=cur.precip_mm;
     statsHtml=`
     <div class="stats4">
       <div><div class="s-lbl">기온</div><div class="s-val">${t}°C</div><div class="s-sub">체감 ${f}°</div></div>
       <div><div class="s-lbl">습도</div><div class="s-val">${hum}%</div></div>
-      <div><div class="s-lbl">바람</div><div class="s-val">${ws}㎞/h</div><div class="s-sub">${wd}${wg?` · ${wg}`:''}</div></div>
-      <div><div class="s-lbl">자외선</div><div class="s-val" style="color:${uvColor(uv)}">${uv}</div><div class="s-sub">${uvTxt}</div></div>
+      <div><div class="s-lbl">바람</div><div class="s-val">${ws}㎞/h</div><div class="s-sub">${wd}${wg?` ·${wg}`:''}</div></div>
+      <div><div class="s-lbl">자외선</div><div class="s-val" style="color:${uvColor(uv)}">${uv}</div><div class="s-sub">${UV_LV[Math.min(Math.floor(uv),11)]}</div></div>
     </div>
     <div class="stats3">
       <div><div class="s-lbl">가시거리</div><div class="s-val sm">${vis}㎞</div></div>
       <div><div class="s-lbl">이슬점</div><div class="s-val sm">${dew}</div></div>
-      <div><div class="s-lbl">1시간 강수</div><div class="s-val sm">${precip}㎜</div></div>
+      <div><div class="s-lbl">강수(1h)</div><div class="s-val sm">${precip}㎜</div></div>
     </div>`;
   }
 
   const card=document.createElement('div');
   card.className='card';
-  card.style.cssText=`background:${city.bg};border:1px solid ${city.bdr};box-shadow:0 16px 48px ${city.sdw}`;
+  card.style.cssText=`background:${city.bg};border:1px solid ${city.bdr};box-shadow:0 10px 32px ${city.sdw}`;
   card.innerHTML=`
   <div class="card-body">
     <div class="card-top">
@@ -317,7 +284,6 @@ function makeCard(city,errs){
   return card;
 }
 
-/* ── Init ── */
 (function(){
   const k=localStorage.getItem('wapi_key');
   if(k){KEY=k;launch();}
