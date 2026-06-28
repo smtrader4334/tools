@@ -6,111 +6,63 @@
 <title>🌏 부산 · 발리 날씨</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{
-  background:#060a14;color:#fff;
-  font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;
-  min-height:100vh;max-width:480px;margin:0 auto;
-}
+body{background:#060a14;color:#fff;font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;min-height:100vh;max-width:480px;margin:0 auto}
 
 /* ── Setup ── */
-#setupScreen{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-height:100vh;padding:40px 28px;text-align:center;
-}
+#setupScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 28px;text-align:center}
 .setup-logo{font-size:52px;margin-bottom:20px;animation:float 3s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .setup-title{font-size:24px;font-weight:900;letter-spacing:-0.5px;margin-bottom:8px}
-.setup-desc{font-size:13px;color:#64748b;line-height:1.7;margin-bottom:32px}
+.setup-desc{font-size:13px;color:#64748b;line-height:1.8;margin-bottom:28px}
+.setup-badge{display:inline-block;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#4ade80;font-size:11px;font-weight:700;border-radius:8px;padding:4px 10px;margin-bottom:24px;letter-spacing:.5px}
 
 .input-wrap{position:relative;width:100%;margin-bottom:12px}
-.input-wrap input{
-  width:100%;background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.12);border-radius:14px;
-  padding:15px 44px 15px 16px;color:#fff;font-size:14px;
-  letter-spacing:1px;outline:none;transition:border .2s;
-}
-.input-wrap input:focus{border-color:rgba(96,165,250,0.5)}
+.input-wrap input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:15px 44px 15px 16px;color:#fff;font-size:14px;letter-spacing:1px;outline:none;transition:border .2s}
+.input-wrap input:focus{border-color:rgba(96,165,250,.5)}
 .input-wrap input::placeholder{color:#475569;letter-spacing:0}
-.toggle-vis{
-  position:absolute;right:14px;top:50%;transform:translateY(-50%);
-  background:none;border:none;color:#64748b;cursor:pointer;font-size:16px;
-}
+.toggle-vis{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:#64748b;cursor:pointer;font-size:16px}
 
-.btn-start{
-  width:100%;background:linear-gradient(135deg,#2563eb,#1d4ed8);
-  border:none;border-radius:14px;padding:15px;color:#fff;
-  font-size:15px;font-weight:700;cursor:pointer;margin-bottom:16px;
-  box-shadow:0 8px 24px rgba(37,99,235,0.4);
-}
-.setup-footer{font-size:12px;color:#334155;line-height:1.8}
+.btn-start{width:100%;background:linear-gradient(135deg,#2563eb,#1d4ed8);border:none;border-radius:14px;padding:15px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:16px;box-shadow:0 8px 24px rgba(37,99,235,.4)}
+.setup-footer{font-size:12px;color:#334155;line-height:1.9}
 .setup-footer a{color:#60a5fa;text-decoration:none}
 
 /* ── Main ── */
 #mainApp{display:none}
 #mainApp.on{display:block}
 
-/* Header */
-.header{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:22px 18px 14px;
-}
+.header{display:flex;justify-content:space-between;align-items:center;padding:22px 18px 14px}
 .h-title{font-size:18px;font-weight:800;letter-spacing:-0.5px}
 .h-sub{font-size:11px;color:#475569;margin-top:2px}
 .h-btns{display:flex;gap:8px}
-.h-btn{
-  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
-  border-radius:10px;padding:7px 12px;color:#94a3b8;font-size:12px;cursor:pointer;
-  white-space:nowrap;
-}
+.h-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:7px 12px;color:#94a3b8;font-size:12px;cursor:pointer;white-space:nowrap}
 
-/* Cards */
 .cards{padding:0 14px 28px;display:flex;flex-direction:column;gap:16px}
-
 .card{border-radius:24px;overflow:hidden}
-
 .card-body{padding:20px 22px 8px}
-
 .card-top{display:flex;justify-content:space-between;align-items:flex-start}
 .city-country{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
 .city-name{font-size:34px;font-weight:900;letter-spacing:-1px;line-height:1.1;margin-top:2px}
-.city-tag{font-size:11px;color:rgba(255,255,255,0.33);margin-top:3px}
-
+.city-tag{font-size:11px;color:rgba(255,255,255,.33);margin-top:3px}
 .wx-icon{font-size:54px;line-height:1;text-align:right}
-.wx-text{font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px;text-align:right;max-width:80px}
-
-.card-date{font-size:12px;color:rgba(255,255,255,0.33);margin-top:8px}
-
+.wx-text{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;text-align:right;max-width:84px;line-height:1.4}
+.card-date{font-size:12px;color:rgba(255,255,255,.33);margin-top:8px}
 .clock{display:flex;align-items:flex-end;gap:2px;margin:8px 0 16px}
 .c-hm{font-size:58px;font-weight:700;font-family:monospace;letter-spacing:2px;line-height:1;color:#f1f5f9}
 .c-sec{font-size:29px;font-weight:400;font-family:monospace;line-height:1;margin-bottom:4px}
+.daynight{display:inline-block;font-size:10px;padding:2px 7px;border-radius:6px;margin-left:6px;font-weight:600;vertical-align:middle}
 
-/* Stats */
-.stats-wrap{
-  padding:14px 22px;background:rgba(0,0,0,0.3);
-  border-top:1px solid rgba(255,255,255,0.05);
-}
+.stats-wrap{padding:14px 22px;background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.05)}
 .stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
-.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.05)}
-.s-lbl{font-size:10px;color:rgba(255,255,255,0.32);letter-spacing:.5px;margin-bottom:4px;text-align:center}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05)}
+.s-lbl{font-size:10px;color:rgba(255,255,255,.32);letter-spacing:.5px;margin-bottom:4px;text-align:center}
 .s-val{font-size:15px;font-weight:700;color:#f1f5f9;text-align:center}
-.s-sub{font-size:9px;color:rgba(255,255,255,0.28);margin-top:2px;text-align:center}
+.s-sub{font-size:9px;color:rgba(255,255,255,.28);margin-top:2px;text-align:center}
 .s-val.sm{font-size:13px}
 
-/* Skeleton */
-.skel{background:rgba(255,255,255,0.07);border-radius:4px;
-  animation:sk 1.4s ease-in-out infinite}
+.skel{background:rgba(255,255,255,.07);border-radius:4px;animation:sk 1.4s ease-in-out infinite}
 @keyframes sk{0%,100%{opacity:.4}50%{opacity:.9}}
-
-.err-msg{font-size:12px;color:rgba(255,80,80,0.7);text-align:center;padding:6px 0;line-height:1.5}
-
-/* Footer */
+.err-msg{font-size:12px;color:rgba(255,80,80,.75);text-align:center;padding:8px 0;line-height:1.6}
 .footer{text-align:center;font-size:11px;color:#1e293b;padding:0 0 24px}
-
-/* Day/Night indicator */
-.daynight{
-  display:inline-block;font-size:10px;padding:2px 6px;border-radius:6px;
-  margin-left:6px;font-weight:600;vertical-align:middle;
-}
 </style>
 </head>
 <body>
@@ -119,22 +71,22 @@ body{
 <div id="setupScreen">
   <div class="setup-logo">🌏</div>
   <div class="setup-title">부산 · 발리 날씨</div>
+  <div class="setup-badge">✓ 프록시 없음 · 직접 연결 · 안정적</div>
   <div class="setup-desc">
-    AccuWeather API 키를 입력하면<br>
-    실시간 날씨 정보를 불러옵니다.
+    WeatherAPI.com 무료 API 키를 입력하세요<br>
+    <span style="color:#475569">월 100만 콜 무료 · 한국어 지원</span>
   </div>
 
   <div class="input-wrap">
-    <input type="password" id="keyInput" placeholder="API Key 입력" autocomplete="off" spellcheck="false">
+    <input type="password" id="keyInput" placeholder="WeatherAPI Key 입력" autocomplete="off" spellcheck="false">
     <button class="toggle-vis" onclick="toggleVis()">👁</button>
   </div>
-
   <button class="btn-start" onclick="startApp()">시작하기 →</button>
 
   <div class="setup-footer">
-    무료 API 키 발급 →
-    <a href="https://developer.accuweather.com/" target="_blank">developer.accuweather.com</a><br>
-    <span style="color:#1e3a5f;font-size:11px">Free Limited Trial · 50 calls/day</span>
+    무료 키 발급 →
+    <a href="https://www.weatherapi.com/signup.aspx" target="_blank">weatherapi.com/signup</a><br>
+    이메일 가입 → 대시보드 → API Key 복사
   </div>
 </div>
 
@@ -157,88 +109,79 @@ body{
 <script>
 /* ── 도시 설정 ── */
 const CITIES=[
-  {
-    id:'busan',name:'부산',country:'대한민국',
-    tz:'Asia/Seoul',flag:'🇰🇷',
-    query:'Busan',ccode:'KR',
-    tagline:'해운대 · 광안리 · 한국 제2도시',
-    accent:'#60a5fa',sec:'#93c5fd',
-    bg:'linear-gradient(160deg,#071b3e 0%,#0a2e60 50%,#071b3e 100%)',
-    bdr:'rgba(59,130,246,0.3)',sdw:'rgba(37,99,235,0.3)',
-  },
-  {
-    id:'bali',name:'발리',country:'인도네시아',
-    tz:'Asia/Makassar',flag:'🇮🇩',
-    query:'Denpasar',ccode:'ID',
-    tagline:'신들의 섬 · 덴파사르 · WITA',
-    accent:'#fb923c',sec:'#fdba74',
-    bg:'linear-gradient(160deg,#2a0d02 0%,#7c2d12 50%,#2a0d02 100%)',
-    bdr:'rgba(234,88,12,0.3)',sdw:'rgba(194,65,12,0.3)',
-  }
+  {id:'busan', name:'부산', country:'대한민국', tz:'Asia/Seoul', flag:'🇰🇷',
+   q:'35.1796,129.0756', tagline:'해운대 · 광안리 · 한국 제2도시',
+   accent:'#60a5fa', sec:'#93c5fd',
+   bg:'linear-gradient(160deg,#071b3e 0%,#0a2e60 50%,#071b3e 100%)',
+   bdr:'rgba(59,130,246,.3)', sdw:'rgba(37,99,235,.3)'},
+  {id:'bali', name:'발리', country:'인도네시아', tz:'Asia/Makassar', flag:'🇮🇩',
+   q:'-8.6705,115.2126', tagline:'신들의 섬 · 덴파사르 · WITA',
+   accent:'#fb923c', sec:'#fdba74',
+   bg:'linear-gradient(160deg,#2a0d02 0%,#7c2d12 50%,#2a0d02 100%)',
+   bdr:'rgba(234,88,12,.3)', sdw:'rgba(194,65,12,.3)'},
 ];
 
-/* ── AccuWeather 아이콘 → 이모지 ── */
-const ICONS={
-  1:'☀️',2:'☀️',3:'⛅',4:'⛅',5:'⛅',
-  6:'☁️',7:'☁️',8:'☁️',11:'🌫️',
-  12:'🌦️',13:'🌦️',14:'🌦️',
-  15:'⛈️',16:'⛈️',17:'⛈️',
-  18:'🌧️',19:'🌨️',20:'❄️',21:'❄️',22:'❄️',
-  23:'🌨️',24:'🌨️',25:'🌨️',26:'🌨️',29:'🌨️',
-  30:'🌡️',31:'🌡️',32:'💨',
-  33:'🌙',34:'🌙',35:'🌤️',36:'🌤️',37:'🌤️',
-  38:'☁️',39:'🌦️',40:'🌦️',41:'⛈️',42:'⛈️',
-  43:'❄️',44:'❄️'
-};
+/* ── 날씨 코드 → 이모지 ── */
+function wxEmoji(code, isDay){
+  if(code===1000) return isDay?'☀️':'🌙';
+  if(code<=1009)  return isDay?'⛅':'🌤️';
+  if([1030,1135,1147].includes(code)) return '🌫️';
+  if(code>=1063&&code<=1072) return '🌦️';
+  if(code===1087||(code>=1273&&code<=1282)) return '⛈️';
+  if(code>=1114&&code<=1117) return '❄️';
+  if(code>=1150&&code<=1153) return '🌦️';
+  if(code>=1168&&code<=1171) return '🌨️';
+  if(code>=1180&&code<=1195) return '🌧️';
+  if(code>=1198&&code<=1225) return '🌨️';
+  if(code>=1240&&code<=1246) return '🌧️';
+  if(code>=1249&&code<=1264) return '🌨️';
+  return '🌡️';
+}
 
-const UV_KO ={'Low':'낮음','Moderate':'보통','High':'높음','Very High':'매우 높음','Extreme':'위험'};
 const WDIR={'N':'북','NNE':'북북동','NE':'북동','ENE':'동북동','E':'동','ESE':'동남동',
   'SE':'남동','SSE':'남남동','S':'남','SSW':'남남서','SW':'남서','WSW':'서남서',
   'W':'서','WNW':'서북서','NW':'북서','NNW':'북북서'};
+const UV_LV=['','낮음','낮음','보통','보통','보통','높음','높음','매우 높음','매우 높음','매우 높음','위험'];
+function uvColor(v){return v<=2?'#4ade80':v<=5?'#facc15':v<=7?'#f97316':v<=10?'#ef4444':'#a855f7'}
 
 /* ── State ── */
 let KEY='';
-let locs={};      // {id: locationKey}
-let cache={};     // {id: {data, ts}}
+let cache={};  // {id: {data, ts}}
 let clockId=null;
 
 /* ── Setup ── */
 function toggleVis(){
-  const inp=document.getElementById('keyInput');
-  inp.type=inp.type==='password'?'text':'password';
+  const i=document.getElementById('keyInput');
+  i.type=i.type==='password'?'text':'password';
 }
-
 function startApp(){
   const k=document.getElementById('keyInput').value.trim();
   if(!k){alert('API 키를 입력해주세요.');return;}
   KEY=k;
-  localStorage.setItem('accu_key',k);
-  locs=JSON.parse(localStorage.getItem('accu_locs')||'{}');
-  document.getElementById('setupScreen').style.display='none';
-  const app=document.getElementById('mainApp');
-  app.classList.add('on');
-  initClock();
-  loadWeather();
+  localStorage.setItem('wapi_key',k);
+  launch();
 }
-
 function resetKey(){
   if(!confirm('API 키를 초기화할까요?'))return;
-  localStorage.removeItem('accu_key');
-  localStorage.removeItem('accu_locs');
-  KEY='';locs={};cache={};
+  localStorage.removeItem('wapi_key');
+  KEY='';cache={};
   if(clockId)clearInterval(clockId);
   document.getElementById('mainApp').classList.remove('on');
   document.getElementById('setupScreen').style.display='flex';
+}
+function launch(){
+  document.getElementById('setupScreen').style.display='none';
+  document.getElementById('mainApp').classList.add('on');
+  initClock();
+  loadWeather();
 }
 
 /* ── Clock ── */
 function initClock(){
   if(clockId)clearInterval(clockId);
-  tickClock();
-  clockId=setInterval(tickClock,1000);
+  tick(); clockId=setInterval(tick,1000);
 }
-
-function tickClock(){
+function tick(){
   const now=new Date();
   CITIES.forEach(c=>{
     const hm=document.getElementById('hm_'+c.id);
@@ -246,108 +189,47 @@ function tickClock(){
     const dt=document.getElementById('dt_'+c.id);
     if(!hm)return;
     const p={};
-    new Intl.DateTimeFormat('en-US',{
-      timeZone:c.tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false
-    }).formatToParts(now).forEach(({type,value})=>p[type]=value);
+    new Intl.DateTimeFormat('en-US',{timeZone:c.tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})
+      .formatToParts(now).forEach(({type,value})=>p[type]=value);
     hm.textContent=`${p.hour}:${p.minute}`;
     sc.textContent=`:${p.second}`;
-    if(dt)dt.textContent=now.toLocaleDateString('ko-KR',{
-      timeZone:c.tz,year:'numeric',month:'long',day:'numeric',weekday:'short'
-    });
+    if(dt)dt.textContent=now.toLocaleDateString('ko-KR',{timeZone:c.tz,year:'numeric',month:'long',day:'numeric',weekday:'short'});
   });
 }
 
-/* ── API (다중 프록시 폴백) ── */
-async function acuFetch(url){
-  const TIMEOUT=9000;
-  const tid=ms=>new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),ms));
-
-  // 1순위: corsproxy.io — raw 응답 직접 반환
-  try{
-    const res=await Promise.race([
-      fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`),
-      tid(TIMEOUT)
-    ]);
-    if(res.ok){
-      const data=await res.json();
-      if(data&&!data.Code) return data; // Code 필드 = AccuWeather 오류
-      if(data?.Code==='Unauthorized'||data?.Code==='InvalidApiKey')
-        throw new Error('API 키 오류 — 키를 확인해주세요');
-    }
-  }catch(e){if(e.message.includes('API'))throw e;console.warn('proxy1:',e.message);}
-
-  // 2순위: allorigins.win — JSON 래퍼 형식
-  try{
-    const res=await Promise.race([
-      fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`),
-      tid(TIMEOUT)
-    ]);
-    if(res.ok){
-      const wrap=await res.json();
-      const code=wrap?.status?.http_code;
-      if(code===401||code===403) throw new Error('API 키 오류 — 키를 확인해주세요');
-      if(code&&code!==200) throw new Error('AccuWeather 오류 '+code);
-      return JSON.parse(wrap.contents);
-    }
-  }catch(e){if(e.message.includes('API')||e.message.includes('AccuWeather'))throw e;console.warn('proxy2:',e.message);}
-
-  // 3순위: thingproxy — 최종 폴백
-  try{
-    const res=await Promise.race([
-      fetch(`https://thingproxy.freeboard.io/fetch/${url}`),
-      tid(TIMEOUT)
-    ]);
-    if(res.ok) return await res.json();
-  }catch(e){console.warn('proxy3:',e.message);}
-
-  throw new Error('날씨 연결 실패 — 갱신 버튼을 눌러 재시도');
-}
-
-async function getLocKey(city){
-  if(locs[city.id])return locs[city.id];
-  const url=`https://dataservice.accuweather.com/locations/v1/cities/search`
-    +`?apikey=${KEY}&q=${encodeURIComponent(city.query)}&language=ko-kr`;
-  const data=await acuFetch(url);
-  if(!data||!data.length)throw new Error(city.name+' 위치 조회 실패');
-  const found=data.find(d=>d.Country&&d.Country.ID===city.ccode)||data[0];
-  locs[city.id]=found.Key;
-  localStorage.setItem('accu_locs',JSON.stringify(locs));
-  return found.Key;
-}
-
-async function getCurrent(locKey){
-  const url=`https://dataservice.accuweather.com/currentconditions/v1/${locKey}`
-    +`?apikey=${KEY}&language=ko-kr&details=true`;
-  const data=await acuFetch(url);
-  if(!data||!data.length)throw new Error('날씨 데이터 없음');
-  return data[0];
+/* ── API (WeatherAPI.com — CORS 직접 지원) ── */
+async function wFetch(city){
+  const url=`https://api.weatherapi.com/v1/current.json?key=${KEY}&q=${city.q}&lang=ko&aqi=no`;
+  const res=await fetch(url);
+  if(!res.ok){
+    const e=await res.json().catch(()=>({}));
+    const msg=e?.error?.message||'';
+    if(res.status===401||res.status===403) throw new Error('API 키 오류 — 키를 확인해주세요');
+    throw new Error(msg||`오류 ${res.status}`);
+  }
+  return await res.json();
 }
 
 /* ── Load ── */
 function refresh(){cache={};loadWeather();}
 
 async function loadWeather(){
-  const now=Date.now();
-  const TTL=30*60*1000;
+  const now=Date.now(), TTL=30*60*1000;
   const allOK=CITIES.every(c=>cache[c.id]&&(now-cache[c.id].ts)<TTL);
   if(allOK){renderCards({});return;}
 
-  renderCards(null); // loading
-
+  renderCards(null);
   const errs={};
   await Promise.all(CITIES.map(async c=>{
     try{
       if(cache[c.id]&&(now-cache[c.id].ts)<TTL)return;
-      const key=await getLocKey(c);
-      const wx=await getCurrent(key);
-      cache[c.id]={data:wx,ts:Date.now()};
+      cache[c.id]={data:await wFetch(c),ts:Date.now()};
     }catch(e){errs[c.id]=e.message;}
   }));
-
   renderCards(errs);
   const ts=Math.max(...CITIES.map(c=>cache[c.id]?.ts||0));
   if(ts>0)document.getElementById('footer').textContent=
-    `AccuWeather · 기준 ${new Date(ts).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})}`;
+    `WeatherAPI.com · 기준 ${new Date(ts).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})}`;
 }
 
 /* ── Render ── */
@@ -355,79 +237,57 @@ function renderCards(errs){
   const el=document.getElementById('cards');
   el.innerHTML='';
   CITIES.forEach(c=>el.appendChild(makeCard(c,errs)));
-  tickClock();
+  tick();
 }
 
 function makeCard(city,errs){
   const loading=errs===null;
   const err=errs?errs[city.id]:null;
-  const wx=cache[city.id]?.data;
+  const raw=cache[city.id]?.data;
+  const cur=raw?.current;
+  const loc=raw?.location;
 
-  // ── weather section ──
-  const icon=wx?(ICONS[wx.WeatherIcon]||'🌡️'):'';
-  const wxText=wx?wx.WeatherText:'';
-  const isDayBadge=wx!=null
-    ? `<span class="daynight" style="background:${wx.IsDayTime?'rgba(251,191,36,.2)':'rgba(99,102,241,.2)'}; color:${wx.IsDayTime?'#fbbf24':'#818cf8'}">${wx.IsDayTime?'낮':'밤'}</span>`
-    : '';
+  const isDay=cur?cur.is_day===1:true;
+  const code=cur?.condition?.code||1000;
+  const icon=cur?wxEmoji(code,isDay):'';
+  const wxTxt=cur?cur.condition.text:'';
 
-  // ── stats ──
+  const dayBadge=cur!=null
+    ?`<span class="daynight" style="background:${isDay?'rgba(251,191,36,.18)':'rgba(99,102,241,.18)'};color:${isDay?'#fbbf24':'#818cf8'}">${isDay?'낮':'밤'}</span>`
+    :'';
+
+  /* stats */
   let statsHtml='';
   if(loading){
-    statsHtml=`<div class="stats4">${[0,1,2,3].map(()=>`
-      <div><div class="skel" style="height:9px;margin-bottom:6px"></div>
+    statsHtml=`<div class="stats4">${[0,1,2,3].map(()=>`<div>
+      <div class="skel" style="height:9px;margin-bottom:6px"></div>
       <div class="skel" style="height:15px"></div></div>`).join('')}</div>`;
-  } else if(err){
+  }else if(err){
     statsHtml=`<div class="err-msg">⚠️ ${err}</div>`;
-  } else if(wx){
-    const t=Math.round(wx.Temperature.Metric.Value);
-    const f=Math.round(wx.RealFeelTemperature.Metric.Value);
-    const hum=wx.RelativeHumidity;
-    const ws=Math.round(wx.Wind.Speed.Metric.Value);
-    const wd=WDIR[wx.Wind.Direction.English]||wx.Wind.Direction.English;
-    const wg=wx.WindGust?Math.round(wx.WindGust.Speed.Metric.Value):null;
-    const uv=wx.UVIndex;
-    const uvTxt=UV_KO[wx.UVIndexText]||wx.UVIndexText||'-';
-    const uvC=uv==null?'#94a3b8':uv<=2?'#4ade80':uv<=5?'#facc15':uv<=7?'#f97316':uv<=10?'#ef4444':'#a855f7';
-    const vis=wx.Visibility?Math.round(wx.Visibility.Metric.Value):'-';
-    const dew=wx.DewPoint?Math.round(wx.DewPoint.Metric.Value)+'°C':'-';
-    const precip=wx.PrecipitationSummary?.PastHour?.Metric?.Value;
-    const precipStr=precip!=null?(precip+'㎜'):'-';
+  }else if(cur){
+    const t=Math.round(cur.temp_c);
+    const f=Math.round(cur.feelslike_c);
+    const hum=cur.humidity;
+    const ws=Math.round(cur.wind_kph);
+    const wd=WDIR[cur.wind_dir]||cur.wind_dir;
+    const wg=cur.gust_kph?Math.round(cur.gust_kph):null;
+    const uv=cur.uv||0;
+    const uvTxt=UV_LV[Math.min(Math.floor(uv),11)]||'';
+    const vis=Math.round(cur.vis_km);
+    const precip=cur.precip_mm;
+    const dew=cur.dewpoint_c!=null?Math.round(cur.dewpoint_c)+'°C':'-';
 
     statsHtml=`
     <div class="stats4">
-      <div>
-        <div class="s-lbl">기온</div>
-        <div class="s-val">${t}°C</div>
-        <div class="s-sub">체감 ${f}°</div>
-      </div>
-      <div>
-        <div class="s-lbl">습도</div>
-        <div class="s-val">${hum}%</div>
-      </div>
-      <div>
-        <div class="s-lbl">바람</div>
-        <div class="s-val">${ws}㎞/h</div>
-        <div class="s-sub">${wd}${wg?` · 돌풍 ${wg}`:''}</div>
-      </div>
-      <div>
-        <div class="s-lbl">자외선</div>
-        <div class="s-val" style="color:${uvC}">${uv!=null?uv:'-'}</div>
-        <div class="s-sub">${uvTxt}</div>
-      </div>
+      <div><div class="s-lbl">기온</div><div class="s-val">${t}°C</div><div class="s-sub">체감 ${f}°</div></div>
+      <div><div class="s-lbl">습도</div><div class="s-val">${hum}%</div></div>
+      <div><div class="s-lbl">바람</div><div class="s-val">${ws}㎞/h</div><div class="s-sub">${wd}${wg?` · ${wg}`:''}</div></div>
+      <div><div class="s-lbl">자외선</div><div class="s-val" style="color:${uvColor(uv)}">${uv}</div><div class="s-sub">${uvTxt}</div></div>
     </div>
     <div class="stats3">
-      <div>
-        <div class="s-lbl">가시거리</div>
-        <div class="s-val sm">${vis}㎞</div>
-      </div>
-      <div>
-        <div class="s-lbl">이슬점</div>
-        <div class="s-val sm">${dew}</div>
-      </div>
-      <div>
-        <div class="s-lbl">1시간 강수</div>
-        <div class="s-val sm">${precipStr}</div>
-      </div>
+      <div><div class="s-lbl">가시거리</div><div class="s-val sm">${vis}㎞</div></div>
+      <div><div class="s-lbl">이슬점</div><div class="s-val sm">${dew}</div></div>
+      <div><div class="s-lbl">1시간 강수</div><div class="s-val sm">${precip}㎜</div></div>
     </div>`;
   }
 
@@ -439,12 +299,12 @@ function makeCard(city,errs){
     <div class="card-top">
       <div>
         <div class="city-country" style="color:${city.accent}">${city.flag} ${city.country}</div>
-        <div class="city-name">${city.name}${isDayBadge}</div>
+        <div class="city-name">${city.name}${dayBadge}</div>
         <div class="city-tag">${city.tagline}</div>
       </div>
       <div>
         <div class="wx-icon">${icon}</div>
-        <div class="wx-text">${wxText}</div>
+        <div class="wx-text">${wxTxt}</div>
       </div>
     </div>
     <div class="card-date" id="dt_${city.id}"></div>
@@ -459,15 +319,8 @@ function makeCard(city,errs){
 
 /* ── Init ── */
 (function(){
-  const k=localStorage.getItem('accu_key');
-  if(k){
-    KEY=k;
-    locs=JSON.parse(localStorage.getItem('accu_locs')||'{}');
-    document.getElementById('setupScreen').style.display='none';
-    document.getElementById('mainApp').classList.add('on');
-    initClock();
-    loadWeather();
-  }
+  const k=localStorage.getItem('wapi_key');
+  if(k){KEY=k;launch();}
 })();
 </script>
 </body>
