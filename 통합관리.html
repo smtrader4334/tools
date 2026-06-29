@@ -229,7 +229,7 @@ function renderListBody(){
         <span class="badge" style="background:${sun?'#ede9fe':'#fee2e2'};color:${sun?'#7c3aed':'#dc2626'}">${sun?'선임권':'독립'}</span>
         <span style="color:${TEXT};font-size:10px;font-weight:600">${esc(c.cn)}</span>
         ${c.region?`<span style="color:${GOLD};font-size:10px;font-weight:600">${esc(c.region)}</span>`:''}
-        ${st==='검토중'&&dd!=null?`<span class="badge" style="background:#fef3c7;color:#a16207;margin-left:auto">제출 D+${dd}</span>`:st==='진행중'&&dacc!=null?`<span class="badge" style="background:#dbeafe;color:#2563eb;margin-left:auto">사고 D+${dacc}</span>`:st==='종결'&&between(c.acc,c.cls)!=null?`<span class="badge" style="background:#dcfce7;color:#16a34a;margin-left:auto">처리 ${between(c.acc,c.cls)}일</span>`:''}
+        ${st==='검토중'&&dd!=null?`<span class="badge" style="background:#fef3c7;color:#a16207;margin-left:auto">제출 D+${dd}</span>${dacc!=null?`<span class="badge" style="background:#dbeafe;color:#2563eb">사고 D+${dacc}</span>`:''}`:st==='진행중'&&dacc!=null?`<span class="badge" style="background:#dbeafe;color:#2563eb;margin-left:auto">사고 D+${dacc}</span>`:st==='종결'&&between(c.acc,c.cls)!=null?`<span class="badge" style="background:#dcfce7;color:#16a34a;margin-left:auto">처리 ${between(c.acc,c.cls)}일</span>`:''}
       </div>
       <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:8px">
         <div style="flex:1;min-width:0">
