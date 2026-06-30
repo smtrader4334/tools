@@ -1066,7 +1066,7 @@ function runCalc(){
   var sinkLen=PF(sv.sink_len)||2.7;
   var c4=[it('싱크대',(sv.sink_type||'ㅡ자')+'형/'+sinkLen+'m','식',1,sinkBase[sv.sink_type]||2632200,0,0,'ㅇ 싱크대 1식','=1')];
   if(sv.island_yn&&PF(sv.island_len)>0)c4.push(it('아일랜드식탁',sv.island_len+'m','식',1,800000,0,0,'ㅇ 아일랜드식탁 1식 (시중가)','=1'));
-  closets.forEach(function(c){ if(c.room&&c.len){ var ja=Math.round(PF(c.len)); c4.push(it('붙박이장('+c.room+')',c.len+'자','자',ja,195000,0,0,'ㅇ '+c.room+' '+c.len+'자','='+ja)); } });
+  closets.forEach(function(c){ if(c.room&&c.len){ var ja=Math.round(PF(c.len)); var m=R2(ja*0.3); c4.push(it('붙박이장('+c.room+')',m+'m/'+ja+'자','자',ja,195000,0,0,'ㅇ '+c.room+' '+c.len+'자','='+ja)); } });
   if(PF(sv.shoecab_len)>0){ var sja=Math.round(PF(sv.shoecab_len)); c4.push(it('현관신발장','-','자',sja,195000,0,0,'ㅇ 현관신발장 '+sv.shoecab_len+'자','='+sja)); }
   cats.push({no:4,name:'가구공사',rows:c4});
   // ⑤ 도장 (발코니 천장·벽체 - 마감 선택에 따라 수성페인트/무늬코트/타일 분기)
