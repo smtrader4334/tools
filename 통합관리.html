@@ -821,7 +821,22 @@ function renderAppbar(){
    +'</div>'
    +'<div id="gdst" style="font-size:11px;margin-top:5px;text-align:right;color:'+gdLastCol+'">'+(gdLastMsg||'☁ 드라이브 — 📤 저장으로 로그인')+'</div>';
 }
-function setApp(a){ APP=a; if(a==='jango') jTab='jMonth'; try{closeModal();}catch(e){} render(); }
+function J_gotoCurrentMonth(){
+  // 오늘 기준 현재 달로 이동. 없으면 직전 데이터 달의 잔고를 이월(거래·고정비·생활비 빈 상태)
+  const now=new Date();
+  const curKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  if(!D.jango[curKey]){
+    // 현재 달 직전으로 데이터 있는 가장 최근 달 찾기 (이월 잔고 계산용)
+    const keys=Object.keys(D.jango).filter(k=>k<curKey).sort();
+    const prevKey=keys.length?keys[keys.length-1]:null;
+    const carryover=prevKey?J_calcM(D.jango[prevKey]).bal:0;
+    D.jango[curKey]={carryover,transactions:[],bizCosts:[],lifeCosts:[],_seeded:true};
+    save();
+  }
+  jMonth=curKey;
+  jYear=now.getFullYear();
+}
+function setApp(a){ APP=a; if(a==='jango'){ jTab='jMonth'; try{J_gotoCurrentMonth();}catch(e){} } try{closeModal();}catch(e){} render(); }
 
 // 드라이브 상태 문구 유지(재렌더 시에도 보존) + 앱바에 표시
 var gdLastMsg='', gdLastCol='#94a3b8';
