@@ -1140,14 +1140,14 @@ function runCalc(){
     var dParts=dWins.map(function(w){var q=PI(w.qty);return '('+R2(PF(w.w)/1000)+'*'+R2(PF(w.h)/1000)+(q>1?'*'+q:'')+')';});
     var sParts=sWins.map(function(w){var q=PI(w.qty);return '('+R2(PF(w.w)/1000)+'*'+R2(PF(w.h)/1000)+(q>1?'*'+q:'')+')';});
     var glBasisParts=[];
-    if(dParts.length) glBasisParts.push('('+dParts.join('+')+')'+'\xD72이중창');
-    sParts.forEach(function(p){glBasisParts.push(p);});
+    if(dParts.length) glBasisParts.push('('+dParts.join('+')+')×2이중창');
+    if(sParts.length) glBasisParts.push('('+sParts.join('+')+')'+(dParts.length?'단창':''));
     var glBasis='ㅇ '+glBasisParts.join('+');
-    var dFxParts=dWins.map(function(w){var q=PI(w.qty);return R2(PF(w.w)/1000)+'*'+R2(PF(w.h)/1000)+(q>1?'*'+q:'');});
+    var dFxParts=dWins.map(function(w){var q=PI(w.qty);return '('+R2(PF(w.w)/1000)+'*'+R2(PF(w.h)/1000)+(q>1?'*'+q:'')+')';});
     var sFxParts=sWins.map(function(w){var q=PI(w.qty);return '('+R2(PF(w.w)/1000)+'*'+R2(PF(w.h)/1000)+(q>1?'*'+q:'')+')';});
     var glFxArr=[];
     if(dFxParts.length) glFxArr.push('('+dFxParts.join('+')+')'+'\xD72');
-    sFxParts.forEach(function(p){glFxArr.push(p);});
+    if(sFxParts.length) glFxArr.push('('+sFxParts.join('+') +')');
     var glFx='='+glFxArr.join('+');
     c6.push(it('복층유리','22mm','㎡',glassArea,38100,34880,0,glBasis,glFx));
   }
