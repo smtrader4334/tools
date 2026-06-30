@@ -997,10 +997,10 @@ function runCalc(){
   var bbBasis, bbFx;
   if(baseDeductStr){
     bbBasis = 'ㅇ 몰딩('+moldExpr+') - 차감('+baseDeductStr+')';
-    bbFx = '=MAX(0,'+moldExpr+'-('+baseDeductStr+'))';
+    bbFx = '='+moldExpr+'-('+baseDeductStr+')';
   } else {
     bbBasis = 'ㅇ 몰딩('+moldExpr+')';
-    bbFx = '=MAX(0,'+moldExpr+')';
+    bbFx = '='+moldExpr;
   }
   var c2=[
     it('반자틀설치','널천장','㎡',excArea,10377,29484,884,basisRooms(allExcl),fxExcl),
