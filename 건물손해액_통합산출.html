@@ -1078,7 +1078,7 @@ function runCalc(){
       var a=wm*hm*cnt;
       deductArea+=a;
       var loc=(w.locs||[]).length?w.locs.join('·'):'창호';
-      deductBasisParts.push(loc+'('+R2(wm)+'×'+R2(hm)+(cnt>1?'×'+cnt:'')+')');
+      deductBasisParts.push(loc+'('+R2(wm)+'*'+R2(hm)+(cnt>1?'*'+cnt:'')+')');
       deductFxParts.push(R2(wm)+'*'+R2(hm)+(cnt>1?'*'+cnt:''));
     });
     var balcWallNet=Math.max(0,balcWallArea-deductArea);
