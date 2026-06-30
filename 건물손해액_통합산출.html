@@ -1180,8 +1180,8 @@ function runCalc(){
     tFloorSum+=PF(b.w)*PF(b.d);
     tileWallParts.push(b.name+'(('+R2(b.w)+'+'+R2(b.d)+')*2*'+wallH+')');
     tileWallFx.push('('+R2(b.w)+'+'+R2(b.d)+')*2*'+wallH);
-    tileFloorParts.push(b.name+'('+R2(b.w)+'*'+R2(b.d)+')');
-    tileFloorFx.push(R2(b.w)+'*'+R2(b.d));
+    tileFloorParts.push(b.name+'('+R2(roomArea(b))+')');
+    tileFloorFx.push(roomAreaBasis(b));
   });
   // ② 발코니 타일 (balcTileJobs → 벽체/천장은 벽체 합산, 바닥은 바닥 합산)
   balcTileJobs.forEach(function(j){
@@ -1203,8 +1203,10 @@ function runCalc(){
     var entryArea=entryRooms.reduce(function(s,r){return s+roomArea(r);},0);
     if(entryArea>0){
       tFloorSum+=entryArea;
-      var eFxArr=entryRooms.filter(function(r){return roomArea(r)>0;}).map(function(r){return R2(r.w)+'*'+R2(r.d);});
-      tileFloorParts.push('현관('+eFxArr.join('+')+')')
+      var validEntry=entryRooms.filter(function(r){return roomArea(r)>0;});
+      var eBasisArr=validEntry.map(function(r){return R2(roomArea(r));});
+      var eFxArr=validEntry.map(function(r){return roomAreaBasis(r);});
+      tileFloorParts.push('현관('+eBasisArr.join('+')+')')
       tileFloorFx.push(eFxArr.join('+'));
     }
   }
@@ -1215,8 +1217,8 @@ function runCalc(){
       tFloorSum+=balcFloorArea;
       var bfArr=balcs.filter(function(r){return roomArea(r)>0;});
       bfArr.forEach(function(r){
-        tileFloorParts.push(r.name+'('+R2(r.w)+'*'+R2(r.d)+')');
-        tileFloorFx.push(R2(r.w)+'*'+R2(r.d));
+        tileFloorParts.push(r.name+'('+R2(roomArea(r))+')');
+        tileFloorFx.push(roomAreaBasis(r));
       });
     }
   }
