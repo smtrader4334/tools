@@ -990,7 +990,7 @@ function runCalc(){
   // ② 목공 (반자틀=전유 욕실포함, 석고판=전유-욕실, 걸레받이=몰딩식-차감식)
   // 산출근거/계산식: 실별둘레 자동합산 + 수동입력 항상 합산
   var autoPerimFx = fxPerim(allExcl,null);  // '=(w+d)*2+...'
-  var moldBasis = basisPerim(allExcl,'',null) + (moldManual>0 ? ' + 추가('+moldManualStr+')' : '');
+  var moldBasis = basisPerim(allExcl,'',null) + (moldManual>0 ? ' + 거실,주방('+moldManualStr+')' : '');
   var moldFx = autoPerimFx + (moldManual>0 ? '+('+moldManualStr+')' : '');
   // 걸레받이 산출근거·계산식
   var moldExpr = R2(moldingTotal);
@@ -1051,7 +1051,7 @@ function runCalc(){
       var moldInner=moldFx.slice(1);
       var wallBasis=(wBasisParts.length?'ㅇ ('+wBasisParts.join('+')+')*2*2.3':'')+(moldInner?'+('+moldInner+')*2.3':'');
       var wallFxStr=(wFxParts.length?'=('+wFxParts.join('+')+')*2*2.3+('+moldInner+')*2.3':'=('+moldInner+')*2.3');
-      return it('벽지도배바름',sv.wall_surface||'석고보드면','㎡',wallPaperArea,5100,7380,0,wallBasis,wallFxStr);
+      return it('벽체도배바름',sv.wall_surface||'석고보드면','㎡',wallPaperArea,5100,7380,0,wallBasis,wallFxStr);
     })(),
     it('리빙우드','욕실천장재','㎡',bathArea,41667,15241,457,basisRooms(bathRooms),fxRooms(bathRooms)),
     it('바닥재',floorSp,'㎡',floorArea,24000,17146,0,basisRooms(floorAllRooms),fxFloor)
@@ -1059,7 +1059,7 @@ function runCalc(){
   // ④ 가구 (입력 반영)
   var sinkBase={'ㅡ자':2632200,'ㄱ자':2744487,'ㄷ자':4116730};
   var sinkLen=PF(sv.sink_len)||2.7;
-  var c4=[it('싱크대',(sv.sink_type||'ㅡ자')+'형/'+sinkLen+'m','식',1,sinkBase[sv.sink_type]||2632200,0,0,'ㅇ 싱크대 1식 (시중가)','=1')];
+  var c4=[it('싱크대',(sv.sink_type||'ㅡ자')+'형/'+sinkLen+'m','식',1,sinkBase[sv.sink_type]||2632200,0,0,'ㅇ 싱크대 1식','=1')];
   if(sv.island_yn&&PF(sv.island_len)>0)c4.push(it('아일랜드식탁',sv.island_len+'m','식',1,800000,0,0,'ㅇ 아일랜드식탁 1식 (시중가)','=1'));
   closets.forEach(function(c){ if(c.room&&c.len){ var ja=Math.round(PF(c.len)); c4.push(it('붙박이장('+c.room+')',c.len+'자','자',ja,195000,0,0,'ㅇ '+c.room+' '+c.len+'자','='+ja)); } });
   if(PF(sv.shoecab_len)>0){ var sja=Math.round(PF(sv.shoecab_len)); c4.push(it('현관신발장','-','자',sja,195000,0,0,'ㅇ 현관신발장 '+sv.shoecab_len+'자','='+sja)); }
