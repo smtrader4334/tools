@@ -139,7 +139,7 @@ function defaultSv(){ return {
   boiler:'가스 콘덴싱',ac_rooms:'',balcony_cnt:'',circuit_cnt:'',
   led_living:'',led_room:'',led_kitchen:'',led_balcony:'',led_bath:'',led_entry:'',
   wallpad:true,interphone:true,speaker:true,fire_ex:true,
-  door_cnt:0,entry_door_type:'현관문 (스틸)',entry_door_w:'',entry_door_h:'',
+  door_cnt:0,entry_door_type:'현관문',entry_door_w:'',entry_door_h:'',
   middle_door:false,middle_door_w:'1500',middle_door_h:'2100',
   molding_manual:'',molding_basis:'',
   base_door_cnt:'',base_door_extra:'0.9*',
@@ -539,7 +539,7 @@ function renderWindows(){
     '<button class="add-btn" onclick="addWin()">+ 창문 추가</button>'+
     '</div></div>'+
     '<div class="section"><div class="section-title">현관문</div><div class="section-body">'+
-    row('종류','<select id="entry_door_type" onchange="onChange()"><option>현관문 (스틸)</option><option>현관문 (목재)</option><option>방화문</option></select>','')+
+    row('종류','<select id="entry_door_type" onchange="onChange()"><option>현관문</option><option>방화문</option></select>','')+
     row('규격','<div class="inline"><input type="text" id="entry_door_w" placeholder="1000" oninput="onChange()"><span class="unit">&#215;</span><input type="text" id="entry_door_h" placeholder="2100" oninput="onChange()"><span class="unit">mm &#183; 1개소</span></div>','')+
     '<div class="check-group" style="margin-top:4px"><label class="ck-label"><input type="checkbox" id="middle_door"'+(sv.middle_door?' checked':'')+' onchange="toggleMiddleDoor()"> 3연동 중문 있음</label></div>'+
     '<div id="md-row" style="display:'+(sv.middle_door?'block':'none')+';margin-top:4px">'+
@@ -1129,9 +1129,10 @@ function runCalc(){
     var mw=sv.middle_door_w||'1500', mh=sv.middle_door_h||'2100';
     c6.push(it('현관3연동중문',mw+'*'+mh,'개소',1,1230000,115553,3466,'ㅇ 현관 1개소','=1'));
   }
-  var edW=sv.entry_door_w||'1000', edH=sv.entry_door_h||'2100';
-  c6.push(it(sv.entry_door_type||'현관문',edW+'*'+edH,'개소',1,819950,124508,3735,'ㅇ 현관문 1개소','=1'));
   if(PI(sv.door_cnt)>0)c6.push(it('목재여닫이문(문틀포함)','900*2100','개소',PI(sv.door_cnt),275500,88382,2651,'ㅇ 여닫이문 '+PI(sv.door_cnt)+'개소','='+PI(sv.door_cnt)));
+  var edW=sv.entry_door_w||'1000', edH=sv.entry_door_h||'2100';
+  var edType=(sv.entry_door_type||'현관문').replace(/\s*\(스틸\)|\s*\(목재\)/,'').replace('방화문','방화문');
+  c6.push(it(edType,edW+'*'+edH,'개소',1,819950,124508,3735,'ㅇ 현관문 1개소','=1'));
   c6.push(it('디지털도어락','-','개소',1,187000,106290,2125,'ㅇ 도어락 1개소','=1'));
   if(glassArea>0){
     var glBasis='ㅇ '+validWins.map(function(w){var q=PI(w.qty);return '('+R2(PF(w.w)/1000)+'*'+R2(PF(w.h)/1000)+(q>1?'*'+q:'')+')';}).join('+');
