@@ -959,6 +959,11 @@ function runCalc(){
     var parts=arr.filter(function(r){return roomArea(r)>0;}).map(function(r){return roomAreaBasis(r);});
     return '='+(parts.length?parts.join('+'):'0');
   }
+  // 실별 괄호 버전 (수장공사용)
+  function fxRoomsP(arr){
+    var parts=arr.filter(function(r){return roomArea(r)>0;}).map(function(r){return '('+roomAreaBasis(r)+')';});
+    return '='+(parts.length?parts.join('+'):'0');
+  }
   // 실 둘레 배열 → "ㅇ 거실((5.0+3.8)*2)+..." 형식
   function basisPerim(arr,label,mult){
     var parts=arr.filter(function(r){return PF(r.w)>0;}).map(function(r){
@@ -1041,7 +1046,7 @@ function runCalc(){
   var floorArea=floorAllRooms.reduce(function(s,r){return s+roomArea(r);},0);
   var fxFloor='='+floorAllRooms.filter(function(r){return roomArea(r)>0;}).map(function(r){return roomAreaBasis(r);}).join('+');
   cats.push({no:3,name:'수장공사',rows:[
-    it('천장도배바름',sv.ceil_surface||'석고보드면','㎡',excArea-bathArea,5100,9584,0,basisRooms(lives),fxExclNoBath),
+    it('천장도배바름',sv.ceil_surface||'석고보드면','㎡',excArea-bathArea,5100,9584,0,basisRooms(lives),fxRoomsP(lives)),
     (function(){
       // 방 그룹식: ((방1(w+d))+(방2(w+d))+...)*2*2.3
       var wRooms=wallRooms.filter(function(r){return PF(r.w)>0;});
@@ -1053,8 +1058,8 @@ function runCalc(){
       var wallFxStr=(wFxParts.length?'=('+wFxParts.join('+')+')*2*2.3+('+moldInner+')*2.3':'=('+moldInner+')*2.3');
       return it('벽체도배바름',sv.wall_surface||'석고보드면','㎡',wallPaperArea,5100,7380,0,wallBasis,wallFxStr);
     })(),
-    it('리빙우드','욕실천장재','㎡',bathArea,41667,15241,457,basisRooms(bathRooms),fxRooms(bathRooms)),
-    it('바닥재',floorSp,'㎡',floorArea,24000,17146,0,basisRooms(floorAllRooms),fxFloor)
+    it('리빙우드','욕실천장재','㎡',bathArea,41667,15241,457,basisRooms(bathRooms),fxRoomsP(bathRooms)),
+    it('바닥재',floorSp,'㎡',floorArea,24000,17146,0,basisRooms(floorAllRooms),fxRoomsP(floorAllRooms))
   ]});
   // ④ 가구 (입력 반영)
   var sinkBase={'ㅡ자':2632200,'ㄱ자':2744487,'ㄷ자':4116730};
