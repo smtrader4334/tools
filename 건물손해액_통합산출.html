@@ -1157,10 +1157,10 @@ function runCalc(){
     var wpBasis='ㅇ 창호둘레합('+perimParts.join('+')+') /10';
     var wpFx='=('+perimParts.join('+')+')/10';
     c6.push(it('창호주위충전','발포우레탄','10m',sL,0,27344,0,wpBasis,wpFx));
-    // 코킹 = 창호둘레 × 1.35(내·외부 할증) / 10
-    var ckBasis='ㅇ 창호둘레합('+perimParts.join('+')+')*1.35 /10';
-    var ckFx='=('+perimParts.join('+')+')*1.35/10';
-    c6.push(it('코킹','창문주위','10m',winPerim*1.35/10,0,42896,0,ckBasis,ckFx));
+    // 코킹 = 창호둘레 × 2 / 10
+    var ckBasis='ㅇ 창호둘레합('+perimParts.join('+')+')×2 /10';
+    var ckFx='=('+perimParts.join('+')+')×2/10';
+    c6.push(it('코킹','창문주위','10m',winPerim*2/10,0,42896,0,ckBasis,ckFx));
   }
   cats.push({no:6,name:'창호공사',rows:c6});
   // ⑦ 방수 (욕실=기본포함, 발코니=명시적 체크시만 포함)
