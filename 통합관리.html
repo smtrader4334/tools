@@ -941,9 +941,9 @@ function J_render(){
     ${jTab==='jMonth'?`<div style="display:flex;gap:4px;overflow-x:auto;padding-bottom:2px">
       ${J_MN.map((ml,i)=>{
         const k=`${jYear}-${String(i+1).padStart(2,'0')}`;
-        const hasTx=(D.jango[k]?.transactions||[]).length>0;
+        const hasData=!!D.jango[k];
         const act=jMonth===k;
-        return`<button onclick="J_setMonth('${k}')" style="background:${act?GOLD:hasTx?'rgba(255,255,255,.2)':'rgba(255,255,255,.07)'};color:${act?NAV:hasTx?'#fff':'rgba(255,255,255,.35)'};border:none;border-radius:8px;padding:4px 8px;font-size:12px;font-weight:${act?700:400};white-space:nowrap;flex-shrink:0">${ml}</button>`;
+        return`<button onclick="J_setMonth('${k}')" style="background:${act?GOLD:hasData?'rgba(255,255,255,.2)':'rgba(255,255,255,.07)'};color:${act?NAV:hasData?'#fff':'rgba(255,255,255,.35)'};border:none;border-radius:8px;padding:4px 8px;font-size:12px;font-weight:${act?700:400};white-space:nowrap;flex-shrink:0">${ml}</button>`;
       }).join('')}
     </div>`:''}`; 
 
