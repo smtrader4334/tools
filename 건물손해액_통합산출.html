@@ -1144,7 +1144,7 @@ function runCalc(){
     sParts.forEach(function(p){glBasisParts.push(p);});
     var glBasis='ㅇ '+glBasisParts.join('+');
     var dFxParts=dWins.map(function(w){var q=PI(w.qty);return R2(PF(w.w)/1000)+'*'+R2(PF(w.h)/1000)+(q>1?'*'+q:'');});
-    var sFxParts=sWins.map(function(w){var q=PI(w.qty);return R2(PF(w.w)/1000)+'*'+R2(PF(w.h)/1000)+(q>1?'*'+q:'');});
+    var sFxParts=sWins.map(function(w){var q=PI(w.qty);return '('+R2(PF(w.w)/1000)+'*'+R2(PF(w.h)/1000)+(q>1?'*'+q:'')+')';});
     var glFxArr=[];
     if(dFxParts.length) glFxArr.push('('+dFxParts.join('+')+')'+'\xD72');
     sFxParts.forEach(function(p){glFxArr.push(p);});
