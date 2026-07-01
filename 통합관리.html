@@ -586,6 +586,12 @@ function openCase(id){
 const chip=(label,active,onclick,extra='')=>`<button onclick="${onclick}" style="background:${active?NAV:BG};color:${active?'#fff':MUTED};border:1px solid ${active?NAV:BORD};border-radius:18px;padding:6px 12px;font-size:12px;font-weight:${active?700:500};margin:0 5px 6px 0;${extra}">${label}</button>`;
 function renderObjChips(){
   const leak=isLeakCn(EF.cn), opts=leak?OBJ_LEAK:OBJ_FIRE;
+  if(leak){
+    // 선임권(누수)이면 objSet을 누수 목록 안의 항목만 남김 (건물·가재 등 화재용 잔재 제거)
+    const kept=EF.objSet.filter(x=>OBJ_LEAK.includes(x));
+    // 누수 항목이 하나도 없으면 기본값 '일배책대물(누수)' 선택
+    EF.objSet=kept.length?kept:['일배책대물(누수)'];
+  }
   const lbl=document.getElementById('objlbl');
   if(lbl)lbl.innerHTML=`목적물 <span style="color:${leak?'#2563eb':'#7c3aed'};font-weight:700">${leak?'💧 선임권·누수 · 단일선택':'🏢 독립 · 복수선택'}</span>`;
   document.getElementById('objchips').innerHTML=opts.map(o=>chip(o,EF.objSet.includes(o),`efObj('${o.replace(/'/g,"\\'")}')`)).join('');
