@@ -532,7 +532,7 @@ function openCase(id){
     refOn:!!_refName,refName:_refName,refPay:_refPay,refManual:false,outOn:_outOn,outName:_outName,
     firmMode:(FIRMS.includes(c.firm))?'preset':(c.firm?'custom':'preset'),
     fire:c.fire||'',police:c.police||'',draw:c.draw||'',
-    fireMode:fpMode(c.fire,FP_PRE),policeMode:fpMode(c.police,FP_PRE),drawMode:fpMode(c.draw,DR_PRE),feeManual:false};
+    fireMode:fpMode(c.fire,FP_PRE),policeMode:fpMode(c.police,FP_PRE),drawMode:fpMode(c.draw,DR_PRE),feeManual:false,objTouched:false};
   const sel=(lbl,key,val,opts)=>`<div class="fg"><label class="lbl">${lbl}</label><select class="inp" onchange="EF.${key}=this.value" >${opts.map(o=>`<option ${o===val?'selected':''}>${o}</option>`).join('')}</select></div>`;
   const money=(lbl,key,ph='')=>`<div class="fg"><label class="lbl">${lbl}</label><input class="inp" id="m_${key}" inputmode="numeric" value="${EF[key]?cma(EF[key]):''}" placeholder="${ph}" oninput="efMoney('${key}',this)"></div>`;
   document.getElementById('mbox').innerHTML=`
@@ -587,10 +587,10 @@ const chip=(label,active,onclick,extra='')=>`<button onclick="${onclick}" style=
 function renderObjChips(){
   const leak=isLeakCn(EF.cn), opts=leak?OBJ_LEAK:OBJ_FIRE;
   if(leak){
-    // 선임권(누수)이면 objSet을 누수 목록 안의 항목만 남김 (건물·가재 등 화재용 잔재 제거)
-    const kept=EF.objSet.filter(x=>OBJ_LEAK.includes(x));
-    // 누수 항목이 하나도 없으면 기본값 '일배책대물(누수)' 선택
-    EF.objSet=kept.length?kept:['일배책대물(누수)'];
+    // 선임권(누수)이면 화재용 잔재(건물,가재 등 OBJ_LEAK에 없는 항목) 제거
+    EF.objSet=EF.objSet.filter(x=>OBJ_LEAK.includes(x));
+    // 아직 사용자가 칩을 직접 건드리지 않았고, 누수 항목이 없으면 기본값 '일배책대물(누수)' 선택
+    if(!EF.objTouched&&!EF.objSet.length)EF.objSet=['일배책대물(누수)'];
   }
   const lbl=document.getElementById('objlbl');
   if(lbl)lbl.innerHTML=`목적물 <span style="color:${leak?'#2563eb':'#7c3aed'};font-weight:700">${leak?'💧 선임권·누수 · 단일선택':'🏢 독립 · 복수선택'}</span>`;
@@ -598,6 +598,7 @@ function renderObjChips(){
 }
 function efObj(o){
   const leak=isLeakCn(EF.cn);
+  EF.objTouched=true; // 사용자가 칩을 직접 눌렀음 → 기본값 자동선택 중단
   if(!leak){const i=EF.objSet.indexOf(o);if(i<0)EF.objSet.push(o);else EF.objSet.splice(i,1);}
   else{const was=EF.objSet.includes(o);EF.objSet=EF.objSet.filter(x=>!OBJ_LEAK.includes(x));if(!was)EF.objSet.push(o);}
   renderObjChips();
