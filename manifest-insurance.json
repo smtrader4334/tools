@@ -1,0 +1,27 @@
+{
+  "id": "/tools/insurance",
+  "name": "보험가액 계산기",
+  "short_name": "보험가액",
+  "description": "건물·시설·가재 보험가액 계산기 - 더함화재특종손해사정",
+  "start_url": "/tools/insurance-calc-2026.html",
+  "scope": "/tools/insurance-calc-2026.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1A3054",
+  "theme_color": "#1A3054",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "/tools/icon-insurance-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/tools/icon-insurance-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
