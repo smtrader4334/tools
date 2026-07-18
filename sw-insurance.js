@@ -1,4 +1,4 @@
-const CACHE = 'insurance-calc-v3';
+const CACHE = 'insurance-calc-v4';
 const STATIC = [
   '/tools/manifest-insurance.json',
   '/tools/icon-insurance-192.png',
@@ -11,12 +11,15 @@ self.addEventListener('install', e => {
 });
 
 self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
-  );
-  self.clients.claim();
+  e.waitUntil((async () => {
+    // 옛 버전 캐시(v3 이하) 전부 삭제
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)));
+    await self.clients.claim();
+    // 이미 열려 있는 창들을 강제로 새로고침 → 즉시 최신 반영
+    const clients = await self.clients.matchAll({ type: 'window' });
+    clients.forEach(c => { try { c.navigate(c.url); } catch (_) {} });
+  })());
 });
 
 self.addEventListener('fetch', e => {
