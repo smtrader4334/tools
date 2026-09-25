@@ -803,24 +803,22 @@ function addSelected(){
 function delRoom(i){ rooms.splice(i,1); render(1); }
 
 // ── ③ 창호 ──
-var WIN_DEFAULTS=[  // 실별 창호 자동 생성 기본 규격 (실측값으로 수정)
-  {re:/^거실$/,      type:'하이샤시미서기이중창', w:'2400', h:'2200'},
-  {re:/안방/,        type:'하이샤시미서기이중창', w:'1800', h:'2200'},
-  {re:/침실/,        type:'하이샤시미서기단창',   w:'1500', h:'1500'},
-  {re:/주방|식당/,   type:'하이샤시미서기단창',   w:'1200', h:'1000'},
-  {re:/발코니/,      type:'하이샤시미서기이중창', w:'2400', h:'2200'},
-  {re:/다용도|세탁/, type:'하이샤시미서기단창',   w:'900',  h:'1200'}
+// 실별 창 칸 만들기: 위치·종류만 채우고 규격(폭×높이)은 비워 둠 — 창호는 현장마다 달라 항상 실측 입력
+var WIN_TYPE_BY_ROOM=[
+  {re:/거실|안방|발코니/, type:'하이샤시미서기이중창'},
+  {re:/침실|주방|식당|다용도|세탁|현관|복도/, type:'하이샤시미서기단창'}
 ];
 function autoWindows(){
   var added=0;
   rooms.forEach(function(r){
     if(!r.name||/욕실|드레스룸|창고|세탁실/.test(r.name)) return;
-    var def=WIN_DEFAULTS.filter(function(d){return d.re.test(r.name);})[0]; if(!def) return;
+    var def=WIN_TYPE_BY_ROOM.filter(function(d){return d.re.test(r.name);})[0]; if(!def) return;
     if(windows.some(function(w){return (w.locs||[]).indexOf(r.name)>=0;})) return;   // 이미 그 실 창호가 있으면 건너뜀
-    windows.push({locs:[r.name],type:def.type,w:def.w,h:def.h,qty:1,_auto:true}); added++;
+    windows.push({locs:[r.name],type:def.type,w:'',h:'',qty:1}); added++;
   });
   render(2);
-  if(!added) alert('추가할 실이 없습니다. (실별치수 탭에서 실을 먼저 추가하거나, 이미 모든 실에 창호가 있습니다)');
+  if(!added){ alert('추가할 실이 없습니다. (실별치수 탭에서 실을 먼저 추가하거나, 이미 모든 실에 창 칸이 있습니다)'); return; }
+  var first=document.querySelector('.ww[value=""]'); if(first) first.focus();
 }
 function winLocList(){
   // 위치 후보: 실별치수에 등록된 실 우선 (욕실·드레스룸·창고·세탁실 제외), 없으면 전체 프리셋
@@ -836,7 +834,7 @@ function renderWindows(){
       return '<label><input type="checkbox" class="wlc" data-wi="'+i+'" data-loc="'+p+'"'+(w.locs.indexOf(p)>=0?' checked':'')+'>'+p+'</label>';
     }).join('');
     var selOpts = WIN_TYPES.map(function(t){ return '<option'+(w.type===t?' selected':'')+'>'+t+'</option>'; }).join('');
-    var locTxt = w.locs.length ? '<div style="font-size:11px;color:#2563eb">선택: '+w.locs.join(', ')+(w._auto?' <span style="color:#16a34a">· 자동생성(규격 확인)</span>':'')+'</div>' : '';
+    var locTxt = w.locs.length ? '<div style="font-size:11px;color:#2563eb">선택: '+w.locs.join(', ')+((!w.w||!w.h)?' <span style="color:#dc2626">· 규격 미입력</span>':'')+'</div>' : '';
     return '<div class="card">'+
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'+
         '<span style="font-size:11px;color:#64748b;font-weight:600">'+(w.locs.length?w.locs.join('·'):'위치 (다중선택)')+'</span>'+
@@ -860,8 +858,8 @@ function renderWindows(){
     '<div class="hint" id="door-auto-hint"></div>'+
     '</div></div></div>'+
     '<div class="section"><div class="section-title">창문 (규격 단위: mm)</div><div class="section-body">'+
-    (rooms.length?'<div class="auto-note">⚡ <b>실별 창호 자동 생성</b>: 등록된 실(거실·안방·침실·주방·발코니)마다 기본 규격 창을 만들어 줍니다. 생성 후 실측 규격으로 고치세요.</div>'+
-    '<button class="add-sel-btn" onclick="autoWindows()">&#9889; 실별 창호 자동 생성</button>':'')+
+    (rooms.length?'<div class="auto-note">⚡ <b>실별 창 칸 만들기</b>: 등록된 실마다 위치·종류가 채워진 창 칸을 만들어 줍니다. 규격은 현장마다 다르므로 <b>폭·높이만 실측값으로 입력</b>하세요. 폭 칸에 <b>2400x2200</b>처럼 한 번에 넣어도 됩니다. Enter로 다음 칸 이동.</div>'+
+    '<button class="add-sel-btn" onclick="autoWindows()">&#9889; 실별 창 칸 만들기 (규격은 직접 입력)</button>':'')+
     '<div id="win-list">'+winCards+'</div>'+
     '<button class="add-btn" onclick="addWin()">+ 창문 직접 추가</button>'+
     '</div></div>'+
@@ -879,10 +877,32 @@ function attachWinEvents(){
   document.querySelectorAll('.wlc').forEach(function(chk){
     chk.onchange=function(){ var i=+chk.dataset.wi,loc=chk.dataset.loc; if(chk.checked){ if(windows[i].locs.indexOf(loc)<0) windows[i].locs.push(loc); } else { windows[i].locs=windows[i].locs.filter(function(l){return l!==loc;}); } onChange(); };
   });
-  document.querySelectorAll('.wts').forEach(function(sel){ sel.onchange=function(){ windows[+sel.dataset.wi].type=sel.value; windows[+sel.dataset.wi]._auto=false; onChange(); }; });
-  document.querySelectorAll('.ww').forEach(function(inp){ inp.setAttribute('inputmode','numeric'); inp.oninput=function(){ windows[+inp.dataset.wi].w=inp.value; windows[+inp.dataset.wi]._auto=false; onChange(); }; });
-  document.querySelectorAll('.wh').forEach(function(inp){ inp.setAttribute('inputmode','numeric'); inp.oninput=function(){ windows[+inp.dataset.wi].h=inp.value; windows[+inp.dataset.wi]._auto=false; onChange(); }; });
+  document.querySelectorAll('.wts').forEach(function(sel){ sel.onchange=function(){ windows[+sel.dataset.wi].type=sel.value; onChange(); }; });
+  document.querySelectorAll('.ww').forEach(function(inp){
+    inp.setAttribute('inputmode','numeric');
+    inp.oninput=function(){ windows[+inp.dataset.wi].w=inp.value; onChange(); };
+    inp.onchange=function(){ splitCombo(inp); };
+  });
+  document.querySelectorAll('.wh').forEach(function(inp){ inp.setAttribute('inputmode','numeric'); inp.oninput=function(){ windows[+inp.dataset.wi].h=inp.value; onChange(); }; });
   document.querySelectorAll('.wq').forEach(function(inp){ inp.oninput=function(){ windows[+inp.dataset.wi].qty=parseInt(inp.value)||1; onChange(); }; });
+  // Enter → 폭 → 높이 → 개소 → 다음 창 폭
+  var seq=[]; document.querySelectorAll('.card').forEach(function(card){ card.querySelectorAll('.ww,.wh,.wq').forEach(function(el){ seq.push(el); }); });
+  seq.forEach(function(el,i){
+    el.setAttribute('enterkeyhint',i<seq.length-1?'next':'done');
+    el.onkeydown=function(ev){
+      if(ev.key!=='Enter') return;
+      ev.preventDefault();
+      var skip=(el.classList.contains('ww')&&splitCombo(el))?2:1;   // 폭×높이 한 번에 입력했으면 높이 칸 건너뜀
+      var nx=seq[i+skip]; if(nx){ nx.focus(); nx.select(); } else el.blur();
+    };
+  });
+}
+// 폭 칸에 "2400x2200" / "2400*2200" 형태로 입력 → 폭·높이 분리 (Enter 또는 칸 이동 시)
+function splitCombo(inp){
+  var m=inp.value.match(/^\s*(\d+)\s*[xX×*]\s*(\d+)\s*$/); if(!m) return false;
+  var i=+inp.dataset.wi; windows[i].w=m[1]; windows[i].h=m[2]; inp.value=m[1];
+  var hh=document.querySelector('.wh[data-wi="'+i+'"]'); if(hh) hh.value=m[2];
+  onChange(); return true;
 }
 function addWin(){ windows.push({locs:[],type:'하이샤시미서기단창',w:'',h:'',qty:1}); render(2); }
 function delWin(i){ windows.splice(i,1); render(2); }
@@ -1792,7 +1812,8 @@ function buildAssumptions(){
   if(noDim.length) L.push({t:'miss',tab:1,msg:'치수 미입력 실: '+noDim.map(function(r){return r.name;}).join(', ')+' (산출에서 제외됨)'});
   var validW=windows.filter(function(w){return w.w&&w.h;});
   if(!validW.length) L.push({t:'miss',tab:2,msg:'창호 미입력 → 창호·유리·커튼박스 물량 0 (창호 탭에서 자동 생성 가능)'});
-  else if(windows.some(function(w){return w._auto;})) L.push({t:'assume',tab:2,msg:'자동 생성 창호 규격 '+windows.filter(function(w){return w._auto;}).length+'건이 기본값 그대로임 (실측 확인)'});
+  var noSize=windows.filter(function(w){return !(w.w&&w.h);});
+  if(validW.length&&noSize.length) L.push({t:'miss',tab:2,msg:'규격 미입력 창 '+noSize.length+'건 ('+noSize.map(function(w){return (w.locs||[]).join('·')||'위치미지정';}).join(', ')+') → 산출에서 제외됨'});
   if(sv.door_cnt==='') L.push({t:'assume',tab:2,msg:'여닫이문 자동 '+autoDoorCnt()+'개소 (안방·침실·드레스룸·다용도실·욕실 기준)'});
   if(!sv.entry_door_w||!sv.entry_door_h) L.push({t:'assume',tab:2,msg:'현관문 규격 기본 1000×2100 적용'});
   if(!(sv.molding_manual||'').trim()) L.push({t:'assume',tab:3,msg:'거실·주방 몰딩·도배 벽둘레 자동 ('+(autoLKExpr()||'거실·주방 실 없음 → 0')+') — 통합구간이면 도면 벽면길이 덧셈식 입력 권장'});
