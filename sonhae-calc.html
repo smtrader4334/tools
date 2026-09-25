@@ -1239,11 +1239,12 @@ function RUP(v,u){return Math.ceil(v/u)*u;}
 function runCalc(){
   syncIn();
   // 욕실 탭을 열지 않았어도 실별치수의 욕실을 위생/욕실 산출에 반영
-  rooms.filter(function(r){return r.name&&r.name.indexOf('욕실')>=0;}).forEach(function(r){
-    if(!baths.find(function(b){return b.name===r.name;})){
-      baths.push({name:r.name,bathtub:true,shower:false,tiles:true});
-    }
+  var bathNames=rooms.filter(function(r){return r.name&&r.name.indexOf('욕실')>=0;}).map(function(r){return r.name;});
+  bathNames.forEach(function(nm){
+    if(!baths.find(function(b){return b.name===nm;})) baths.push({name:nm,bathtub:true,shower:false,tiles:true});
   });
+  // 실별치수에서 삭제된 욕실은 위생기구 산출에서도 제거 (수동 추가분은 유지)
+  baths=baths.filter(function(b){return bathNames.indexOf(b.name)>=0||b._manual===true;});
   // 실 분류
   var lives = rooms.filter(function(r){return r.name&&r.w&&r.d&&r.name.indexOf('욕실')<0;});
   var bathRooms = rooms.filter(function(r){return r.name&&r.w&&r.d&&r.name.indexOf('욕실')>=0;});
@@ -1554,14 +1555,14 @@ function runCalc(){
     if(isBalc)return wpChecks[r.name]===true;
     return false;
   });
-  if(wpRooms.length===0)wpRooms=bathRooms;
+  // 방수 체크가 모두 해제되면 방수공사 항목을 넣지 않음
   // 벽체방수: 욕실만 (발코니 벽체 제외), 높이 1.0m
   var wpWallRooms=wpRooms.filter(function(r){return r.name.indexOf('욕실')>=0;});
   var WPH=1.0;  // 욕실 벽체 방수 높이 1m
   var wpWall=wpWallRooms.reduce(function(s,r){return s+2*(PF(r.w)+PF(r.d));},0)*WPH;
   // 바닥방수: 욕실+발코니 전체
-  var wpArea=wpRooms.reduce(function(s,r){return s+roomArea(r);},0)||bathArea;
-  cats.push({no:7,name:'방수공사',rows:[
+  var wpArea=wpRooms.reduce(function(s,r){return s+roomArea(r);},0);
+  if(wpRooms.length)cats.push({no:7,name:'방수공사',rows:[
     it('바탕처리','벽체','㎡',wpWall,0,9714,388,basisPerim(wpWallRooms,'',WPH),fxPerim(wpWallRooms,WPH)),
     it('바탕처리','바닥','㎡',wpArea,0,8913,356,basisRooms(wpRooms),fxRooms(wpRooms)),
     it('시멘트액체방수','벽체','㎡',wpWall,5555,18859,565,basisPerim(wpWallRooms,'',WPH),fxPerim(wpWallRooms,WPH)),
@@ -1680,7 +1681,8 @@ function runCalc(){
   if(c9.length)cats.push({no:9,name:'위생공사',rows:c9});
   // ⑩ 설비
   var isCond=(sv.boiler||'').indexOf('콘덴싱')>=0;
-  var acN=(sv.ac_rooms||'').trim()===''?autoCounts().ac:PI(sv.ac_rooms), balcN=PI(sv.balcony_cnt)||balcs.length;
+  var blank=function(v){return String(v==null?'':v).trim()==='';};   // 빈칸=자동값, 0 입력=0
+  var acN=blank(sv.ac_rooms)?autoCounts().ac:PI(sv.ac_rooms), balcN=blank(sv.balcony_cnt)?balcs.length:PI(sv.balcony_cnt);
   var c10=[
     it('가스보일러',sv.boiler||'가스 콘덴싱','EA',1,isCond?938300:680000,231120,0,'ㅇ 보일러 1대','=1'),
     it('연통 및 급수급탕배관','슬리브포함','식',1,200000,0,0,'ㅇ 배관 1식','=1'),
@@ -1693,7 +1695,7 @@ function runCalc(){
   c10.push(it('가스계량기','LPG','EA',1,85000,0,0,'ㅇ 가스계량기 1EA','=1'));
   cats.push({no:10,name:'설비공사',rows:c10});
   // ⑪ 전기 — 전유면적 기준 일반 물량산출 (실무 표준 원단위)
-  var ckt=PI(sv.circuit_cnt)||8;
+  var ckt=blank(sv.circuit_cnt)?8:PI(sv.circuit_cnt);
   var eA=excArea;  // 전유면적
   // ── 전선·전선관 (면적당 표준 원단위, m) ──
   // 전등용 HIV 1.5SQ ≈ 3.0m/㎡, 콘센트용 HIV 2.5SQ ≈ 4.5m/㎡
@@ -1727,8 +1729,8 @@ function runCalc(){
   var livingCnt=lives.filter(function(r){return r.name.indexOf('거실')>=0;}).length||1;
   var kitchenCnt=lives.filter(function(r){return r.name.indexOf('주방')>=0||r.name.indexOf('식당')>=0;}).length||1;
   var entryCnt=lives.filter(function(r){return r.name.indexOf('현관')>=0;}).length||1;
-  var ledLiving=PI(sv.led_living)||livingCnt,ledRoom=PI(sv.led_room)||roomCnt,ledKit=PI(sv.led_kitchen)||kitchenCnt;
-  var ledBalc=PI(sv.led_balcony)||Math.max(1,balcs.length),ledBath=PI(sv.led_bath)||Math.max(1,bathRooms.length),ledEntry=PI(sv.led_entry)||entryCnt;
+  var ledLiving=blank(sv.led_living)?livingCnt:PI(sv.led_living),ledRoom=blank(sv.led_room)?roomCnt:PI(sv.led_room),ledKit=blank(sv.led_kitchen)?kitchenCnt:PI(sv.led_kitchen);
+  var ledBalc=blank(sv.led_balcony)?Math.max(1,balcs.length):PI(sv.led_balcony),ledBath=blank(sv.led_bath)?Math.max(1,bathRooms.length):PI(sv.led_bath),ledEntry=blank(sv.led_entry)?entryCnt:PI(sv.led_entry);
   var c11=[
     it('세대분전함',ckt+'회로','면',1,154800,121785,0,'ㅇ 세대분전함 '+ckt+'회로 1면','=1'),
     it('배선차단기','50A','EA',1,25900,58840,0,'ㅇ 메인차단기 1EA','=1'),
@@ -1751,6 +1753,7 @@ function runCalc(){
     it('LED등기구','욕실등','EA',ledBath,97000,18883,0,'ㅇ 욕실 '+ledBath+'EA','='+ledBath),
     it('LED등기구','현관등','EA',ledEntry,45000,30241,0,'ㅇ 현관 '+ledEntry+'EA','='+ledEntry)
   ];
+  c11=c11.filter(function(x){return x.qty>0;});   // 0 입력 항목 제외
   if(sv.wallpad)c11.push(it('월패드','-','EA',1,264000,43788,0,'ㅇ 월패드 1EA','=1'));
   if(sv.interphone)c11.push(it('현관자기','-','EA',1,12100,0,0,'ㅇ 현관자기 1EA','=1'));
   if(sv.speaker)c11.push(it('세대방송스피커','-','EA',1,5500,0,0,'ㅇ 방송스피커 1EA','=1'));
