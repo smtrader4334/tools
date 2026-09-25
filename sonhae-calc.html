@@ -632,11 +632,12 @@ function updateMoldingHint(){
   var el=document.getElementById('molding-hint'); if(!el) return;
   var lives=rooms.filter(function(r){return r.name&&r.w&&r.d&&r.name.indexOf('욕실')<0&&BALCONIES.indexOf(r.name)<0;});
   var baths=rooms.filter(function(r){return r.name&&r.w&&r.d&&r.name.indexOf('욕실')>=0;});
-  var auto=lives.concat(baths).reduce(function(s,r){return s+2*(parseFloat(r.w)+parseFloat(r.d));},0);
+  var LK=/거실|주방|식당/;
+  var auto=lives.filter(function(r){return !LK.test(r.name);}).concat(baths).reduce(function(s,r){return s+2*(parseFloat(r.w)+parseFloat(r.d));},0);
   var manual=safeEval(sv.molding_manual);
-  var total=auto+manual;
-  if(manual>0) el.innerHTML='실별둘레합: '+auto.toFixed(2)+'m + 추가입력: '+manual.toFixed(2)+'m = <b>합계: '+total.toFixed(2)+'m</b>';
-  else el.innerHTML='자동합산: '+auto.toFixed(2)+'m (실별 둘레 합) — 추가 입력 시 합산됩니다';
+  var lkAuto=lives.filter(function(r){return LK.test(r.name);}).reduce(function(s,r){return s+2*(parseFloat(r.w)+parseFloat(r.d));},0);
+  if(manual>0) el.innerHTML='방·욕실 둘레합: '+auto.toFixed(2)+'m + 거실·주방 입력식: '+manual.toFixed(2)+'m = <b>합계: '+(auto+manual).toFixed(2)+'m</b>';
+  else el.innerHTML='방·욕실 둘레합: '+auto.toFixed(2)+'m + 거실·주방 실 둘레 자동: '+lkAuto.toFixed(2)+'m = <b>합계: '+(auto+lkAuto).toFixed(2)+'m</b> — 거실·주방 통합구간은 도면 벽면길이 덧셈식으로 입력하면 그 값으로 대체됩니다';
 }
 
 // ── 면적 계산 ──
@@ -925,7 +926,7 @@ function renderFinish(){
   '</div></div>'+
   '<div class="section"><div class="section-title">천장몰딩 (거실+주방 통합구간)</div><div class="section-body">'+
     '<div class="auto-note">⚡ 아래 세 칸은 <b>비워두면 실별치수·창호 입력값으로 자동 산정</b>됩니다. 도면 실측 벽면길이가 있을 때만 덧셈식으로 입력하세요.</div>'+
-    row('몰딩 추가길이','<div class="inline"><input type="text" id="molding_manual" value="'+(sv.molding_manual||'')+'" placeholder="예: 3.5+2.8+4.2 (통합구간 벽면 덧셈식)" oninput="onChange()"><span class="unit">m</span></div>','실별 둘레 자동합산에 더해지는 추가 벽면길이 (거실·주방 통합구간 등)')+
+    row('거실·주방 몰딩길이','<div class="inline"><input type="text" id="molding_manual" value="'+(sv.molding_manual||'')+'" placeholder="예: 3.5+2.8+4.2 (통합구간 벽면 덧셈식)" oninput="onChange()"><span class="unit">m</span></div>','몰딩 = 방·욕실 둘레 자동합산 + 거실·주방 구간. 거실·주방 구간은 여기 덧셈식 우선, 비우면 실 둘레 자동')+
     '<div id="molding-hint" style="font-size:11px;color:#2563eb;padding:0 2px"></div>'+
     row('거실·주방 벽둘레(도배)','<div class="inline"><input type="text" id="wall_lk_manual" value="'+(sv.wall_lk_manual||'')+'" placeholder="비우면 거실·주방 실 둘레 자동" oninput="onChange()"><span class="unit">m</span></div>','벽체도배 = (방 그룹 둘레×2 + 거실·주방 벽둘레)×2.3')+
     '<div id="lk-auto-hint" style="font-size:11px;color:#2563eb;padding:0 2px"></div>'+
@@ -1236,12 +1237,17 @@ function runCalc(){
   var cleanArea = excArea+balcArea;
   var lifePerim = lives.reduce(function(s,r){return s+2*(PF(r.w)+PF(r.d));},0);
   var bathPerim = bathRooms.reduce(function(s,r){return s+2*(PF(r.w)+PF(r.d));},0);
-  // 천장몰딩: 실별 둘레 자동합산 + 수동입력 항상 합산
+  // 천장몰딩: 거실·주방·식당을 제외한 실 둘레 자동합산 + 거실·주방 구간(수동 덧셈식, 비우면 실 둘레 자동)
+  var LK_RE=/거실|주방|식당/;
+  var moldRooms = lives.filter(function(r){return !LK_RE.test(r.name);}).concat(bathRooms);
+  var lkRooms = lives.filter(function(r){return LK_RE.test(r.name);});
   var moldManualStr = (sv.molding_manual||'').trim();
   var moldManual = safeEval(moldManualStr);
-  var moldingAuto = lifePerim+bathPerim;
   var moldingIsManual = moldManual>0;
-  var moldingTotal = moldingAuto + moldManual;
+  var moldLKStr = moldingIsManual ? moldManualStr : lkRooms.map(function(r){return '('+R2(r.w)+'+'+R2(r.d)+')*2';}).join('+');
+  var moldLK = moldingIsManual ? moldManual : safeEval(moldLKStr);
+  var moldingAuto = moldRooms.reduce(function(s,r){return s+2*(PF(r.w)+PF(r.d));},0);
+  var moldingTotal = moldingAuto + moldLK;
   // 걸레받이 차감: 입력한 차감식 (도어너비 합 등)
   var baseDeductStr = effBaseDeductStr();   // 비우면 문 개소 기준 자동 차감식
   var baseDeduct = safeEval(baseDeductStr);
@@ -1342,10 +1348,11 @@ function runCalc(){
     it('그을음세척·그라인딩','특별인부','인',4,0,226122,0,'ㅇ 특별인부 4인','=4')
   ]});
   // ② 목공 (반자틀=전유 욕실포함, 석고판=전유-욕실, 걸레받이=몰딩식-차감식)
-  // 산출근거/계산식: 실별둘레 자동합산 + 수동입력 항상 합산
-  var autoPerimFx = fxPerim(allExcl,null);  // '=(w+d)*2+...'
-  var moldBasis = basisPerim(allExcl,'',null) + (moldManual>0 ? ' + 거실,주방('+moldManualStr+')' : '');
-  var moldFx = autoPerimFx + (moldManual>0 ? '+('+moldManualStr+')' : '');
+  // 산출근거/계산식: 거실·주방 제외 실별둘레 자동합산 + 거실·주방 구간(수동식 또는 실 둘레 자동)
+  var autoPerimFx = fxPerim(moldRooms,null);  // '=(w+d)*2+...'
+  var lkLabel = moldingIsManual ? '거실,주방('+moldManualStr+')' : (lkRooms.length ? basisPerim(lkRooms,'',null).replace(/^ㅇ\s*/,'') : '');
+  var moldBasis = basisPerim(moldRooms,'',null) + (lkLabel ? ' + '+lkLabel : '');
+  var moldFx = autoPerimFx + (moldLKStr ? '+('+moldLKStr+')' : '');
   // 걸레받이 산출근거·계산식
   var moldExpr = R2(moldingTotal);
   var bbBasis, bbFx;
@@ -1788,7 +1795,8 @@ function buildAssumptions(){
   else if(windows.some(function(w){return w._auto;})) L.push({t:'assume',tab:2,msg:'자동 생성 창호 규격 '+windows.filter(function(w){return w._auto;}).length+'건이 기본값 그대로임 (실측 확인)'});
   if(sv.door_cnt==='') L.push({t:'assume',tab:2,msg:'여닫이문 자동 '+autoDoorCnt()+'개소 (안방·침실·드레스룸·다용도실·욕실 기준)'});
   if(!sv.entry_door_w||!sv.entry_door_h) L.push({t:'assume',tab:2,msg:'현관문 규격 기본 1000×2100 적용'});
-  if(!(sv.wall_lk_manual||'').trim()&&!(sv.molding_manual||'').trim()) L.push({t:'assume',tab:3,msg:'거실·주방 벽둘레 자동 ('+(autoLKExpr()||'거실·주방 실 없음 → 0')+')'});
+  if(!(sv.molding_manual||'').trim()) L.push({t:'assume',tab:3,msg:'거실·주방 몰딩·도배 벽둘레 자동 ('+(autoLKExpr()||'거실·주방 실 없음 → 0')+') — 통합구간이면 도면 벽면길이 덧셈식 입력 권장'});
+  else if(!(sv.wall_lk_manual||'').trim()) L.push({t:'ok',msg:'거실·주방 구간 입력식('+sv.molding_manual.trim()+')을 몰딩·벽체도배에 적용'});
   if(!(sv.base_door_extra||'').trim()) L.push({t:'assume',tab:3,msg:'걸레받이 차감식 자동 ('+(autoBaseDeductExpr()||'0')+')'});
   if(!sv.sink_len) L.push({t:'assume',tab:4,msg:'싱크대 길이 미입력 → 2.7m 기준 단가 적용'});
   var ac=autoCounts();
