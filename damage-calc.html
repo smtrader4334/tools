@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>손해액 산출기</title>
+<meta name="theme-color" content="#1A3054">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="손해액 산출">
+<link rel="apple-touch-icon" href="./icon-insurance-192.png">
+<link rel="icon" type="image/png" href="./icon-insurance-192.png">
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root{
+  --navy:#1A3054; --navy2:#27477A; --bg:#EEF2F8; --card:#FFFFFF; --line:#D6DEEA;
+  --text:#1B2433; --sub:#5B6B82; --accent:#2F6FEB; --red:#D93025; --green:#1A7A4A; --amber:#B7791F;
+  --soft:#F5F8FC;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+input,select,button,textarea{font-family:inherit;font-size:14px}
+.wrap{max-width:960px;margin:0 auto;padding:0 12px 120px}
+header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.hd{max-width:960px;margin:0 auto;padding:14px 16px 0}
+.hd small{font-size:10px;letter-spacing:2px;color:#9DB6DD;font-weight:700}
+.hd h1{font-size:18px;font-weight:800;margin:2px 0 10px}
+.tabs{display:flex;max-width:960px;margin:0 auto}
+.tab{flex:1;background:none;border:0;color:rgba(255,255,255,.5);padding:10px 0;font-weight:700;border-bottom:3px solid transparent;cursor:pointer}
+.tab.on{color:#fff;border-bottom-color:#7FB0FF}
+.sec{display:none}.sec.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px}
+.card h2{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card h2 .tag{font-size:11px;font-weight:700;color:var(--sub)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+label.f{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--sub);font-weight:600;min-width:0}
+label.f input,label.f select{width:100%;padding:8px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);min-width:0}
+label.f input:focus,label.f select:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+input.num{text-align:right}
+.btn{border:0;border-radius:8px;padding:9px 14px;font-weight:700;cursor:pointer;background:var(--navy);color:#fff}
+.btn.ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.btn.sm{padding:6px 10px;font-size:12px}
+.btn.del{background:none;color:var(--red);border:1px solid #F1C0BC;padding:5px 9px;font-size:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.item{border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px;background:var(--soft)}
+.item .top{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.item .top .no{font-weight:800;color:var(--navy);min-width:22px}
+.item .top input{flex:1;min-width:0;padding:8px 9px;border:1px solid var(--line);border-radius:8px;font-weight:700}
+.calcline{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px;font-size:12px;color:var(--sub)}
+.calcline b{color:var(--text)}
+.calcline .acv b{color:var(--accent)}
+.empty{padding:24px;text-align:center;color:var(--sub);font-size:13px}
+.hint{font-size:11px;color:var(--sub);line-height:1.6;margin-top:8px}
+.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:6px}
+table{border-collapse:collapse;width:100%;font-size:12px;min-width:560px}
+th,td{border:1px solid var(--line);padding:6px 7px}
+th{background:#E8EEF7;color:var(--navy);font-weight:700;white-space:nowrap}
+td.r{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tr.sum td{background:#F2F6FC;font-weight:800}
+.kv{display:grid;grid-template-columns:1fr auto;gap:0;font-size:13px}
+.kv div{padding:7px 2px;border-bottom:1px dashed var(--line)}
+.kv div:nth-child(even){text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.kv .em{color:var(--accent)}
+.kv .neg{color:var(--red)}
+.formula{font-size:11px;color:var(--sub);background:var(--soft);border-radius:8px;padding:8px 10px;margin-top:8px;line-height:1.7;word-break:keep-all}
+.big{margin-top:12px;background:var(--navy);color:#fff;border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.big .l{font-size:13px;opacity:.8}.big .v{font-size:24px;font-weight:900;font-variant-numeric:tabular-nums}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px}
+.badge.full{background:#E3F4EA;color:var(--green)}.badge.prop{background:#FDF1DC;color:var(--amber)}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);box-shadow:0 -2px 10px rgba(0,0,0,.06);z-index:40}
+.bar .in{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.bar .t{font-size:12px;color:var(--sub)}.bar .t b{display:block;font-size:18px;color:var(--navy);font-variant-numeric:tabular-nums}
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:#1B2433;color:#fff;padding:9px 16px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
+.toast.on{opacity:1}
+@media print{
+  header,.bar,.noprint,.tabs{display:none!important}
+  .sec{display:block!important}
+  body{background:#fff}
+  .card{break-inside:avoid;border-color:#999}
+  .wrap{padding:0}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hd">
+    <small>PROPERTY LOSS ADJUSTMENT</small>
+    <h1>손해액 산출기</h1>
+  </div>
+  <div class="tabs">
+    <button class="tab on" data-t="info">기본·보험</button>
+    <button class="tab" data-t="items">손해품목</button>
+    <button class="tab" data-t="result">산출결과</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ===== 기본·보험 ===== -->
+<section class="sec on" id="sec-info">
+  <div class="card">
+    <h2>사고 기본정보</h2>
+    <div class="grid">
+      <label class="f">사고번호<input data-b="caseNo"></label>
+      <label class="f">피보험자<input data-b="insured"></label>
+      <label class="f">사고일자<input type="date" data-b="accDate"></label>
+      <label class="f">사고장소<input data-b="place"></label>
+      <label class="f">사고원인<input data-b="cause" placeholder="예: 화재"></label>
+      <label class="f">보험종목<input data-b="product" placeholder="예: 일반화재"></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>감가 기준<span class="tag">전 품목 공통</span></h2>
+    <div class="grid">
+      <label class="f">잔가율 (%)<input class="num" type="number" step="0.1" data-b="residual"></label>
+      <label class="f">최종잔가율 (%)<input class="num" type="number" step="0.1" data-b="finalResidual"></label>
+    </div>
+    <div class="formula">
+      연간감가율 = (1 − 잔가율) ÷ 내용연수<br>
+      감가율 = 연간감가율 × 경과연수 (단, 1 − 최종잔가율 한도)<br>
+      시가 = 재조달가액 × (1 − 감가율)
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>보험목적별 계약조건<button class="btn sm ghost noprint" id="addGroup">+ 목적 추가</button></h2>
+    <div id="groups"></div>
+    <div class="hint">
+      · 부보비율: 일반·주택 화재 등 80% 조건부 실손보상은 80%, 전액비례는 100%를 선택합니다.<br>
+      · 가입금액 ≥ 보험가액×부보비율이면 가입금액 한도 실손보상, 미달이면 비례보상합니다.<br>
+      · 보험가액이나 가입금액을 비워두면 비례 판정 없이 실손으로 산출합니다.<br>
+      · 잔존물제거비용은 손해액의 10% 한도, 손해방지비용은 가입금액 초과 시에도 지급(비례 적용)합니다.
+    </div>
+  </div>
+</section>
+
+<!-- ===== 손해품목 ===== -->
+<section class="sec" id="sec-items">
+  <div class="card">
+    <h2>손해품목<span class="row noprint">
+      <button class="btn sm ghost" id="addItem">+ 품목 추가</button>
+    </span></h2>
+    <div id="items"></div>
+  </div>
+</section>
+
+<!-- ===== 산출결과 ===== -->
+<section class="sec" id="sec-result">
+  <div id="result"></div>
+  <div class="card noprint">
+    <h2>저장 · 내보내기</h2>
+    <div class="row">
+      <button class="btn" id="copySum">요약 복사</button>
+      <button class="btn ghost" id="csv">CSV 저장</button>
+      <button class="btn ghost" id="print">인쇄 / PDF</button>
+      <button class="btn ghost" id="exportJson">파일로 저장</button>
+      <button class="btn ghost" id="importJson">불러오기</button>
+      <input type="file" id="jsonFile" accept=".json,application/json" hidden>
+      <button class="btn del" id="reset">초기화</button>
+    </div>
+    <div class="hint">입력값은 이 브라우저에 자동 저장됩니다. 다른 기기로 옮기려면 “파일로 저장”을 이용하세요.</div>
+  </div>
+</section>
+
+</div>
+
+<div class="bar noprint">
+  <div class="in">
+    <div class="t">손해액 합계<b id="barLoss">0</b></div>
+    <div class="t" style="text-align:right">지급보험금 합계<b id="barPay">0</b></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+const KEY = 'damage-calc-v1';
+const CATS = ['건물','시설','기계','집기비품','재고자산','가재도구','기타'];
+const uid = () => Math.random().toString(36).slice(2, 9);
+
+function blank(){
+  const g1 = {id:uid(), name:'건물', value:'', sum:'', ratio:80, deductible:'', salvage:'', debrisCost:'', preventCost:''};
+  return {
+    caseNo:'', insured:'', accDate:'', place:'', cause:'', product:'',
+    residual:10, finalResidual:20,
+    groups:[g1],
+    items:[{id:uid(), gid:g1.id, name:'', qty:1, unit:'', price:'', age:'', life:'', noDep:false}]
+  };
+}
+
+let S;
+try { S = JSON.parse(localStorage.getItem(KEY)) || blank(); } catch(e){ S = blank(); }
+if (!S.groups || !S.groups.length) S = blank();
+
+const $ = s => document.querySelector(s);
+const n = v => { const x = parseFloat(String(v).replace(/,/g,'')); return isFinite(x) ? x : 0; };
+const won = v => Math.round(v).toLocaleString('ko-KR');
+const pct = v => (Math.round(v*10000)/100).toLocaleString('ko-KR') + '%';
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} };
+
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toast.h); toast.h=setTimeout(()=>t.classList.remove('on'),1600); }
+
+/* ---------- 계산 ---------- */
+function calcItem(it){
+  const rc = n(it.qty) * n(it.price);
+  const r = n(S.residual)/100, fr = n(S.finalResidual)/100;
+  const life = n(it.life), age = n(it.age);
+  let annual = 0, dep = 0;
+  if (!it.noDep && life > 0){
+    annual = (1 - r) / life;
+    dep = Math.min(annual * age, 1 - fr);
+    if (dep < 0) dep = 0;
+  }
+  return {rc, annual, dep, depAmt: rc*dep, acv: rc*(1-dep)};
+}
+
+function calcGroup(g){
+  const items = S.items.filter(i => i.gid === g.id).map(i => ({...i, c: calcItem(i)}));
+  const rc = items.reduce((a,i)=>a+i.c.rc,0);
+  const acv = items.reduce((a,i)=>a+i.c.acv,0);
+  const salvage = n(g.salvage);
+  const loss = Math.max(0, acv - salvage);           // 손해액
+  const value = n(g.value), sum = n(g.sum), ratio = n(g.ratio)/100 || 1;
+  const base = value * ratio;
+  let rate = 1, full = true;
+  if (value > 0 && sum > 0 && sum < base){ rate = sum / base; full = false; }
+  const limit = sum > 0 ? sum : Infinity;
+
+  const lossPay = Math.min(loss * rate, limit);
+  // 잔존물제거비용: 손해액의 10% 한도, 비례 적용, 손해액과 합산하여 가입금액 한도
+  const debrisAllow = Math.min(n(g.debrisCost), loss * 0.1);
+  const debrisPay = Math.max(0, Math.min(debrisAllow * rate, limit - lossPay));
+  // 손해방지비용: 비례 적용, 가입금액 초과 시에도 지급
+  const preventPay = n(g.preventCost) * rate;
+  const gross = lossPay + debrisPay + preventPay;
+  const ded = n(g.deductible);
+  const pay = Math.max(0, gross - ded);
+  return {items, rc, acv, salvage, loss, value, sum, ratio, base, rate, full, lossPay,
+          debrisAllow, debrisPay, preventPay, gross, ded, pay};
+}
+
+function calcAll(){
+  const gs = S.groups.map(g => ({g, r: calcGroup(g)}));
+  const tot = gs.reduce((a,{r})=>({rc:a.rc+r.rc, acv:a.acv+r.acv, loss:a.loss+r.loss, pay:a.pay+r.pay}),{rc:0,acv:0,loss:0,pay:0});
+  return {gs, tot};
+}
+
+/* ---------- 렌더: 기본 ---------- */
+function bindBasics(){
+  document.querySelectorAll('[data-b]').forEach(el => {
+    const k = el.dataset.b; el.value = S[k] ?? '';
+    el.oninput = () => { S[k] = el.value; save(); refresh(); };
+  });
+}
+
+function groupOptions(sel){
+  return S.groups.map(g => `<option value="${g.id}"${g.id===sel?' selected':''}>${esc(g.name||'(이름없음)')}</option>`).join('');
+}
+
+function renderGroups(){
+  $('#groups').innerHTML = S.groups.map((g,idx) => `
+    <div class="item" data-gid="${g.id}">
+      <div class="top">
+        <span class="no">${idx+1}</span>
+        <input list="catlist" data-g="name" value="${esc(g.name)}" placeholder="보험목적 (건물·시설 등)">
+        ${S.groups.length>1?'<button class="btn del noprint" data-act="delg">삭제</button>':''}
+      </div>
+      <div class="grid">
+        <label class="f">보험가액<input class="num" inputmode="numeric" data-g="value" value="${esc(g.value)}"></label>
+        <label class="f">보험가입금액<input class="num" inputmode="numeric" data-g="sum" value="${esc(g.sum)}"></label>
+        <label class="f">부보비율<select data-g="ratio">
+          ${[80,100].map(v=>`<option value="${v}"${n(g.ratio)===v?' selected':''}>${v}%${v===80?' (80% 조건부)':' (전액비례)'}</option>`).join('')}
+        </select></label>
+        <label class="f">자기부담금<input class="num" inputmode="numeric" data-g="deductible" value="${esc(g.deductible)}"></label>
+        <label class="f">잔존물가액<input class="num" inputmode="numeric" data-g="salvage" value="${esc(g.salvage)}"></label>
+        <label class="f">잔존물제거비용<input class="num" inputmode="numeric" data-g="debrisCost" value="${esc(g.debrisCost)}"></label>
+        <label class="f">손해방지비용<input class="num" inputmode="numeric" data-g="preventCost" value="${esc(g.preventCost)}"></label>
+      </div>
+      <div class="calcline" data-gline></div>
+    </div>`).join('') + `<datalist id="catlist">${CATS.map(c=>`<option value="${c}">`).join('')}</datalist>`;
+}
+
+$('#groups').addEventListener('input', e => {
+  const box = e.target.closest('[data-gid]'); if (!box) return;
+  const g = S.groups.find(x => x.id === box.dataset.gid); const k = e.target.dataset.g;
+  if (!g || !k) return;
+  g[k] = e.target.type === 'select-one' ? n(e.target.value) : fmtInput(e.target);
+  save(); refresh();
+  if (k === 'name') renderItems();
+});
+$('#groups').addEventListener('change', e => { if (e.target.tagName==='SELECT') e.target.dispatchEvent(new Event('input',{bubbles:true})); });
+$('#groups').addEventListener('click', e => {
+  if (e.target.dataset.act !== 'delg') return;
+  const id = e.target.closest('[data-gid]').dataset.gid;
+  const cnt = S.items.filter(i=>i.gid===id).length;
+  if (cnt && !confirm(`이 목적에 속한 품목 ${cnt}개도 함께 삭제됩니다. 계속할까요?`)) return;
+  S.groups = S.groups.filter(g=>g.id!==id);
+  S.items = S.items.filter(i=>i.gid!==id);
+  save(); renderGroups(); renderItems(); refresh();
+});
+$('#addGroup').onclick = () => {
+  const used = S.groups.map(g=>g.name);
+  S.groups.push({id:uid(), name:CATS.find(c=>!used.includes(c))||'', value:'', sum:'', ratio:80, deductible:'', salvage:'', debrisCost:'', preventCost:''});
+  save(); renderGroups(); renderItems(); refresh();
+};
+
+/* 금액 입력 천단위 콤마 */
+function fmtInput(el){
+  if (!el.classList.contains('num') || el.type === 'number') return el.value;
+  const raw = el.value.replace(/[^\d.]/g,'');
+  if (raw === '') { el.value=''; return ''; }
+  const [a,b] = raw.split('.');
+  const pos = el.value.length - el.selectionStart;
+  el.value = Number(a).toLocaleString('ko-KR') + (b!==undefined?'.'+b:'');
+  try { const p = Math.max(0, el.value.length - pos); el.setSelectionRange(p,p); } catch(e){}
+  return el.value;
+}
+
+/* ---------- 렌더: 품목 ---------- */
+function renderItems(){
+  if (!S.items.length){ $('#items').innerHTML = '<div class="empty">손해품목이 없습니다. “+ 품목 추가”를 눌러주세요.</div>'; return; }
+  $('#items').innerHTML = S.items.map((it,idx) => `
+    <div class="item" data-iid="${it.id}">
+      <div class="top">
+        <span class="no">${idx+1}</span>
+        <input data-i="name" value="${esc(it.name)}" placeholder="품명 / 공종 (예: 벽체 도배)">
+        <button class="btn sm ghost noprint" data-act="dup" title="복제">복제</button>
+        <button class="btn del noprint" data-act="del">삭제</button>
+      </div>
+      <div class="grid">
+        <label class="f">보험목적<select data-i="gid">${groupOptions(it.gid)}</select></label>
+        <label class="f">수량<input class="num" type="number" step="any" data-i="qty" value="${esc(it.qty)}"></label>
+        <label class="f">단위<input data-i="unit" value="${esc(it.unit)}" placeholder="㎡, 식, EA"></label>
+        <label class="f">단가(재조달)<input class="num" inputmode="numeric" data-i="price" value="${esc(it.price)}"></label>
+        <label class="f">경과연수(년)<input class="num" type="number" step="any" data-i="age" value="${esc(it.age)}"></label>
+        <label class="f">내용연수(년)<input class="num" type="number" step="any" data-i="life" value="${esc(it.life)}"></label>
+        <label class="f">감가 적용<select data-i="noDep">
+          <option value=""${!it.noDep?' selected':''}>적용</option>
+          <option value="1"${it.noDep?' selected':''}>미적용 (재고·신품 등)</option>
+        </select></label>
+      </div>
+      <div class="calcline" data-iline></div>
+    </div>`).join('');
+}
+
+$('#items').addEventListener('input', e => {
+  const box = e.target.closest('[data-iid]'); if (!box) return;
+  const it = S.items.find(x=>x.id===box.dataset.iid); const k = e.target.dataset.i;
+  if (!it || !k) return;
+  if (k === 'noDep') it.noDep = !!e.target.value;
+  else if (k === 'price') it.price = fmtInput(e.target);
+  else it[k] = e.target.value;
+  save(); refresh();
+});
+$('#items').addEventListener('change', e => { if (e.target.tagName==='SELECT') e.target.dispatchEvent(new Event('input',{bubbles:true})); });
+$('#items').addEventListener('click', e => {
+  const act = e.target.dataset.act; if (!act) return;
+  const id = e.target.closest('[data-iid]').dataset.iid;
+  const i = S.items.findIndex(x=>x.id===id);
+  if (act==='del') S.items.splice(i,1);
+  if (act==='dup') S.items.splice(i+1,0,{...S.items[i], id:uid()});
+  save(); renderItems(); refresh();
+});
+$('#addItem').onclick = () => {
+  const last = S.items[S.items.length-1];
+  S.items.push({id:uid(), gid: last?last.gid:S.groups[0].id, name:'', qty:1, unit:last?last.unit:'', price:'', age:last?last.age:'', life:last?last.life:'', noDep:last?last.noDep:false});
+  save(); renderItems(); refresh();
+  const els = document.querySelectorAll('#items [data-i="name"]'); els[els.length-1]?.focus();
+};
+
+/* ---------- 산출 결과 ---------- */
+function refresh(){
+  const {gs, tot} = calcAll();
+
+  document.querySelectorAll('#items [data-iid]').forEach(box => {
+    const it = S.items.find(x=>x.id===box.dataset.iid); if (!it) return;
+    const c = calcItem(it);
+    box.querySelector('[data-iline]').innerHTML =
+      `<span>재조달가액 <b>${won(c.rc)}</b></span>` +
+      `<span>감가율 <b>${pct(c.dep)}</b>${c.annual?` (연 ${pct(c.annual)})`:''}</span>` +
+      `<span>감가액 <b>${won(c.depAmt)}</b></span>` +
+      `<span class="acv">시가 <b>${won(c.acv)}</b></span>`;
+  });
+  document.querySelectorAll('#groups [data-gid]').forEach(box => {
+    const f = gs.find(x=>x.g.id===box.dataset.gid); if (!f) return;
+    const r = f.r;
+    box.querySelector('[data-gline]').innerHTML =
+      `<span>품목 ${r.items.length}개</span><span>손해액 <b>${won(r.loss)}</b></span>` +
+      `<span>${r.full?'<span class="badge full">실손보상</span>':`<span class="badge prop">비례보상 ${pct(r.rate)}</span>`}</span>` +
+      `<span class="acv">지급보험금 <b>${won(r.pay)}</b></span>`;
+  });
+
+  $('#barLoss').textContent = won(tot.loss);
+  $('#barPay').textContent = won(tot.pay);
+
+  const head = `
+    <div class="card">
+      <h2>손해액 산출서<span class="tag">${esc(S.caseNo)}</span></h2>
+      <div class="kv">
+        <div>피보험자</div><div>${esc(S.insured)||'-'}</div>
+        <div>사고일자 / 원인</div><div>${esc(S.accDate)||'-'} / ${esc(S.cause)||'-'}</div>
+        <div>사고장소</div><div>${esc(S.place)||'-'}</div>
+        <div>보험종목</div><div>${esc(S.product)||'-'}</div>
+        <div>감가기준</div><div>잔가율 ${n(S.residual)}% · 최종잔가율 ${n(S.finalResidual)}%</div>
+      </div>
+    </div>`;
+
+  const groupsHtml = gs.map(({g,r}) => `
+    <div class="card">
+      <h2>${esc(g.name)||'(이름없음)'} ${r.full?'<span class="badge full">실손보상</span>':'<span class="badge prop">비례보상</span>'}</h2>
+      ${r.items.length ? `<div class="tblwrap"><table>
+        <thead><tr><th>No</th><th>품명</th><th>수량</th><th>단가</th><th>재조달가액</th><th>경과/내용</th><th>감가율</th><th>시가(손해액)</th></tr></thead>
+        <tbody>${r.items.map((i,k)=>`<tr>
+          <td>${k+1}</td><td>${esc(i.name)}</td>
+          <td class="r">${n(i.qty).toLocaleString('ko-KR')}${esc(i.unit)?' '+esc(i.unit):''}</td>
+          <td class="r">${won(n(i.price))}</td><td class="r">${won(i.c.rc)}</td>
+          <td class="r">${i.noDep?'-':`${n(i.age)}/${n(i.life)}년`}</td>
+          <td class="r">${pct(i.c.dep)}</td><td class="r">${won(i.c.acv)}</td></tr>`).join('')}
+          <tr class="sum"><td colspan="4">합계</td><td class="r">${won(r.rc)}</td><td></td><td class="r">${r.rc?pct(1-r.acv/r.rc):'-'}</td><td class="r">${won(r.acv)}</td></tr>
+        </tbody></table></div>` : '<div class="empty">이 목적에 등록된 품목이 없습니다.</div>'}
+      <div class="kv" style="margin-top:10px">
+        <div>시가손해 합계</div><div>${won(r.acv)}</div>
+        <div>(−) 잔존물가액</div><div class="neg">${won(r.salvage)}</div>
+        <div class="em">① 손해액</div><div class="em">${won(r.loss)}</div>
+        <div>보험가액</div><div>${r.value?won(r.value):'미입력'}</div>
+        <div>보험가입금액</div><div>${r.sum?won(r.sum):'미입력'}</div>
+        <div>비례보상 기준 (가액 × ${pct(r.ratio)})</div><div>${r.value?won(r.base):'-'}</div>
+        <div>보상비율</div><div>${pct(r.rate)}</div>
+        <div>② 손해액 보상 (①×비율, 가입금액 한도)</div><div>${won(r.lossPay)}</div>
+        <div>③ 잔존물제거비용 (①의 10% 한도 ${won(r.loss*0.1)} × 비율)</div><div>${won(r.debrisPay)}</div>
+        <div>④ 손해방지비용 (× 비율)</div><div>${won(r.preventPay)}</div>
+        <div>(−) 자기부담금</div><div class="neg">${won(r.ded)}</div>
+        <div class="em">지급보험금 (②+③+④−자기부담금)</div><div class="em">${won(r.pay)}</div>
+      </div>
+      <div class="formula">${r.full
+        ? (r.value && r.sum ? `가입금액 ${won(r.sum)} ≥ 보험가액×${pct(r.ratio)} ${won(r.base)} → 가입금액 한도 실손보상` : '보험가액 또는 가입금액 미입력 → 비례 판정 없이 실손 산출')
+        : `가입금액 ${won(r.sum)} < 보험가액×${pct(r.ratio)} ${won(r.base)} → 손해액 × ${won(r.sum)} / ${won(r.base)} = ${pct(r.rate)} 비례보상`}</div>
+    </div>`).join('');
+
+  const summary = `
+    <div class="card">
+      <h2>총괄표</h2>
+      <div class="tblwrap"><table>
+        <thead><tr><th>보험목적</th><th>재조달가액</th><th>손해액</th><th>보상비율</th><th>지급보험금</th></tr></thead>
+        <tbody>${gs.map(({g,r})=>`<tr><td>${esc(g.name)}</td><td class="r">${won(r.rc)}</td><td class="r">${won(r.loss)}</td><td class="r">${pct(r.rate)}</td><td class="r">${won(r.pay)}</td></tr>`).join('')}
+        <tr class="sum"><td>합계</td><td class="r">${won(tot.rc)}</td><td class="r">${won(tot.loss)}</td><td></td><td class="r">${won(tot.pay)}</td></tr></tbody>
+      </table></div>
+      <div class="big"><span class="l">지급보험금 합계</span><span class="v">${won(tot.pay)}원</span></div>
+    </div>`;
+
+  $('#result').innerHTML = head + summary + groupsHtml;
+}
+
+/* ---------- 탭 ---------- */
+document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on', x===b));
+  document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('on', s.id==='sec-'+b.dataset.t));
+  window.scrollTo(0,0);
+});
+
+/* ---------- 내보내기 ---------- */
+function summaryText(){
+  const {gs, tot} = calcAll();
+  const L = [`[손해액 산출] ${S.caseNo||''} ${S.insured||''}`.trim(), `사고일자: ${S.accDate||'-'} / 원인: ${S.cause||'-'}`, ''];
+  gs.forEach(({g,r}) => {
+    L.push(`■ ${g.name||'(이름없음)'}`);
+    L.push(` 재조달가액 ${won(r.rc)} / 시가 ${won(r.acv)} / 잔존물 ${won(r.salvage)}`);
+    L.push(` 손해액 ${won(r.loss)} / ${r.full?'실손보상':'비례보상 '+pct(r.rate)}`);
+    if (r.debrisPay) L.push(` 잔존물제거비용 ${won(r.debrisPay)}`);
+    if (r.preventPay) L.push(` 손해방지비용 ${won(r.preventPay)}`);
+    if (r.ded) L.push(` 자기부담금 −${won(r.ded)}`);
+    L.push(` 지급보험금 ${won(r.pay)}`, '');
+  });
+  L.push(`손해액 합계 ${won(tot.loss)}원`, `지급보험금 합계 ${won(tot.pay)}원`);
+  return L.join('\n');
+}
+$('#copySum').onclick = async () => {
+  const t = summaryText();
+  try { await navigator.clipboard.writeText(t); toast('요약을 복사했습니다'); }
+  catch(e){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast('요약을 복사했습니다'); }
+};
+function download(name, text, type){
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type})); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+const fname = ext => `손해액산출_${(S.caseNo||S.insured||'').replace(/[\\/:*?"<>|]/g,'')||new Date().toISOString().slice(0,10)}.${ext}`;
+$('#csv').onclick = () => {
+  const {gs} = calcAll();
+  const q = v => `"${String(v).replace(/"/g,'""')}"`;
+  const rows = [['보험목적','품명','수량','단위','단가','재조달가액','경과연수','내용연수','감가율(%)','감가액','시가']];
+  gs.forEach(({g,r}) => r.items.forEach(i => rows.push([g.name,i.name,n(i.qty),i.unit,n(i.price),Math.round(i.c.rc),i.noDep?'':n(i.age),i.noDep?'':n(i.life),(i.c.dep*100).toFixed(2),Math.round(i.c.depAmt),Math.round(i.c.acv)])));
+  rows.push([]);
+  rows.push(['보험목적','시가합계','잔존물가액','손해액','보험가액','가입금액','부보비율(%)','보상비율(%)','손해액보상','잔존물제거비용','손해방지비용','자기부담금','지급보험금']);
+  gs.forEach(({g,r}) => rows.push([g.name,Math.round(r.acv),r.salvage,Math.round(r.loss),r.value,r.sum,n(g.ratio),(r.rate*100).toFixed(2),Math.round(r.lossPay),Math.round(r.debrisPay),Math.round(r.preventPay),r.ded,Math.round(r.pay)]));
+  download(fname('csv'), '﻿'+rows.map(r=>r.map(q).join(',')).join('\r\n'), 'text/csv;charset=utf-8');
+};
+$('#print').onclick = () => window.print();
+$('#exportJson').onclick = () => download(fname('json'), JSON.stringify(S,null,2), 'application/json');
+$('#importJson').onclick = () => $('#jsonFile').click();
+$('#jsonFile').onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try { const d = JSON.parse(rd.result); if (!d.groups || !d.items) throw 0; S = d; save(); init(); toast('불러왔습니다'); }
+    catch(err){ alert('올바른 산출 파일이 아닙니다.'); }
+    e.target.value = '';
+  };
+  rd.readAsText(f);
+};
+$('#reset').onclick = () => { if (confirm('입력한 내용을 모두 지우고 새로 시작할까요?')) { S = blank(); save(); init(); } };
+
+function init(){ bindBasics(); renderGroups(); renderItems(); refresh(); }
+init();
+})();
+</script>
+</body>
+</html>
