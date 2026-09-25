@@ -333,6 +333,7 @@ function applyStateObj(st){
   sv=Object.assign(defaultSv(), st.sv||{});
   if(sv.base_door_extra==='0.9*') sv.base_door_extra='';   // 구버전 기본값 → 자동식 사용
   if(sv.door_cnt===0) sv.door_cnt='';
+  if(sv.balc_win_deduct){ Object.keys(sv.balc_win_deduct).forEach(function(i){ if(windows[i]&&windows[i].deduct===undefined) windows[i].deduct=!!sv.balc_win_deduct[i]; }); sv.balc_win_deduct={}; }
   if(!sv._caseId) sv._caseId=newCaseId();
   calcResult=null;
 }
@@ -565,13 +566,14 @@ function syncIn(){  // DOM → sv
   });
   var dc=document.getElementById('door_cnt'); if(dc) sv.door_cnt=(dc.value.trim()===''?'':(parseInt(dc.value)||0));
   // 발코니 창호 차감 체크
-  var bwd={};
   windows.forEach(function(w,i){
     var el=document.getElementById('balc_wd_'+i);
-    if(el) bwd[i]=el.checked;
-    else if(sv.balc_win_deduct&&sv.balc_win_deduct[i]!==undefined) bwd[i]=sv.balc_win_deduct[i];
+    if(el) w.deduct=el.checked;
   });
-  sv.balc_win_deduct=bwd;
+}
+function winDeduct(w){   // 발코니 벽체 창호 차감 여부: 창 객체에 저장, 미지정 시 발코니 위치 창이면 차감
+  if(w.deduct!==undefined) return !!w.deduct;
+  return (w.locs||[]).some(function(l){return BALCONIES.indexOf(l)>=0;});
 }
 function syncOut(){  // sv → DOM
   Object.keys(sv).forEach(function(id){
@@ -934,7 +936,7 @@ function renderFinish(){
       var items=windows.map(function(w,i){
         if(!w.type||!w.w||!w.h) return '';
         var isBalc=(w.locs||[]).some(function(l){return BALCONIES.indexOf(l)>=0;});
-        var cur=sv.balc_win_deduct&&sv.balc_win_deduct[i]!==undefined?sv.balc_win_deduct[i]:isBalc;
+        var cur=winDeduct(w);
         var loc=(w.locs||[]).length?w.locs.join('·'):'미지정';
         var wm=PF(w.w)/1000,hm=PF(w.h)/1000,cnt=PI(w.qty)||1;
         var area=String(parseFloat((wm*hm*cnt).toFixed(2)));
@@ -1091,7 +1093,7 @@ function autoCounts(){
   var roomCnt=lives.filter(function(r){return !NONROOM.some(function(k){return r.name.indexOf(k)>=0;});}).length||1;
   var c=function(re){return rooms.filter(function(r){return r.name&&re.test(r.name);}).length;};
   return { room:roomCnt, living:c(/거실/)||1, kitchen:c(/주방|식당/)||1, entry:c(/현관/)||1,
-           balc:Math.max(1,c(/발코니/)), bath:Math.max(1,c(/욕실/)), balcPipe:c(/발코니/), ac:c(/거실|안방|침실/)||0 };
+           balc:c(/발코니/), bath:c(/욕실/), balcPipe:c(/발코니/), ac:c(/거실|안방|침실/)||0 };
 }
 function renderMechElec(){
   var a=autoCounts();
@@ -1442,7 +1444,7 @@ function runCalc(){
   var sinkLen=PF(sv.sink_len)||2.7;
   var c4=[it('싱크대',(sv.sink_type||'ㅡ자')+'형/'+sinkLen+'m','식',1,sinkBase[sv.sink_type]||2632200,0,0,'ㅇ 싱크대 1식','=1')];
   if(sv.island_yn&&PF(sv.island_len)>0)c4.push(it('아일랜드식탁',sv.island_len+'m','식',1,800000,0,0,'ㅇ 아일랜드식탁 1식 (시중가)','=1'));
-  closets.forEach(function(c){ if(c.room&&c.len){ var ja=Math.round(PF(c.len)); var m=R2(ja*0.3); c4.push(it('붙박이장('+c.room+')',m+'m/'+ja+'자','자',ja,195000,0,0,'ㅇ '+c.room+' '+c.len+'자','='+ja)); } });
+  closets.forEach(function(c){ if(c.room&&c.len&&rooms.some(function(r){return r.name===c.room;})){ var ja=Math.round(PF(c.len)); var m=R2(ja*0.3); c4.push(it('붙박이장('+c.room+')',m+'m/'+ja+'자','자',ja,195000,0,0,'ㅇ '+c.room+' '+c.len+'자','='+ja)); } });
   if(PF(sv.shoecab_len)>0){ var sja=Math.round(PF(sv.shoecab_len)); c4.push(it('현관신발장','-','자',sja,195000,0,0,'ㅇ 현관신발장 '+sv.shoecab_len+'자','='+sja)); }
   cats.push({no:4,name:'가구공사',rows:c4});
   // ⑤ 도장 (발코니 천장·벽체 - 마감 선택에 따라 수성페인트/무늬코트/타일 분기)
@@ -1451,10 +1453,9 @@ function runCalc(){
   if(balcArea>0){
     var balcWallArea=balcs.reduce(function(s,r){return s+2*(PF(r.w)+PF(r.d));},0)*2.3;
     // 창호 차감
-    var bwd=sv.balc_win_deduct||{};
     var deductArea=0,deductBasisParts=[],deductFxParts=[];
     windows.forEach(function(w,i){
-      if(!bwd[i]||!w.w||!w.h) return;
+      if(!winDeduct(w)||!w.w||!w.h) return;
       var wm=PF(w.w)/1000,hm=PF(w.h)/1000,cnt=PI(w.qty)||1;
       var a=wm*hm*cnt;
       deductArea+=a;
@@ -1722,7 +1723,7 @@ function runCalc(){
   var hasKitchen=lives.some(function(r){return r.name.indexOf('주방')>=0;});
   var outKitchen=hasKitchen?2:0;  // 주방 전용회로 콘센트 가산
   var out2=outBase+outKitchen;
-  var outBath=Math.max(1,bathRooms.length);  // 욕실 방수콘센트
+  var outBath=bathRooms.length;  // 욕실 방수콘센트 (욕실 수)
   var sw1=swCount;                 // 1구 스위치 (실 개수+현관)
   var sw2=Math.max(1,Math.round(roomList.length*0.4)); // 2구 스위치 (거실/주방 등 일부)
   // LED 등기구 (실제 실 개수 기반)
@@ -1730,7 +1731,7 @@ function runCalc(){
   var kitchenCnt=lives.filter(function(r){return r.name.indexOf('주방')>=0||r.name.indexOf('식당')>=0;}).length||1;
   var entryCnt=lives.filter(function(r){return r.name.indexOf('현관')>=0;}).length||1;
   var ledLiving=blank(sv.led_living)?livingCnt:PI(sv.led_living),ledRoom=blank(sv.led_room)?roomCnt:PI(sv.led_room),ledKit=blank(sv.led_kitchen)?kitchenCnt:PI(sv.led_kitchen);
-  var ledBalc=blank(sv.led_balcony)?Math.max(1,balcs.length):PI(sv.led_balcony),ledBath=blank(sv.led_bath)?Math.max(1,bathRooms.length):PI(sv.led_bath),ledEntry=blank(sv.led_entry)?entryCnt:PI(sv.led_entry);
+  var ledBalc=blank(sv.led_balcony)?balcs.length:PI(sv.led_balcony),ledBath=blank(sv.led_bath)?bathRooms.length:PI(sv.led_bath),ledEntry=blank(sv.led_entry)?entryCnt:PI(sv.led_entry);
   var c11=[
     it('세대분전함',ckt+'회로','면',1,154800,121785,0,'ㅇ 세대분전함 '+ckt+'회로 1면','=1'),
     it('배선차단기','50A','EA',1,25900,58840,0,'ㅇ 메인차단기 1EA','=1'),
@@ -2132,7 +2133,7 @@ function generateText(){
   L.push('벽체: '+sv.wall_main);
   L.push('천장: '+sv.ceil_main);
   if(sv.artwall) L.push('아트월: '+sv.artwall_loc);
-  if(sv.kitchen_tile_h) L.push('주방타일 높이: '+sv.kitchen_tile_h+'mm');
+  if(sv.kitchen_tile_h) L.push('주방타일 높이: '+sv.kitchen_tile_h+'m');
   L.push('\n[가구공사]');
   L.push('싱크대: '+sv.sink_type+'형'+(sv.sink_len?' '+sv.sink_len+'m':'(길이 미입력)'));
   if(sv.island_yn) L.push('아일랜드식탁: '+(sv.island_len||'-')+'m');
