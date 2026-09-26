@@ -9,7 +9,7 @@
 | `poster-*.jpg` | 썸네일 (엔딩 카드) |
 
 ## 구성 (96 BPM, 1박 = 0.625초)
-- 0:00 훅: 멀티탭 스파크 "탁" (CG)
+- 0:00 훅: 어둠 속 성냥 점화 "치익" (실사)
 - 0:02.5 오프닝: 실사 배경 4컷 위로 박자마다 한 단어씩 — 사고는 예고 없이 옵니다 / 불이 나고, 연기가 번지고 / 무엇이, 얼마나 손상됐는지 / 설명할 근거가 필요합니다
 - 0:12.5 빌드업: 보이는 피해 너머까지. → 화면이 서서히 어두워지며 드롭으로
 - 0:15 드롭 A: 한 박자에 한 단어 + 실사 배경 (불·연기·그을음·소방수 → 현장·측정·도면·약관 → 누락·근거·산정·설명 → 복구·일상·제자리·회복)
@@ -28,7 +28,7 @@ pip install numpy scipy
 - 박자표: `src/timeline.json` · 화면 연출: `src/film.js`, `src/film.html`
 - 실사 클립: `src/footage.json` (Mixkit 클립 번호·시작 초·배속) → `src/footage.py`
 - 폰 화면 페이지: `src/pages.py` (theham-consult.pages.dev 에서 최신본을 받음)
-- CG 장면(훅 멀티탭, 누락 견적서): `src/scenes-gl.js`, `src/scenes-2d.js` — 셰이더만 확인: `node src/render.mjs --page gltest.html --q key=strip --preview 0.7`
+- CG 장면(누락 견적서, 실사가 없을 때의 대체 장면): `src/scenes-gl.js`, `src/scenes-2d.js` — 셰이더만 확인: `node src/render.mjs --page gltest.html --q key=strip --preview 0.7`
 - 음악: `src/music.py` (코드로 직접 합성 — 샘플·저작권 음원 없음)
 - 특정 시점만 미리보기: `node src/render.mjs --fmt h --preview 16.3,31.8`
 

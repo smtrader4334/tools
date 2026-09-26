@@ -1,6 +1,7 @@
 {
   "_source": "Mixkit (https://mixkit.co) — Mixkit Stock Video Free License: 상업적 이용 무료, 출처 표기 불필요. 원본 클립은 저장소에 넣지 않고 빌드 때 내려받음.",
   "_fields": "id=Mixkit 클립 번호, in=시작 초, dur=사용 길이(초, 기본 0.625=1박), speed=재생 배속, dim=글자 가독성용 어둡게(0~1), gain=밝기, vx=세로(9:16) 크롭 중심(0~1)",
+  "hook":     {"id": 8435,  "in": 0.669, "dur": 2.5, "speed": 0.85, "dim": 0.00, "vx": 0.56},
   "op1":      {"id": 42342, "in": 1.0,  "dur": 2.5, "speed": 1.0, "dim": 0.25, "vx": 0.5},
   "op2":      {"id": 5280,  "in": 5.0,  "dur": 2.5, "speed": 1.0, "dim": 0.40, "vx": 0.62},
   "op3":      {"id": 2636,  "in": 3.5,  "dur": 2.5, "speed": 1.0, "dim": 0.15, "gain": 1.1, "vx": 0.35},

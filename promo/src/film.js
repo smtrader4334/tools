@@ -366,7 +366,8 @@ async function renderBG(t, phrase, word) {
   ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
   if (t < 2.5) {
-    glTo2D('strip', t, t / 2.5);
+    // 훅: 어둠 속 성냥 점화 (실사). 클립이 없으면 CG 멀티탭
+    if (!(await drawFootage('hook', t, 0.06 * eInOut(t / 2.5)))) glTo2D('strip', t, t / 2.5);
     const f = lin(t, 2.15, 2.5);
     if (f > 0) { ctx.fillStyle = `rgba(0,0,0,${f})`; ctx.fillRect(0, 0, W, H); }
     return 'hook';

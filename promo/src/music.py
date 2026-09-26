@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-music.py (v3) - original score for the 47.5 s 더함화재특종손해사정 brand film.
+music.py (v4) - original score for the 47.5 s 더함화재특종손해사정 brand film.
 
 Premium, restrained corporate score: felt piano, warm string beds, deep clean
 low hits, a soft pulse and a lot of air.  Everything is synthesised from
@@ -19,8 +19,9 @@ Usage   python3 src/music.py            render
         python3 src/music.py --verify-only   checks on the existing wav
 
 Form
-  hook    0-2.5    room tone + mains hum, power-strip spark at 0.625, smoke
-                   hiss, sub swell into the first phrase
+  hook    0-2.5    room tone, match struck in the dark: scrape from 0.545,
+                   ignition at 0.625 (puff flare + phosphorus sizzle), soft
+                   flame breath to 2.5, sub swell into the first phrase
   opening 2.5-12.5 four bars; each "phrase" = clean low hit + felt piano,
                    each "note" = piano only.  The words play a motif:
                    Dm  A4 F4 D4 | Bbmaj7 A4 F4 C5 | Gm9 Bb4 G4 D5 | A C#5 A4 E5
@@ -159,7 +160,7 @@ def open_chord_at(t):
 # Mix levels (linear, pre-master)
 # ---------------------------------------------------------------------------
 LV = dict(
-    room=0.010, hum=0.0045, spark=0.42, subswell=0.08,
+    room=0.010, match=0.30, flame=0.018, subswell=0.08,
     lowhit=0.53, piano=0.87, strings_open=0.16, tick=0.28,
     riser=0.05, breath=0.36, kick=0.62, accent=0.30, air=0.08, taiko=0.36, ost=0.40,
     strings_a=0.13, sub=0.25, shimmer=0.035, impact=0.70, whoosh=0.10,
@@ -505,62 +506,73 @@ def stereo_noise(rng, n):
     return np.vstack((noise(rng, n), noise(rng, n)))
 
 
-def mains_hum(rng, n):
-    """60 Hz mains hum (Korea) with harmonics, slight wobble"""
-    t = tvec(n)
-    x = np.zeros(n)
-    for k, a in [(1, 1.0), (2, 0.6), (3, 0.32), (4, 0.2), (5, 0.12), (6, 0.08), (8, 0.04), (10, 0.03)]:
-        x += a * np.sin(2 * np.pi * 60.0 * k * t + rng.uniform(0, 2 * np.pi))
-    return normpk(x * (1 + 0.08 * np.sin(2 * np.pi * 0.9 * t)))
-
-
-def spark(rng):
-    """power-strip arc: sharp snap (3 micro-discharges) + plastic housing 'tak',
-    Poisson crackle of micro-arcs, 120 Hz-pulsed sizzle, short unstable buzz,
-    then a soft smoke hiss"""
-    n = ns(1.9)
-    t = tvec(n)
+def match_strike(rng, pre=0.08):
+    """a match struck in the dark.  Returns a stereo clip whose ignition is at
+    `pre` s: gritty friction scrape (band-passed 1.5-7 kHz noise with
+    stick-slip grains and a moving resonance) swelling into the ignition, a
+    small crisp ignition crack, a soft low-passed 'puff' flare decaying over
+    ~0.5 s, and the phosphorus head's sizzle with tiny random pops"""
+    n = ns(pre + 1.0)
     out = np.zeros((2, n))
-    for d, g in [(0.0, 1.0), (0.0009, 0.55), (0.0024, 0.3)]:
-        k = ns(d)
-        m = n - k
-        tt = t[:m]
-        for ch in range(2):
-            b = hp(noise(rng, m), 400) * np.exp(-tt / 0.00035)
-            b += 0.35 * bp(noise(rng, m), 2500, 9000) * np.exp(-tt / 0.0015)
-            out[ch, k:] += g * b * att(tt, 0.00005)
-    body = np.zeros(n)
-    for f, tau, a in [(430, .012, .22), (940, .008, .15), (1720, .005, .10), (2890, .003, .06)]:
-        body += a * np.sin(2 * np.pi * f * t) * np.exp(-t / tau)
-    out += st(body * att(t, 0.0002))
-    # crackle: micro-arcs, rate falling ~450/s -> ~10/s over ~0.45 s
-    src = hp(noise(rng, ns(0.5)), 1200)
-    tc = 0.004
+    # 1. scrape (치익)
+    m = ns(pre + 0.02)
+    tm = tvec(m)
+    sc = bp(noise(rng, m), 1500, 7000)
+    am = np.abs(lp(noise(rng, m), 350))
+    sc = normpk(sc * (0.35 + 0.9 * am / am.max()))
+    grains = np.zeros(m)
+    k = 0.0
     while True:
-        tc += rng.exponential(1.0 / (450.0 * np.exp(-tc / 0.11) + 10.0))
-        if tc >= 0.47:
+        k += rng.exponential(1.0 / 700.0)
+        if k >= pre + 0.01:
             break
-        L = ns(rng.uniform(0.0002, 0.0014))
+        i, L = ns(k), ns(rng.uniform(0.0002, 0.0006))
+        grains[i:i + L] += rng.lognormal(0, 0.5) * rng.choice([-1, 1]) * np.exp(-np.arange(len(grains[i:i + L])) / (L / 3))
+    sc = sc + 0.6 * normpk(hp(grains, 1500))
+    sc = sc + 0.8 * normpk(tvf(sc, 2400.0 * (4200.0 / 2400.0) ** (tm / tm[-1]), 2.0, 'bp', 32))
+    env = smoothstep(tm / pre) ** 1.4 * att(tm, 0.004)
+    env *= np.where(tm < pre - 0.008, 1.0, np.exp(-(tm - pre + 0.008) / 0.008))   # strip releases the head
+    out[:, :m] += st(0.32 * normpk(sc) * env)
+    # 2. ignition at `pre`: crisp crack + soft puff/whoosh flare
+    ki = ns(pre)
+    L2 = n - ki
+    t2 = tvec(L2)
+    crack = hp(noise(rng, L2), 1200) * np.exp(-t2 / 0.0012) + 0.5 * bp(noise(rng, L2), 600, 4000) * np.exp(-t2 / 0.004)
+    out[:, ki:] += st(0.8 * normpk(crack * att(t2, 0.00005)))
+    fc = 3200.0 * (700.0 / 3200.0) ** np.clip(t2 / 0.5, 0, 1)
+    puff = tvf(tvf(stereo_noise(rng, L2), fc, 0.7, 'lp', 64), fc, 0.7, 'lp', 64)
+    penv = (1 - np.exp(-t2 / 0.012)) ** 2 * (np.exp(-t2 / 0.16) + 0.25 * np.exp(-t2 / 0.4))
+    body = bp(stereo_noise(rng, L2), 250, 1200) * penv
+    out[:, ki:] += 0.55 * normpk(puff * penv) + 0.18 * normpk(body)
+    # 3. phosphorus sizzle bed + tiny pops (~0.63-1.1 s)
+    fl = np.abs(lp(noise(rng, L2), 40))
+    sz = lp(hp(stereo_noise(rng, L2), 3000), 10000) * (0.3 + 0.7 * fl / fl.max())
+    out[:, ki:] += 0.10 * normpk(sz * att(t2, 0.004) * np.exp(-t2 / 0.15))
+    src = hp(noise(rng, ns(0.2)), 2000)
+    tc = 0.005
+    while True:
+        tc += rng.exponential(1.0 / (120.0 * np.exp(-tc / 0.12) + 8.0))
+        if tc >= 0.475:
+            break
+        L = ns(rng.uniform(0.0002, 0.0008))
         o = int(rng.integers(0, len(src) - L))
+        g = 0.15 * rng.lognormal(0, 0.6) * np.exp(-tc / 0.2)
+        gl, gr = panlaw(rng.uniform(-0.4, 0.4))
+        j = ki + ns(tc)
         grain = src[o:o + L] * np.exp(-np.arange(L) / (L / 3.0))
-        g = 0.32 * rng.lognormal(0, 0.7) * np.exp(-tc / 0.18)
-        gl, gr = panlaw(rng.uniform(-0.5, 0.5))
-        k = ns(tc)
-        out[0, k:k + L] += gl * g * grain
-        out[1, k:k + L] += gr * g * grain
-    # arc sizzle (120 Hz pulsed) + unstable buzz
-    irr = normpk(lp(noise(rng, n), 25))
-    irr = np.clip(0.55 + 0.6 * irr, 0, 1)
-    am = np.abs(np.sin(2 * np.pi * 60.0 * t)) ** 6
-    env = att(t, 0.001) * np.exp(-t / 0.09) * (t < 0.42)
-    sz = lp(hp(stereo_noise(rng, n), 2500), 11000)
-    out += 0.22 * sz * (0.35 + 0.65 * am) * irr * env
-    bz = bp(square(120.0 * (1 + 0.004 * irr), n, 0.0, 0.3), 220, 3500)
-    out += st(0.10 * normpk(bz) * irr * att(t, 0.003) * np.exp(-t / 0.075) * (t < 0.4))
-    # smoke hiss
-    hs = lp(hp(stereo_noise(rng, n), 1500), 7000)
-    out += 0.028 * hs * smoothstep((t - 0.12) / 0.35) * np.exp(-np.maximum(t - 0.4, 0) / 0.42)
-    return fade(normpk(out), 0.0, 0.1)
+        out[0, j:j + L] += gl * g * grain
+        out[1, j:j + L] += gr * g * grain
+    return fade(out, 0.004, 0.05)
+
+
+def flame_breath(rng, dur):
+    """gentle steady flame: very soft rumbling low-mid noise with a slow,
+    irregular flicker and a breath of air"""
+    n = ns(dur)
+    x = bp(stereo_noise(rng, n), 90, 550)
+    flick = normpk(lp(noise(rng, n), 6))
+    x = x * (0.6 + 0.4 * flick) + 0.12 * lp(hp(stereo_noise(rng, n), 800), 2500) * (0.6 + 0.4 * flick)
+    return normpk(x)
 
 
 def felt_tick(rng, pitch=1.0, bright=0.0, a=0.0002):
@@ -892,18 +904,22 @@ def render_hook(B):
     rt = hp(lp(stereo_noise(rng, n), 650), 45)
     rt *= smoothstep(t / 0.2) * np.where(t < T_SPARK + 0.3, 1.0, np.exp(-(t - T_SPARK - 0.3) / 0.4))
     B['hook'].add(fade(rt, 0, 0.05), 0.0, LV['room'])
-    t_off = T_SPARK + 0.33                                   # breaker trips: hum dies
-    nh = ns(t_off + 0.08)
-    th = tvec(nh)
-    hum = mains_hum(rng_for('hum'), nh) * smoothstep(th / 0.25)
-    hum *= 1 + 0.6 * smoothstep((th - T_SPARK) / 0.01) * np.exp(-np.maximum(th - T_SPARK, 0) / 0.15)
-    B['hook'].add(fade(hum, 0, 0.08), 0.0, LV['hum'], 0.1)
-    ev(0.0, 'hook', 'room tone + mains hum', '60 Hz hum, faint room noise')
-    sp = spark(rng_for('spark'))
-    B['hook'].add(sp, T_SPARK, LV['spark'], -0.12)
-    B['s_room'].add(sp, T_SPARK, LV['spark'] * 0.5, -0.12)
-    ev(T_SPARK, 'KEY', 'spark', 'power-strip snap (탁) + crackle ~0.45 s + buzz, then smoke hiss')
-    ev(t_off, 'hook', 'hum cuts out', 'breaker trips; everything decays to near silence by ~2.3 s')
+    ev(0.0, 'hook', 'room tone', 'very quiet room noise in the dark')
+    # match: scrape 80 ms before, ignition exactly at T_SPARK
+    pre = 0.08
+    mt = match_strike(rng_for('match'), pre)
+    B['hook'].add(mt, T_SPARK - pre, LV['match'], -0.08)
+    B['s_room'].add(mt, T_SPARK - pre, LV['match'] * 0.45, -0.08)
+    ev(T_SPARK - pre, 'hook', 'match scrape', f'gritty friction 1.5-7 kHz swelling into ignition at {T_SPARK:.3f}')
+    ev(T_SPARK, 'KEY', 'match ignition', 'crisp ignition + soft puff flare (~0.5 s) + phosphorus sizzle/pops to ~1.1 s')
+    # steady flame breath, fading with the picture
+    f0, f1 = T_SPARK + 0.25, HOOK1
+    fb = flame_breath(rng_for('flame'), f1 - f0)
+    tf = tvec(fb.shape[1]) + f0
+    fb *= smoothstep((tf - f0) / 0.35) * np.where(tf < 2.15, 1.0, np.cos(np.clip((tf - 2.15) / 0.33, 0, 1) * np.pi / 2) ** 2)
+    B['hook'].add(fade(fb, 0.01, 0.02), f0, LV['flame'], -0.08)
+    B['s_room'].add(fade(fb, 0.01, 0.02), f0, LV['flame'] * 0.3, -0.08)
+    ev(f0, 'hook', 'flame breath', 'soft low-mid flame rumble 1.1-2.3, fades with the picture by 2.5')
     # low sub swell into the first phrase, dipping just before it
     t0 = 1.6
     n = ns(OPEN0) - ns(t0)
@@ -1440,6 +1456,18 @@ def verify(wav_path, stems, info):
           f'largest drop within 20 ms = {-d20.min():.2f} dB (limit 6); level 35.0 vs 35.6: '
           f'{rms_db(B1 - 0.02, B1 + 0.02):.1f} -> {rms_db(B1 + 0.58, B1 + 0.62):.1f} dBFS')
     print(f'  last 50 ms all zero: {bool(np.all(y[:, ns(DUR - 0.05):] == 0))}')
+    # hook: the match ignition should be the most distinct transient of 0-2.5 s
+    hfh = hp(y.mean(axis=0), 1000, 4)
+    ch = np.concatenate(([0.0], np.cumsum(hfh ** 2)))
+    ks = np.arange(ns(0.1), ns(HOOK1 - 0.05))
+    P2, Q2 = ns(0.002), ns(0.008)
+    rise = (ch[ks + P2] - ch[ks]) / P2 - (ch[ks] - ch[ks - Q2]) / Q2
+    order = np.argsort(rise)[::-1]
+    top, second = ks[order[0]], next(ks[i] for i in order if abs(ks[i] - ks[order[0]]) > ns(0.03))
+    print(f'  hook: most distinct HF transient (energy rise 2 ms after vs 8 ms before) at {top / SR:.4f} s; '
+          f'runner-up at {second / SR:.4f} s is {10 * np.log10(rise.max() / max(rise[order][ks[order] == second][0], 1e-20)):.1f} dB weaker')
+    print('  hook RMS: ' + '  '.join(f'{a:.2f}-{b:.2f} {rms_db(a, b):.1f}' for a, b in
+                                   [(0.0, 0.5), (0.545, 0.625), (0.625, 0.7), (0.7, 1.1), (1.1, 2.1), (2.1, 2.45)]) + ' dBFS')
 
     print('\nstem loudness per section (LUFS, 400 ms gated) and peak')
     for k, v in (stems or {}).items():
