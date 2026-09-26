@@ -909,7 +909,7 @@ def render_opening_and_build(B):
             cd, blips = countdown(rng_for('countdown'), dur=BEAT - 0.06)
             B['ticks'].add(cd, t_cd, LV['countdown'])
             B['s_plate'].add(cd, t_cd, LV['countdown'] * 0.25)
-            ev(t_cd, 'fx', 'count-down whirr start', f'{len(blips)} blips, pitch falling, decelerating')
+            ev(t_cd, 'KEY', 'count-down whirr start', f'{len(blips)} blips, pitch falling, decelerating; ends {t_cd + blips[-1]:.3f}')
             for b in blips:
                 ev(t_cd + b, 'countdown', 'blip')
     # heartbeat in the tense pause (first beat with no word after 8.5)
@@ -991,7 +991,7 @@ def render_opening_and_build(B):
     fc = 500.0 * (6000.0 / 500.0) ** (u ** 1.3)
     rs = tvf(tvf(rs, fc, 0.7, 'lp', 64), fc, 1.0, 'lp', 64) * u ** 1.5
     B['music'].add(fade(hp(rs, 120), 0.05, 0.002), RISE0, LV['riser_saw'])
-    ev(RISE0, 'fx', 'riser start', 'noise sweep + Shepard tone + rising saw; hard cut at 15.5')
+    ev(RISE0, 'KEY', 'riser + snare roll start', 'noise sweep + Shepard tone + rising saw; 8ths->16ths->32nds; hard cut at 15.5')
     roll = ([RISE0 + 0.25 * i for i in range(4)] + [RISE0 + 1.0 + 0.125 * i for i in range(4)]
             + [RISE0 + 1.5 + 0.0625 * i for i in range(8)])
     rr = rng_for('roll')
@@ -1199,7 +1199,7 @@ def render_drops(B):
     tb0 = B1 - 2.0
     rz = noise_riser(rng_for('riser2'), 2.0)
     B['fx'].add(rz, tb0, LV['riser_noise'] * 0.5)
-    ev(tb0, 'fx', 'riser (drop B)', 'noise swell into the dead stop at 36.0')
+    ev(tb0, 'KEY', 'riser + snare fill (drop B)', 'noise swell + snare 8ths->16ths into the dead stop at 36.0')
     sn = rng_for('snare2')
     times = [tb0 + 0.25 * i for i in range(4)] + [tb0 + 1.0 + 0.125 * i for i in range(4)]
     for i, t in enumerate(times):
@@ -1230,7 +1230,7 @@ def render_outro(B):
             ls = light_sweep(rng_for('sweep'))
             B['outro'].add(ls, t, LV['sweep'])
             B['s_space_o'].add(ls, t, LV['sweep'] * 1.2)
-            ev(t, 'fx', 'light sweep', f'airy sweep L->R {t:.2f}-{t + 1.5:.2f}')
+            ev(t, 'KEY', 'light sweep', f'airy shimmer sweeping up + panning L->R {t:.2f}-{t + 1.5:.2f}')
         elif kind == 'drip':
             d = drip(rng_for('drip', 1))                      # identical to the hook drop
             B['outro'].add(d, t, LV['drip'] * 0.9)
