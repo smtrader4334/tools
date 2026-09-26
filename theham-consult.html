@@ -117,6 +117,12 @@ header{
 .section-title{font-family:'Noto Serif KR',serif;font-size:19px;font-weight:700;color:var(--navy);line-height:1.5;margin-bottom:18px;}
 .divider{border:none;border-top:1px solid var(--border);margin:0 20px;}
 
+/* VIDEO */
+.video-card{background:var(--navy);border-radius:10px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.18);margin-bottom:14px;}
+.video-card video{display:block;width:100%;aspect-ratio:16/9;background:#0D0B22;}
+.video-card .video-cap{padding:10px 14px;font-size:12px;color:#A8BAC8;display:flex;justify-content:space-between;gap:8px;}
+.video-card .video-cap strong{color:var(--gold-light);font-weight:600;}
+
 /* CARDS */
 .info-card{background:var(--white);border-radius:10px;padding:18px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.06);margin-bottom:14px;}
 .info-card.navy{background:var(--navy);}
@@ -289,6 +295,13 @@ footer{background:#0D0B22;padding:24px 18px;text-align:center;color:#5A6E80;font
     <div class="eyebrow">화재 대형사고</div>
     <div class="section-title">독립 손해사정<br>제대로 보상받으세요</div>
 
+    <div class="video-card">
+      <video controls playsinline preload="none" poster="promo-video/out/theham-fire-brand-film.jpg">
+        <source src="promo-video/out/theham-fire-brand-film.mp4" type="video/mp4">
+      </video>
+      <div class="video-cap"><strong>▶ 영상으로 보는 화재 손해사정</strong><span>2:24</span></div>
+    </div>
+
     <div class="info-card warn">
       <div class="card-header">⚠️ 화재 사고, 이대로 두면 안 됩니다</div>
       <p>보험사 사정사는 <strong>피해 항목을 누락</strong>하거나 수리비를 <strong>시세보다 낮게</strong> 산정합니다. 건물 구조와 공사비 단가를 정확히 모르면 반박조차 할 수 없습니다.</p>
@@ -320,6 +333,13 @@ footer{background:#0D0B22;padding:24px 18px;text-align:center;color:#5A6E80;font
   <div class="section">
     <div class="eyebrow">누수·소액사고</div>
     <div class="section-title">손해사정사 선임권<br>비용 없이 행사하세요</div>
+
+    <div class="video-card">
+      <video controls playsinline preload="none" poster="promo-video/out/theham-leak-appointment-right.jpg">
+        <source src="promo-video/out/theham-leak-appointment-right.mp4" type="video/mp4">
+      </video>
+      <div class="video-cap"><strong>▶ 영상으로 보는 손해사정사 선임권</strong><span>1:16</span></div>
+    </div>
 
     <div class="info-card navy">
       <div class="card-header">📋 선임권이란</div>
@@ -456,6 +476,7 @@ function switchTab(btn, type) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tab-' + type).classList.add('active');
+  document.querySelectorAll('.tab-panel video').forEach(v => v.pause());
 }
 </script>
 </body>
