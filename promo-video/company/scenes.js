@@ -58,10 +58,10 @@
   });
 
   /* ------------------------------------------ C2: what adjusting is */
-  film.scene('c2', 11.8, 26.4, (lt, t) => {
+  film.scene('c2', 11.8, 26.8, (lt, t) => {
     const w = P(t, 11.8, 0.9, E.inOutQuart);
     $('c2').style.clipPath = w < 1 ? `inset(0 0 0 ${((1 - w) * 100).toFixed(3)}%)` : 'none';
-    $('c2').style.opacity = env(t, 11.8, 26.4, 0, 0.6).toFixed(4);
+    $('c2').style.opacity = env(t, 11.8, 26.8, 0, 0).toFixed(4);
     show($('c2eb'), t, 12.5, 999, { y: 10 });
     chars($('c2w'), t, 12.8, 999, { stagger: 0.07, y: 26, blur: 12 });
     grow($('c2rule'), t, 13.6, 1.1);
@@ -72,7 +72,7 @@
 
   /* ---------------------------------------------- C3: who adjusts */
   film.scene('c3', 25.8, 38.4, (lt, t) => {
-    $('c3').style.opacity = env(t, 25.8, 38.4, 0.6, 0.6).toFixed(4);
+    $('c3').style.opacity = env(t, 25.8, 38.4, 0.9, 0.6, E.inOutSine).toFixed(4);
     chars($('c3h'), t, 26.5, 999, { stagger: 0.04, y: 22, blur: 10 });
     const dim = P(t, 31.5, 0.8);
     show($('p3a'), t, 28.5, 999, { x: -30, y: 0, blur: 8, alpha: 1 - 0.45 * dim });
@@ -82,10 +82,10 @@
 
   /* ------------------------------------------- C4: four practice areas */
   const CARDS = ['v1', 'v2', 'v3', 'v4'], CARD_T = [42.0, 45.0, 48.0, 51.0];
-  film.scene('c4', 37.8, 62.4, (lt, t) => {
+  film.scene('c4', 37.8, 62.8, (lt, t) => {
     const w = P(t, 37.8, 0.9, E.inOutQuart);
     $('c4').style.clipPath = w < 1 ? `inset(${((1 - w) * 100).toFixed(3)}% 0 0 0)` : 'none';
-    $('c4').style.opacity = env(t, 37.8, 62.4, 0, 0.6).toFixed(4);
+    $('c4').style.opacity = env(t, 37.8, 62.8, 0, 0).toFixed(4);
     show($('c4eb'), t, 38.5, 999, { y: 10 });
     chars($('c4h'), t, 38.8, 999, { stagger: 0.04, y: 20, blur: 10 });
     CARDS.forEach((id, i) => {
@@ -105,7 +105,7 @@
 
   /* ------------------------------------------------ C5: the standard */
   film.scene('c5', 61.8, 80.4, (lt, t) => {
-    $('c5').style.opacity = env(t, 61.8, 80.4, 0.6, 0.6).toFixed(4);
+    $('c5').style.opacity = env(t, 61.8, 80.4, 0.9, 0.6, E.inOutSine).toFixed(4);
     show($('c5eb'), t, 62.5, 999, { y: 10 });
     chars($('c5h'), t, 62.8, 999, { stagger: 0.045, y: 22, blur: 10 });
     draw($('c5line').querySelector('path'), t, 66.0, 5.0, E.inOutSine);
@@ -117,10 +117,10 @@
   });
 
   /* ---------------------------------------------------- C6: people */
-  film.scene('c6', 79.8, 96.4, (lt, t) => {
+  film.scene('c6', 79.8, 96.8, (lt, t) => {
     const w = P(t, 79.8, 0.9, E.inOutQuart);
     $('c6').style.clipPath = w < 1 ? `inset(0 ${((1 - w) * 100).toFixed(3)}% 0 0)` : 'none';
-    $('c6').style.opacity = env(t, 79.8, 96.4, 0, 0.6).toFixed(4);
+    $('c6').style.opacity = env(t, 79.8, 96.8, 0, 0).toFixed(4);
     show($('c6eb'), t, 80.5, 999, { y: 10 });
     chars($('c6h'), t, 80.8, 999, { stagger: 0.045, y: 20, blur: 10 });
     show($('m1'), t, 83.0, 999, { x: -40, y: 0, blur: 8, fin: 1.1 });
@@ -167,7 +167,7 @@
     map.all = all;
   }
   film.scene('c7', 95.8, 106.4, (lt, t) => {
-    $('c7').style.opacity = env(t, 95.8, 106.4, 0.6, 0.6).toFixed(4);
+    $('c7').style.opacity = env(t, 95.8, 106.4, 0.9, 0.6, E.inOutSine).toFixed(4);
     show($('c7eb'), t, 96.5, 999, { y: 10 });
     chars($('c7h'), t, 96.8, 999, { stagger: 0.05, y: 22, blur: 10 });
     show($('c7s'), t, 98.5, 999, { y: 12, blur: 6 });
