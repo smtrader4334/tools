@@ -31,4 +31,4 @@ canvas.fx { width: 1080px; height: 1920px; }
 .endinfo { left: 90px; top: 880px; width: 900px; text-align: center; }
 .endinfo .kakao { justify-content: center; text-align: left; margin-top: 60px; }
 .endinfo .addr { font-size: 26px; }
-#legal { left: 60px; right: 60px; bottom: 90px; font-size: 20px; line-height: 1.7; }
+#legal { left: 30px; right: 30px; bottom: 90px; font-size: 17px; line-height: 1.8; letter-spacing: 0; }

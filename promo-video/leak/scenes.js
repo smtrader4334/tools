@@ -263,7 +263,7 @@
     tl.zoneC = mk('rect', { x: NODES[3], y: LY - 12, width: 0, height: 24, rx: 12, class: 'zoneC' }, svg);
     tl.br = mk('path', { d: `M${NODES[1]} ${LY + 38}v12H${B7}v-12`, class: 'br', pathLength: 1 }, svg);
     tl.brT = mk('text', { x: (NODES[1] + B7) / 2, y: LY + 90, class: 'nlbl', style: 'font-size:26px;fill:#2F7FB8' }, svg);
-    tl.brT.textContent = '접수 후 7일';
+    tl.brT.textContent = '안내받은 날짜';
     tl.nodes = NODES.map((x) => mk('circle', { cx: x, cy: LY, r: 14, class: 'node' }, svg));
     tl.labels = ['사고 발생', '보험 접수', '보험사 조사 착수', '조사 완료'].map((s, i) => {
       const e = mk('text', { x: NODES[i], y: LY - 34, class: 'nlbl' }, svg);
@@ -332,7 +332,7 @@
     }
     show($('l6n'), t, 68.8, 99, { y: 14, blur: 8 });
     show($('l6rep'), t, 69.3, 99, { y: 10 });
-    ['e1', 'e2', 'e3', 'e4', 'e5'].forEach((id, i) => show($(id), t, 69.0 + i * 0.25, 99, { x: 30, y: 0, blur: 6, fin: 0.9 }));
+    ['e1', 'e2', 'e3', 'e4', 'e5', 'e6'].forEach((id, i) => show($(id), t, 69.0 + i * 0.25, 99, { x: 30, y: 0, blur: 6, fin: 0.9 }));
     show($('legal'), t, 70.2, 99, { y: 8, fin: 1.2 });
   });
 

@@ -69,7 +69,7 @@
 #tl .zoneA { fill: rgba(95,178,230,0.22); }
 #tl .zoneC { fill: rgba(192,57,43,0.12); }
 #tl .br { fill: none; stroke: var(--blue-d); stroke-width: 2.5; stroke-linecap: round; }
-.tcard { position: absolute; width: 470px; box-sizing: border-box; padding: 24px 28px 26px; border-radius: 14px; background: #FFFFFF; box-shadow: 0 16px 40px rgba(28,26,58,0.14); }
+.tcard { position: absolute; width: 540px; box-sizing: border-box; padding: 24px 28px 26px; border-radius: 14px; background: #FFFFFF; box-shadow: 0 16px 40px rgba(28,26,58,0.14); }
 .tcard .bdg { display: inline-block; font: 700 21px var(--sans); color: #fff; padding: 4px 14px 6px; border-radius: 16px; background: var(--blue-d); }
 .tcard .bdg.warn { background: #B8473A; }
 .tcard .tt { font: 600 32px var(--serif); color: var(--ink); margin-top: 14px; white-space: nowrap; }
@@ -113,7 +113,8 @@
 .endinfo .kt { font: 600 38px var(--serif); color: var(--cream); }
 .endinfo .kd { font: 300 27px/1.6 var(--sans); color: #AEB5C6; margin-top: 12px; }
 .endinfo .addr { font: 300 27px var(--sans); color: #AEB5C6; margin-top: 46px; }
-#legal { bottom: 54px; font: 300 20px var(--sans); color: #8F97AA; letter-spacing: 0.04em; }
+.endinfo .addr.area { margin-top: 14px; font-size: 24px; color: var(--gold-l); }
+#legal { bottom: 44px; font: 300 20px/1.7 var(--sans); color: #8F97AA; letter-spacing: 0.04em; }
 </style>
 <script>
   // ?v=1 renders the vertical 9:16 short (layout overrides in vertical.css, edit list in common/shorts.json)
@@ -143,10 +144,10 @@
   <!-- L3: the right to appoint -->
   <div id="l3" class="scene navy-bg2">
     <div class="abs center" id="l3eb">알고 계셨나요?</div>
-    <div class="abs center" id="l3h">손해사정사,<br><em>직접 선임</em>할 수 있습니다.</div>
+    <div class="abs center" id="l3h">손해사정사 선택,<br><em>고객님의 권리</em>입니다.</div>
     <div class="law" id="law">
       <div class="hd"><i></i>보험업법 제185조 · 보험업감독규정 제9-16조</div>
-      <div class="bd">보험계약자는 <em>자신의 손해사정사를 직접 선임</em>할 수 있으며,<br>보험회사는 정당한 사유 없이 이를 거부할 수 없습니다.</div>
+      <div class="bd">보험회사가 정한 조사 담당자 외에,<br><em>고객이 선택한 손해사정사의 선임</em>을 요청할 수 있습니다.</div>
       <div class="chip">2024년 8월 시행</div>
     </div>
     <div class="abs center" id="l3f">보험사가 보낸 손해사정사만<br><em>기다릴 필요는 없습니다.</em></div>
@@ -158,10 +159,10 @@
     <div class="abs eyebrow ink" id="l4eb">Timing</div>
     <div class="abs" id="l4t">핵심은, <em>타이밍</em>입니다.</div>
     <svg id="tl" viewBox="0 0 1920 1080"></svg>
-    <div class="tcard" id="cA" style="left:675px; top:268px"><span class="bdg">최적</span><div class="tt">조사 착수 전 선임</div><div class="dd">손해사정 비용 → <b>보험회사 부담</b></div></div>
-    <div class="tcard" id="cB" style="left:675px; top:690px"><span class="bdg">가능</span><div class="tt">7일이 지나도 조사 미착수</div><div class="dd">손해사정 비용 → <b>보험회사 부담</b></div></div>
-    <div class="tcard" id="cC" style="left:1305px; top:268px"><span class="bdg warn">주의</span><div class="tt">조사 완료 후 이의 제기</div><div class="dd">손해사정 비용 → <b class="warn">계약자 부담 원칙</b></div></div>
-    <div class="abs center" id="l4c">보험 접수 직후, <em>조사가 시작되기 전에</em> 연락하세요.</div>
+    <div class="tcard" id="cA" style="left:675px; top:268px"><span class="bdg">최적</span><div class="tt">조사 착수 전 선임 의사 전달</div><div class="dd">동의 등 요건 충족 시 → <b>보험회사 부담</b></div></div>
+    <div class="tcard" id="cB" style="left:675px; top:690px"><span class="bdg">확인</span><div class="tt">보험회사 안내 문자 · 날짜</div><div class="dd">받은 안내에 따라 → <b>절차 확인</b></div></div>
+    <div class="tcard" id="cC" style="left:1330px; top:268px"><span class="bdg warn">주의</span><div class="tt">조사 시작 · 완료 후</div><div class="dd">절차 · 비용 부담 → <b class="warn">개별 확인</b></div></div>
+    <div class="abs center" id="l4c">조사 안내를 받았다면, <em>조사가 시작되기 전에</em> 연락하세요.</div>
   </div>
 
   <!-- L5: what changes -->
@@ -178,7 +179,7 @@
     </div>
     <div class="card5" id="k3" style="left:1230px">
       <svg width="64" height="64" viewBox="0 0 64 64"><path pathLength="1" d="M14 6 H42 L52 16 V58 H14 Z M42 6 V16 H52"/><path pathLength="1" d="M22 28 H44 M22 37 H44 M22 46 H34"/></svg>
-      <div class="tt">근거 있는 의견 제출</div><div class="dd">산정 근거를 바탕으로<br>보험사에 의견을 제출합니다</div>
+      <div class="tt">손해사정서 작성</div><div class="dd">검토 내용을 정리해<br>알기 쉽게 설명합니다</div>
     </div>
     <div class="abs center" id="l5f">직접 선임한 손해사정사가, 처음부터 함께합니다.</div>
   </div>
@@ -193,18 +194,19 @@
       <img id="logoImg" src="../common/logo-gold.png" alt="">
     </div>
     <div class="abs" id="l6n"><span class="gold">더함</span>화재특종손해사정</div>
-    <div class="abs" id="l6rep">대표 손해사정사 유승민</div>
+    <div class="abs" id="l6rep">선임권 상담 · 이도경 이사</div>
     <div class="endinfo">
       <div class="lab" id="e1">누수 선임권 상담</div>
-      <div class="tel" id="e2">010-3589-7193</div>
+      <div class="tel" id="e2">010-2506-0717</div>
       <div class="hrs" id="e3">평일 09:00 – 18:00</div>
       <div class="kakao" id="e4">
         <div class="qr"><img src="../common/qr-kakao.svg" alt=""></div>
         <div><div class="kt">카카오톡 상담</div><div class="kd">QR 코드를 스캔하면<br>상담 채널로 바로 연결됩니다</div></div>
       </div>
       <div class="addr" id="e5">부산광역시 연제구 중앙대로 1113, 8층 (연산동, 진보빌딩)</div>
+      <div class="addr area" id="e6">누수 등 배상책임 · 재물보험 사고 선임권 &nbsp;|&nbsp; 부산 · 울산 · 경남</div>
     </div>
-    <div class="abs center" id="legal">금융감독원 제G0002711호 &nbsp;·&nbsp; 재물손해사정사 제PR00000099호 &nbsp;·&nbsp; 사업자등록번호 711-50-00987</div>
+    <div class="abs center" id="legal">보험회사 비용 부담은 동의 등 개별 요건에 따라 달라집니다.<br>금융감독원 손해사정업 등록 제G0002711호 &nbsp;·&nbsp; 재물손해사정사 제PR00000099호 &nbsp;·&nbsp; 사업자등록번호 711-50-00987</div>
   </div>
 
   <canvas id="fxFront" class="fx" width="1920" height="1080"></canvas>

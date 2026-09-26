@@ -403,7 +403,7 @@
     show($('s10tag'), T, 9.0, 12.0, { y: 12, blur: 6 });
     // end card
     setStyle($('s10rep'), { opacity: P(T, 12.8, 0.9), transform: `translate3d(${V ? 0 : -440}px,${(40 - 14 * P(T, 12.8, 0.9)).toFixed(2)}px,0)` });
-    ['e1', 'e2', 'e3', 'e4', 'e5'].forEach((id, i) => show($(id), T, 12.6 + i * 0.25, 99, { x: 30, y: 0, blur: 6, fin: 0.9 }));
+    ['e1', 'e2', 'e3', 'e4', 'e5', 'e6'].forEach((id, i) => show($(id), T, 12.6 + i * 0.25, 99, { x: 30, y: 0, blur: 6, fin: 0.9 }));
     show($('legal'), T, 13.8, 99, { y: 8, fin: 1.2 });
   });
 
