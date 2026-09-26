@@ -15,7 +15,7 @@ node src/render.mjs --fmt v
 for f in h v; do
   name=$([ "$f" = h ] && echo 16x9 || echo 9x16)
   "$FFMPEG" -y -loglevel error -i "build/video-$f.mp4" -i build/music.wav \
-    -map 0:v -map 1:a -c:v libx264 -preset slow -crf 20 -maxrate 14M -bufsize 28M -pix_fmt yuv420p \
+    -map 0:v -map 1:a -c:v libx264 -preset slow -crf 20 -maxrate 7M -bufsize 14M -pix_fmt yuv420p \
     -c:a aac -b:a 256k -shortest -movflags +faststart \
     "theham-brand-film-$name.mp4"
   "$FFMPEG" -y -loglevel error -ss 42.5 -i "build/video-$f.mp4" -frames:v 1 -q:v 2 "poster-$name.jpg"
