@@ -182,6 +182,7 @@
   // ?v=1 renders the vertical 9:16 short (layout overrides in vertical.css, edit list in common/shorts.json)
   window.VERTICAL = new URLSearchParams(location.search).get('v') === '1';
   if (VERTICAL) { document.documentElement.classList.add('vertical'); document.write('<link rel="stylesheet" href="vertical.css">'); }
+  if (new URLSearchParams(location.search).get('theme') === 'site') document.write('<link rel="stylesheet" href="../common/theme-site.css">');
 </script>
 </head>
 <body>

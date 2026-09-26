@@ -79,7 +79,10 @@ async function main() {
   const { chromium } = await loadPlaywright();
   const srv = await serve();
   if (a.vertical) { VW = 1080; VH = 1920; }
-  const url = `http://127.0.0.1:${srv.address().port}/${a.film}/index.html${a.vertical ? '?v=1' : ''}`;
+  const qs = new URLSearchParams();
+  if (a.vertical) qs.set('v', '1');
+  if (a.theme) qs.set('theme', a.theme);
+  const url = `http://127.0.0.1:${srv.address().port}/${a.film}/index.html${qs.toString() ? '?' + qs : ''}`;
   const browser = await chromium.launch({ args: ['--disable-gpu-vsync', '--force-color-profile=srgb', '--font-render-hinting=none'] });
   try {
     if (a.stills) {
