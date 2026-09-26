@@ -192,7 +192,31 @@
       return this;
     }
     layer(fn) { this.layers.push(fn); return this; }
-    seek(t) {
+    // Play an edit of the timeline: [[srcStart, srcEnd], ...] joined back to back (hard cuts).
+    setEdit(segments, fadeOut = 1.2) {
+      this.edit = segments;
+      this.duration = segments.reduce((a, [s0, s1]) => a + (s1 - s0), 0);
+      this.editFade = document.createElement('div');
+      this.editFade.style.cssText = 'position:absolute;inset:0;background:#000;pointer-events:none;z-index:70;opacity:0';
+      document.getElementById('stage').appendChild(this.editFade);
+      this.editFadeOut = fadeOut;
+    }
+    source(t) {
+      if (!this.edit) return t;
+      let acc = 0;
+      for (const [s0, s1] of this.edit) {
+        if (t < acc + (s1 - s0) - 1e-9) return s0 + (t - acc);
+        acc += s1 - s0;
+      }
+      const [, last] = this.edit[this.edit.length - 1];
+      return last;
+    }
+    seek(tt) {
+      const t = this.source(tt);
+      if (this.edit) {
+        const f = Math.max(1 - clamp(tt / 0.4), clamp((tt - (this.duration - this.editFadeOut)) / this.editFadeOut));
+        this.editFade.style.opacity = f.toFixed(4);
+      }
       this.t = t;
       for (const s of this.scenes) {
         const on = t >= s.start && t < s.end;

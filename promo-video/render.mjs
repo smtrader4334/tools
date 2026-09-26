@@ -27,9 +27,10 @@ async function loadPlaywright() {
 }
 
 function parseArgs(argv) {
-  const a = { film: argv[0], fps: 30, workers: 3, dir: 'build/stills' };
+  const a = { film: argv[0], fps: 30, workers: 3, dir: 'build/stills', vertical: false };
   for (let i = 1; i < argv.length; i++) {
     const k = argv[i].replace(/^--/, '');
+    if (k === 'vertical') { a.vertical = true; continue; }
     a[k] = argv[i + 1]; i++;
   }
   a.fps = Number(a.fps); a.workers = Number(a.workers);
@@ -49,8 +50,9 @@ function serve() {
   });
 }
 
+let VW = 1920, VH = 1080;
 async function openPage(browser, url) {
-  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
+  const page = await browser.newPage({ viewport: { width: VW, height: VH }, deviceScaleFactor: 1 });
   page.on('pageerror', (e) => console.error('[page error]', e.message));
   page.on('console', (m) => { if (m.type() === 'error') console.error('[console]', m.text()); });
   await page.goto(url);
@@ -61,7 +63,7 @@ async function openPage(browser, url) {
 
 async function capture(page, t) {
   await page.evaluate((tt) => window.__film.seek(tt), t);
-  return page.screenshot({ type: 'png', clip: { x: 0, y: 0, width: 1920, height: 1080 } });
+  return page.screenshot({ type: 'png', clip: { x: 0, y: 0, width: VW, height: VH } });
 }
 
 function ffmpegSink(out, fps) {
@@ -76,7 +78,8 @@ async function main() {
   if (!a.film) throw new Error('usage: node render.mjs <film> [--out file | --stills t1,t2]');
   const { chromium } = await loadPlaywright();
   const srv = await serve();
-  const url = `http://127.0.0.1:${srv.address().port}/${a.film}/index.html`;
+  if (a.vertical) { VW = 1080; VH = 1920; }
+  const url = `http://127.0.0.1:${srv.address().port}/${a.film}/index.html${a.vertical ? '?v=1' : ''}`;
   const browser = await chromium.launch({ args: ['--disable-gpu-vsync', '--force-color-profile=srgb', '--font-render-hinting=none'] });
   try {
     if (a.stills) {
@@ -85,7 +88,7 @@ async function main() {
       for (const s of a.stills.split(',')) {
         const t = Number(s);
         const buf = await capture(page, t);
-        const f = path.join(a.dir, `${a.film}_${t.toFixed(2).padStart(7, '0')}.png`);
+        const f = path.join(a.dir, `${a.film}${a.vertical ? 'V' : ''}_${t.toFixed(2).padStart(7, '0')}.png`);
         fs.writeFileSync(f, buf);
         console.log(f);
       }

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build a finished film:  ./build.sh fire   |   ./build.sh leak
+# Build a finished film:  ./build.sh fire | leak | fire-short | leak-short  (shorts = 9:16 vertical cuts)
 #   1. render every frame from <film>/index.html (headless Chromium)
 #   2. render the original score  (audio/<film>_score.py)
 #   3. encode H.264 (BT.709) + AAC into out/<name>.mp4, plus a poster frame
@@ -9,15 +9,24 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 film=${1:?usage: ./build.sh fire|leak}
+vflag=()
 case "$film" in
   fire) name=theham-fire-brand-film; poster=24.5 ;;
   leak) name=theham-leak-appointment-right; poster=26.5 ;;
+  fire-short) name=theham-fire-short-9x16; poster=20.5; vflag=(--vertical) ;;
+  leak-short) name=theham-leak-short-9x16; poster=13.0; vflag=(--vertical) ;;
   *) echo "unknown film: $film" >&2; exit 1 ;;
 esac
+src=${film%-short}
 
 mkdir -p build out
-[ "${SKIP_VIDEO:-0}" = 1 ] || node render.mjs "$film" --workers "${WORKERS:-3}" --out "build/$film-video.mkv"
-[ "${SKIP_AUDIO:-0}" = 1 ] || (cd audio && python3 "${film}_score.py" "../build/$film-audio.wav")
+[ "${SKIP_VIDEO:-0}" = 1 ] || node render.mjs "$src" "${vflag[@]}" --workers "${WORKERS:-3}" --out "build/$film-video.mkv"
+if [ "${SKIP_AUDIO:-0}" != 1 ]; then
+  if [ "$film" = "$src" ] || [ ! -f "build/$src-audio.wav" ]; then
+    (cd audio && python3 "${src}_score.py" "../build/$src-audio.wav")
+  fi
+  [ "$film" = "$src" ] || (cd audio && python3 short_cut.py "$src" "../build/$src-audio.wav" "../build/$film-audio.wav")
+fi
 
 VF="scale=out_color_matrix=bt709:out_range=tv:flags=lanczos+accurate_rnd+full_chroma_int,format=yuv420p"
 X264=(-c:v libx264 -preset slow -profile:v high -level 4.1 -x264-params "keyint=60:min-keyint=30:aq-mode=3")
@@ -38,7 +47,7 @@ if [ "$(stat -c %s "out/$name.mp4")" -gt "$max" ]; then
     -c:a aac -b:a 192k -ar 48000 -movflags +faststart "out/$name.mp4"
 fi
 
-node render.mjs "$film" --stills "$poster" --dir build/poster >/dev/null
-ffmpeg -y -loglevel error -i build/poster/"$film"_*.png -q:v 2 "out/$name.jpg"
+node render.mjs "$src" "${vflag[@]}" --stills "$poster" --dir build/poster >/dev/null
+ffmpeg -y -loglevel error -i build/poster/"$src"*_*.png -q:v 2 "out/$name.jpg"
 rm -rf build/poster
 ffprobe -v error -show_entries format=duration,size -of default=nw=1 "out/$name.mp4"

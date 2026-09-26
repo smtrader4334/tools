@@ -15,32 +15,35 @@
   const { E, P, env, show, chars, grow, draw, setStyle, lerp, clamp, spring, blurCss } = M;
   const $ = (id) => document.getElementById(id);
   const film = new M.Film({ duration: 144, fps: 30 });
-  M.fitStage($('stage'));
+  const V = !!window.VERTICAL, W = V ? 1080 : 1920, H = V ? 1920 : 1080;
+  M.fitStage($('stage'), W, H);
+  for (const c of [$('fxBack'), $('fxFront')]) { c.width = W; c.height = H; }
 
   /* ------------------------------------------------ global canvas layers */
   const back = $('fxBack'), bctx = back.getContext('2d');
   const front = $('fxFront'), fctx = front.getContext('2d');
-  const embers = new FX.Embers({ count: 280, seed: 7 });
-  const smoke = new FX.Smoke({ count: 16, seed: 3, alpha: 0.075 });
-  const serif76 = '300 76px "Noto Serif CJK KR"';
-  const burn1 = new FX.BurnText({ lines: [{ text: '평생을 일궈 온 공간이', x: 960, y: 500, font: serif76 }], burnStart: 10.0, sweep: 1.9, seed: 11 });
-  const burn2 = new FX.BurnText({ lines: [{ text: '한순간, 재가 되었습니다.', x: 960, y: 628, font: serif76 }], burnStart: 10.5, sweep: 2.0, seed: 12 });
+  const embers = new FX.Embers(V ? { count: 300, seed: 7, x0: -80, x1: 1160, yBase: 1980 } : { count: 280, seed: 7 });
+  const smoke = new FX.Smoke(V ? { count: 16, seed: 3, alpha: 0.075, x0: -200, x1: 1280, yBase: 2150 } : { count: 16, seed: 3, alpha: 0.075 });
+  const serif76 = V ? '300 72px "Noto Serif CJK KR"' : '300 76px "Noto Serif CJK KR"';
+  const BY = V ? [880, 1000] : [500, 628];
+  const burn1 = new FX.BurnText({ w: W, h: H, lines: [{ text: '평생을 일궈 온 공간이', x: W / 2, y: BY[0], font: serif76 }], burnStart: 10.0, sweep: 1.9, seed: 11 });
+  const burn2 = new FX.BurnText({ w: W, h: H, lines: [{ text: '한순간, 재가 되었습니다.', x: W / 2, y: BY[1], font: serif76 }], burnStart: 10.5, sweep: 2.0, seed: 12 });
 
   function fireGlow(ctx, t, k) {
     if (k <= 0.002) return;
     const f = 0.78 + 0.22 * FX.noise1(t * 1.7, 5) + 0.06 * Math.sin(t * 9.1) * FX.noise1(t * 3.3, 6);
-    const g = ctx.createRadialGradient(960, 1260, 60, 960, 1260, 1150);
+    const g = ctx.createRadialGradient(W / 2, H + 180, 60, W / 2, H + 180, V ? 1400 : 1150);
     g.addColorStop(0, `rgba(255,122,40,${(0.55 * k * f).toFixed(4)})`);
     g.addColorStop(0.35, `rgba(196,68,18,${(0.22 * k * f).toFixed(4)})`);
     g.addColorStop(0.7, `rgba(90,26,10,${(0.08 * k * f).toFixed(4)})`);
     g.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = g;
-    ctx.fillRect(0, 0, 1920, 1080);
+    ctx.fillRect(0, 0, W, H);
   }
 
   film.layer((t) => {
     bctx.setTransform(1, 0, 0, 1, 0, 0);
-    bctx.clearRect(0, 0, 1920, 1080);
+    bctx.clearRect(0, 0, W, H);
     const k1 = env(t, 0.0, 16.0, 3.5, 2.6, E.inOutSine, E.inOutSine);
     const k6 = env(t, 60.0, 80.0, 2.0, 1.2) * 0.3;
     const k9 = env(t, 112.0, 120.2, 1.6, 1.0) * 0.5;
@@ -51,7 +54,7 @@
     smoke.draw(bctx, t, k1 + k9 * 0.7);
     embers.draw(bctx, t, k1 + k6 + k9);
 
-    fctx.clearRect(0, 0, 1920, 1080);
+    fctx.clearRect(0, 0, W, H);
     if (t < 16) {
       const a1 = P(t, 1.8, 2.4, E.outCubic), a2 = P(t, 5.0, 2.4, E.outCubic);
       burn1.draw(fctx, t, a1, (1 - a1) * 16);
@@ -311,7 +314,7 @@
   const m = {};
   function measureS10() {
     const s = $('stage').getBoundingClientRect();
-    const sc = s.width / 1920;
+    const sc = s.width / W;
     const rel = (el) => { const r = el.getBoundingClientRect(); return { x: (r.left - s.left) / sc, y: (r.top - s.top) / sc, w: r.width / sc, h: r.height / sc }; };
     const scene = $('s10'), prev = scene.style.display;
     scene.style.display = 'block';
@@ -354,7 +357,7 @@
     } else {
       mv.style.display = 'block';
       const toC = P(T, 4.5, 1.2, E.inOutCubic);
-      const cx = 960 - m.startW / 2;
+      const cx = W / 2 - m.startW / 2;
       const x1 = lerp(m.start.x, cx, toC), y1 = m.start.y;
       const toN = P(T, 5.9, 1.3, E.inOutCubic);
       const s = lerp(1, 64 / 96, toN);
@@ -373,7 +376,8 @@
     const endMove = P(T, 12.0, 1.4, E.inOutCubic);
     setStyle($('s10n'), {
       opacity: nameOn ? 1 : 0,
-      transform: `translate3d(${(-440 * endMove).toFixed(2)}px,${(26 * endMove).toFixed(2)}px,0) scale(${lerp(1, 0.8, endMove).toFixed(4)})`,
+      transform: V ? `translate3d(0,${(-300 * endMove).toFixed(2)}px,0) scale(${lerp(1, 0.8, endMove).toFixed(4)})`
+        : `translate3d(${(-440 * endMove).toFixed(2)}px,${(26 * endMove).toFixed(2)}px,0) scale(${lerp(1, 0.8, endMove).toFixed(4)})`,
     });
     $('s10nB').style.maxWidth = `${(m.restW * ex).toFixed(2)}px`;
     const edge = ex < 1 ? 'linear-gradient(90deg, #000 calc(100% - 56px), transparent)' : 'none';
@@ -384,7 +388,8 @@
     const logoOn = T >= 5.9;
     setStyle(lw, {
       opacity: logoOn ? 1 : 0,
-      transform: `translate3d(${(-440 * endMove).toFixed(2)}px,${(40 * endMove).toFixed(2)}px,0) scale(${lerp(1, 0.8, endMove).toFixed(4)})`,
+      transform: V ? `translate3d(0,${(-240 * endMove).toFixed(2)}px,0) scale(${lerp(1, 0.8, endMove).toFixed(4)})`
+        : `translate3d(${(-440 * endMove).toFixed(2)}px,${(40 * endMove).toFixed(2)}px,0) scale(${lerp(1, 0.8, endMove).toFixed(4)})`,
     });
     if (logoOn) {
       m.logoPaths.forEach((p, i) => draw(p, T, 6.0 + i * 0.08, 1.7, E.inOutCubic));
@@ -397,12 +402,13 @@
     }
     show($('s10tag'), T, 9.0, 12.0, { y: 12, blur: 6 });
     // end card
-    setStyle($('s10rep'), { opacity: P(T, 12.8, 0.9), transform: `translate3d(-440px,${(40 - 14 * P(T, 12.8, 0.9)).toFixed(2)}px,0)` });
+    setStyle($('s10rep'), { opacity: P(T, 12.8, 0.9), transform: `translate3d(${V ? 0 : -440}px,${(40 - 14 * P(T, 12.8, 0.9)).toFixed(2)}px,0)` });
     ['e1', 'e2', 'e3', 'e4', 'e5'].forEach((id, i) => show($(id), T, 12.6 + i * 0.25, 99, { x: 30, y: 0, blur: 6, fin: 0.9 }));
     show($('legal'), T, 13.8, 99, { y: 8, fin: 1.2 });
   });
 
   M.boot(film, async () => {
+    if (V) film.setEdit((await fetch('../common/shorts.json').then((r) => r.json())).fire);
     buildS6();
     buildRing();
     burn1.init();

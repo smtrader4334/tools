@@ -115,6 +115,11 @@
 .endinfo .addr { font: 300 27px var(--sans); color: #AEB5C6; margin-top: 46px; }
 #legal { bottom: 54px; font: 300 20px var(--sans); color: #8F97AA; letter-spacing: 0.04em; }
 </style>
+<script>
+  // ?v=1 renders the vertical 9:16 short (layout overrides in vertical.css, edit list in common/shorts.json)
+  window.VERTICAL = new URLSearchParams(location.search).get('v') === '1';
+  if (VERTICAL) { document.documentElement.classList.add('vertical'); document.write('<link rel="stylesheet" href="vertical.css">'); }
+</script>
 </head>
 <body>
 <div id="stage">

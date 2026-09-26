@@ -13,20 +13,22 @@
   const $ = (id) => document.getElementById(id);
   const TAU = Math.PI * 2;
   const film = new M.Film({ duration: 76, fps: 30 });
-  M.fitStage($('stage'));
+  const V = !!window.VERTICAL, W = V ? 1080 : 1920, H = V ? 1920 : 1080;
+  M.fitStage($('stage'), W, H);
+  for (const c of [$('fxBack'), $('fxFront')]) { c.width = W; c.height = H; }
 
   const back = $('fxBack'), bctx = back.getContext('2d');
   const front = $('fxFront'), fctx = front.getContext('2d');
 
   /* ---------------------------------------------------------- caustics */
   // low-res caustic network (iterated turbulence), upscaled and screened in at low opacity
-  const CW = 256, CH = 144;
+  const CW = V ? 144 : 256, CH = V ? 256 : 144;
   const cc = FX.canvas(CW, CH), cctx = cc.getContext('2d'), cimg = cctx.createImageData(CW, CH);
   function caustics(ctx, t, k) {
     if (k <= 0.002) return;
     const d = cimg.data, time = t * 0.32 + 23.0, inten = 0.005;
     for (let y = 0; y < CH; y++) for (let x = 0; x < CW; x++) {
-      const px = (x / CW) * TAU * 1.7 - 250.0, py = (y / CH) * TAU * 0.95 - 250.0;
+      const px = (x / CW) * TAU * (V ? 0.95 : 1.7) - 250.0, py = (y / CH) * TAU * (V ? 1.7 : 0.95) - 250.0;
       let ix = px, iy = py, c = 1.0;
       for (let n = 0; n < 5; n++) {
         const tt = time * (1.0 - 3.5 / (n + 1));
@@ -45,12 +47,12 @@
     ctx.globalAlpha = 0.085 * k;
     ctx.globalCompositeOperation = 'screen';
     ctx.imageSmoothingQuality = 'high';
-    ctx.drawImage(cc, 0, 0, 1920, 1080);
+    ctx.drawImage(cc, 0, 0, W, H);
     ctx.restore();
   }
 
   /* ------------------------------------------------ L1: drops & stain */
-  const CEIL = 150, FLOOR = 880, DX = 1440;
+  const CEIL = V ? 330 : 150, FLOOR = V ? 1560 : 880, DX = V ? 780 : 1440;
   const IMPACTS = [2.5, 4.5, 6.0, 7.0, 8.0, 8.5, 9.0, 9.5];
   const FALL = 0.5, G = (2 * (FLOOR - CEIL - 14)) / (FALL * FALL);
   const stainN = Array.from({ length: 361 }, (_, i) => FX.fbm2(Math.cos((i / 360) * TAU) * 2.2 + 5, Math.sin((i / 360) * TAU) * 2.2 + 5, 77, 4));
@@ -86,9 +88,9 @@
     const c = P(t, 0.3, 1.4, E.inOutCubic), f = P(t, 0.6, 1.4, E.inOutCubic);
     ctx.strokeStyle = 'rgba(232,226,210,0.32)';
     ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(DX - DX * c, CEIL); ctx.lineTo(DX + (1920 - DX) * c, CEIL); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(DX - DX * c, CEIL); ctx.lineTo(DX + (W - DX) * c, CEIL); ctx.stroke();
     ctx.strokeStyle = 'rgba(232,226,210,0.16)';
-    ctx.beginPath(); ctx.moveTo(DX - DX * f, FLOOR); ctx.lineTo(DX + (1920 - DX) * f, FLOOR); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(DX - DX * f, FLOOR); ctx.lineTo(DX + (W - DX) * f, FLOOR); ctx.stroke();
     // crack
     const cr = P(t, 0.8, 0.6);
     if (cr > 0) {
@@ -132,8 +134,8 @@
   }
 
   film.layer((t) => {
-    bctx.clearRect(0, 0, 1920, 1080);
-    fctx.clearRect(0, 0, 1920, 1080);
+    bctx.clearRect(0, 0, W, H);
+    fctx.clearRect(0, 0, W, H);
     const k1 = env(t, 0, 10.6, 1.0, 0.6);
     caustics(bctx, t, k1 * 0.8);
     drawL1(bctx, t);
@@ -249,15 +251,18 @@
   });
 
   /* ---------------------------------------------------- L4: timing */
-  const NODES = [300, 700, 1120, 1540], LY = 560;
+  const NODES = V ? [120, 370, 660, 950] : [300, 700, 1120, 1540], LY = V ? 660 : 560;
+  const TX0 = V ? 60 : 200, TX1 = V ? 1030 : 1720, ZA = NODES[2] - NODES[1], ZC = TX1 - NODES[3];
+  const B7 = NODES[1] + ZA * 0.55;
   const tl = {};
   function buildTimeline() {
     const svg = $('tl');
-    tl.track = mk('line', { x1: 200, y1: LY, x2: 1720, y2: LY, class: 'track', pathLength: 1 }, svg);
-    tl.zoneA = mk('rect', { x: 700, y: LY - 12, width: 0, height: 24, rx: 12, class: 'zoneA' }, svg);
-    tl.zoneC = mk('rect', { x: 1540, y: LY - 12, width: 0, height: 24, rx: 12, class: 'zoneC' }, svg);
-    tl.br = mk('path', { d: `M700 598v12H930v-12`, class: 'br', pathLength: 1 }, svg);
-    tl.brT = mk('text', { x: 815, y: 650, class: 'nlbl', style: 'font-size:26px;fill:#2F7FB8' }, svg);
+    if (V) svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    tl.track = mk('line', { x1: TX0, y1: LY, x2: TX1, y2: LY, class: 'track', pathLength: 1 }, svg);
+    tl.zoneA = mk('rect', { x: NODES[1], y: LY - 12, width: 0, height: 24, rx: 12, class: 'zoneA' }, svg);
+    tl.zoneC = mk('rect', { x: NODES[3], y: LY - 12, width: 0, height: 24, rx: 12, class: 'zoneC' }, svg);
+    tl.br = mk('path', { d: `M${NODES[1]} ${LY + 38}v12H${B7}v-12`, class: 'br', pathLength: 1 }, svg);
+    tl.brT = mk('text', { x: (NODES[1] + B7) / 2, y: LY + 90, class: 'nlbl', style: 'font-size:26px;fill:#2F7FB8' }, svg);
     tl.brT.textContent = '접수 후 7일';
     tl.nodes = NODES.map((x) => mk('circle', { cx: x, cy: LY, r: 14, class: 'node' }, svg));
     tl.labels = ['사고 발생', '보험 접수', '보험사 조사 착수', '조사 완료'].map((s, i) => {
@@ -278,12 +283,12 @@
       c.setAttribute('r', (14 * Math.max(0, p)).toFixed(2));
       tl.labels[i].style.opacity = P(t, 38.4 + i * 0.3, 0.6).toFixed(3);
     });
-    tl.zoneA.setAttribute('width', (420 * P(t, 40.0, 0.8, E.inOutCubic)).toFixed(1));
+    tl.zoneA.setAttribute('width', (ZA * P(t, 40.0, 0.8, E.inOutCubic)).toFixed(1));
     show($('cA'), t, 40.2, 99, { y: 24, blur: 8 });
     draw(tl.br, t, 43.5, 0.6, E.outCubic);
     tl.brT.style.opacity = P(t, 43.7, 0.5).toFixed(3);
     show($('cB'), t, 43.7, 99, { y: -20, blur: 8 });
-    tl.zoneC.setAttribute('width', (180 * P(t, 47.0, 0.6, E.inOutCubic)).toFixed(1));
+    tl.zoneC.setAttribute('width', (ZC * P(t, 47.0, 0.6, E.inOutCubic)).toFixed(1));
     show($('cC'), t, 47.2, 99, { y: 24, blur: 8 });
     show($('l4c'), t, 50.0, 99, { y: 12, blur: 8 });
   });
@@ -332,6 +337,11 @@
   });
 
   M.boot(film, async () => {
+    if (V) {
+      film.setEdit((await fetch('../common/shorts.json').then((r) => r.json())).leak);
+      $('l6b').innerHTML = '보험 접수 직후<br><em>가장 먼저</em> 연락하세요.';
+      document.querySelector('.law .bd').innerHTML = document.querySelector('.law .bd').innerHTML.replace('<br>', ' ');
+    }
     $('l2').style.display = 'block';
     buildApt();
     $('l2').style.display = 'none';
