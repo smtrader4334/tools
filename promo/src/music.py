@@ -88,14 +88,15 @@ A0, A1 = SEC['dropA']
 B0, B1 = SEC['dropB']
 OUT0, OUT1 = SEC['outro']
 T_SPARK = hit_time('spark', HOOK0 + BEAT)          # 0.625
-SIL0 = hit_time('silence', BUILD1 - BEAT)          # 14.375 dead air start
+SWELL0 = hit_time('swell', BUILD1 - BEAT)          # 14.375 breath-in swell into drop A
+CREST = SWELL0 - 0.175                             # 14.2   build strings + riser crest, then fall away
 LIFT = word_time('복구', A0 + 3 * BAR)               # 22.5 lift to major
-STOP = B1                                          # 35.0 stop dead
+RING0 = hit_time('ringout', B1 - BEAT)             # 34.375 drop B ring-out chord (Bb -> F)
 
 # opening / build harmony (string bed + low-hit tuning) and the word motif
 OPEN_CHORDS = [(OPEN0, OPEN0 + BAR, 'Dm'), (OPEN0 + BAR, OPEN0 + 2 * BAR, 'Bbmaj7'),
                (OPEN0 + 2 * BAR, OPEN0 + 3 * BAR, 'Gm9'), (OPEN0 + 3 * BAR, BUILD0, 'A'),
-               (BUILD0, BUILD0 + 2 * BEAT, 'Bbmaj7'), (BUILD0 + 2 * BEAT, SIL0, 'A')]
+               (BUILD0, BUILD0 + 2 * BEAT, 'Bbmaj7'), (BUILD0 + 2 * BEAT, A0, 'A')]
 HIT_ROOT = {'Dm': 'D2', 'Bbmaj7': 'Bb1', 'Gm9': 'G1', 'A': 'A1'}
 MOTIF = [['A4', 'F4', 'D4'],        # 사고는 / 예고 없이 / 옵니다.
          ['A4', 'F4', 'C5'],        # 불이 나고, / 연기가 / 번지고,
@@ -114,7 +115,7 @@ CHORDS = [(A0, A0 + BAR, 'Dm'), (A0 + BAR, A0 + 2 * BAR, 'Bb'),
           (A0 + 2 * BAR, A0 + 2 * BAR + 2 * BEAT, 'Gm'), (A0 + 2 * BAR + 2 * BEAT, LIFT, 'A'),
           (LIFT, LIFT + 2 * BEAT, 'F'), (LIFT + 2 * BEAT, A1, 'C'),
           (B0, B0 + BAR, 'F'), (B0 + BAR, B0 + 2 * BAR, 'C'), (B0 + 2 * BAR, B0 + 3 * BAR, 'Dm'),
-          (B0 + 3 * BAR, B1, 'Bb')]
+          (B0 + 3 * BAR, RING0, 'Bb'), (RING0, B1, 'Fend')]
 CH = {  # sub root | 8th ostinato tones (root, 5th, 8ve, 3rd) | drop-A strings | drop-B pad | pulse
     'Dm': dict(sub='D2', ost=('D3', 'A3', 'D4', 'F3'), strA=('D2', 'D3', 'F3', 'A3', 'D4'),
                padB=('D2', 'F3', 'A3', 'E4'), pulse=('D3', 'A3')),
@@ -126,7 +127,10 @@ CH = {  # sub root | 8th ostinato tones (root, 5th, 8ve, 3rd) | drop-A strings |
               padB=('F2', 'C3', 'A3', 'E4'), pulse=('F3', 'C4')),
     'C': dict(sub='C2', ost=('E3', 'C4', 'E4', 'G3'), strA=('C2', 'C4', 'E4', 'G4', 'C5'),
               padB=('C2', 'E3', 'G3', 'D4'), pulse=('E3', 'C4')),
+    'Fend': dict(sub='F1', padB=('F2', 'C3', 'A3', 'F4')),     # ring-out: plain F major
 }
+RING_PIANO = [('F2', 0.45), ('C4', 0.5), ('F4', 0.52), ('A4', 0.56)]
+BREATH_CHORD = [('D3', 0.5), ('A3', 0.5), ('D4', 0.55), ('F4', 0.55), ('A4', 0.5)]   # the drop's Dm
 OST_PATTERN = [0, 0, 1, 0, 2, 0, 1, 3]            # per 8th within a bar
 MEL_A = ['A4', 'C5', 'E5', 'G5']                  # 복구 / 일상 / 제자리 / 회복
 MEL_B = {'F': ['A5', 'F5', 'C5'], 'C': ['E5', 'C5', 'G5'],
@@ -154,12 +158,11 @@ def open_chord_at(t):
 LV = dict(
     room=0.010, hum=0.0045, spark=0.42, subswell=0.08,
     lowhit=0.53, piano=0.87, strings_open=0.16, tick=0.28,
-    riser=0.05, kick=0.62, accent=0.30, air=0.08, taiko=0.36, ost=0.40,
+    riser=0.05, breath=0.10, kick=0.62, accent=0.30, air=0.08, taiko=0.36, ost=0.40,
     strings_a=0.13, sub=0.25, shimmer=0.035, impact=0.70, whoosh=0.10,
-    pad_b=0.12, pulse=0.16, ui=0.06, page=0.05,
+    pad_b=0.12, pulse=0.16, ui=0.06, page=0.05, ring=0.87,
     softboom=0.42, pad_o=0.09, subdrop=0.36, sweep=0.04, chime=0.16, ember=0.28,
 )
-TAIL_GAIN = 0.22     # faint natural reverb tail kept after the dead stop at 35.0
 
 EVENTS = []          # (t, category, name, note)
 KICK_TIMES = []
@@ -719,14 +722,41 @@ def string_bed(name, lines, t0, t1, fc, amp, voices=6, detune=0.16, vib=0.0022, 
     return hp(out * amp, hp_fc)
 
 
-def air_riser(rng, dur):
+def air_riser(rng, dur, crest=None):
+    """soft airy band-passed noise rising to `crest` s, then falling away"""
     n = ns(dur)
     t = tvec(n)
-    u = t / dur
+    crest = dur if crest is None else crest
+    u = np.clip(t / crest, 0, 1)
     fc = 800.0 * (9000.0 / 800.0) ** (u ** 1.2)
     x = tvf(stereo_noise(rng, n), fc, 1.4, 'bp', 64)
-    x *= 10.0 ** ((-30.0 + 30.0 * u ** 1.1) / 20.0)
-    return fade(normpk(hp(x, 400)), 0.05, 0.002)
+    x *= 10.0 ** ((-30.0 + 30.0 * u ** 1.1) / 20.0) * np.where(t < crest, 1.0, np.exp(-(t - crest) / 0.15))
+    return fade(normpk(hp(x, 400)), 0.05, 0.02)
+
+
+def breath_in(dur):
+    """reverse-reverb 'breath-in': the drop's Dm chord (felt piano + short pad)
+    and a soft cymbal are reverberated (no pre-delay), reversed and cropped,
+    so the swell rises smoothly and arrives exactly at the end of the clip"""
+    rng = rng_for('breath')
+    L = ns(1.6)
+    tt = tvec(L)
+    dry = np.zeros((2, L))
+    for nm, v in BREATH_CHORD:
+        p = piano(nm, v, 1.0)[:, :L]
+        dry[:, :p.shape[1]] += p
+    lines = [([(0.0, 1.6, nm)], g, sp) for nm, g, sp in [('D3', 0.8, 0.4), ('A3', 0.7, 0.7), ('F4', 0.6, 0.9)]]
+    pad = string_bed('breath-pad', lines, 0.0, 1.6, np.full(L, 1400.0), att(tt, 0.01) * np.exp(-tt / 0.5))
+    dry = lp(dry, 2500) + 0.5 * normpk(pad) * np.max(np.abs(dry))
+    cym = lp(hp(stereo_noise(rng, L), 3000), 9000) * att(tt, 0.001) * np.exp(-tt / 0.6)
+    ir = make_ir('breath', 2.2, 1.1, 2.8, 0.0, er=0.15, lp_fc=7000, hp_fc=120)
+    wet = np.vstack([signal.oaconvolve(dry[ch], ir[ch]) for ch in range(2)])
+    m = ns(dur)
+    x = (normpk(wet[:, ::-1][:, -m:]) + 0.3 * normpk(dry[:, ::-1][:, -m:])
+         + 0.15 * normpk(cym[:, ::-1][:, -m:]))
+    u = tvec(m) / dur
+    x *= smoothstep(u / 0.6)                  # starts from nothing, rises smoothly
+    return fade(normpk(hp(x, 60)), 0.0, 0.004)
 
 
 def soft_whoosh(rng, dur=1.2):
@@ -872,7 +902,7 @@ def render_hook(B):
 def render_opening_and_build(B):
     # ---- words play the motif ---------------------------------------------------
     for t, kind, text in HITS:
-        if not (OPEN0 <= t < SIL0) or kind not in ('phrase', 'note'):
+        if not (OPEN0 <= t < SWELL0) or kind not in ('phrase', 'note'):
             continue
         bar = OPEN0 + np.floor((t - OPEN0) / BAR + 1e-9) * BAR
         pi = int(round((bar - OPEN0) / BAR))
@@ -892,31 +922,32 @@ def render_opening_and_build(B):
         else:
             ev(t, 'KEY', f'note "{text}"', f'piano {note}')
 
-    # ---- string bed: Dm | Bbmaj7 | Gm9 | A | Bbmaj7 A, swell + crescendo ----------
-    t0, t1 = OPEN0, SIL0
+    # ---- string bed: Dm | Bbmaj7 | Gm9 | A | Bbmaj7 A, swell + crescendo, crest at
+    #      14.2 and a natural fall-away (short tail, filter closing) ----------------
+    t0, t1 = OPEN0, A0
     n = ns(t1) - ns(t0)
     tt = tvec(n) + t0
     lines = []
     for vi, notes in enumerate(OPEN_LINES):
         segs = [(a, b, m) for (a, b, _), m in zip(OPEN_CHORDS, notes)]
         lines.append((segs, [1.0, 0.8, 0.7, 0.62, 0.5][vi], [0.2, 0.45, 0.65, 0.8, 0.9][vi]))
-    fc = logterp(tt, [t0, t0 + 5, BUILD0, SIL0], [420, 700, 1100, 3600])
-    amp = np.interp(tt, [t0, t0 + 2.5, t0 + 7.5, BUILD0, SIL0], [0.0, 0.35, 0.7, 0.85, 1.2]) ** 1.3
+    fc = logterp(tt, [t0, t0 + 5, BUILD0, CREST, A0], [420, 700, 1100, 3600, 1500])
+    amp = np.interp(tt, [t0, t0 + 2.5, t0 + 7.5, BUILD0, CREST], [0.0, 0.35, 0.7, 0.85, 1.2]) ** 1.3
+    amp *= np.where(tt < CREST, 1.0, np.exp(-(tt - CREST) / 0.16))
     x = string_bed('strings-open', lines, t0, t1, fc, amp)
-    x = fade(x, 0.05, 0.002)
+    x = fade(x, 0.05, 0.02)
     B['strings'].add(x, t0, LV['strings_open'])
     B['s_hall'].add(x, t0, LV['strings_open'] * 0.5)
-    ev(t0, 'music', 'string bed in', 'Dm | Bbmaj7 | Gm9 | A | Bbmaj7 A; crescendo 12.5-14.375')
+    ev(t0, 'music', 'string bed in', f'Dm | Bbmaj7 | Gm9 | A | Bbmaj7 A; crescendo to {CREST:.3f}, then falls away')
 
     # ---- felt clock pulse on beats; accelerating through the build ----------------
     tr = rng_for('ticks')
     ticks = [(OPEN0 + i * BEAT, 1.0 if i % 4 == 0 else 0.8, 1.0 if i % 2 == 0 else 0.9)
              for i in range(int(round((BUILD0 - OPEN0) / BEAT)))]
-    e8, e16, e32 = BEAT / 2, BEAT / 4, BEAT / 8
+    e8, e16 = BEAT / 2, BEAT / 4
     acc0 = BUILD0 + 2 * BEAT                     # 13.75
     ticks += [(BUILD0 + i * e8, 0.8, 1.0) for i in range(int(round((acc0 - BUILD0) / e8)))]
-    ticks += [(acc0 + i * e16, 0.85, 1.05) for i in range(int(round(BEAT / 2 / e16)))]
-    ticks += [(acc0 + BEAT / 2 + i * e32, 0.9, 1.1) for i in range(int(round(BEAT / 2 / e32)))]
+    ticks += [(acc0 + i * e16, v, 1.05) for i, v in enumerate([0.85, 0.7, 0.5, 0.3])]   # thin out by ~14.2
     for i, (t, v, p) in enumerate(ticks):
         tk = felt_tick(tr, p)
         B['ticks'].add(tk, t, LV['tick'] * v, 0.08 * (-1) ** i)
@@ -925,11 +956,17 @@ def render_opening_and_build(B):
 
     # ---- airy riser -----------------------------------------------------------------
     r0 = BUILD0 + BEAT
-    rz = air_riser(rng_for('riser'), SIL0 - r0)
+    rz = air_riser(rng_for('riser'), A0 - 0.1 - r0, CREST - r0)
     B['fx'].add(rz, r0, LV['riser'])
     B['s_hall'].add(rz, r0, LV['riser'] * 0.3)
-    ev(r0, 'KEY', 'string crescendo + airy riser', f'soft ticks accelerate {acc0:.3f}-{SIL0:.3f}')
-    ev(SIL0, 'KEY', 'DEAD AIR', f'exact digital silence {SIL0:.3f}-{A0:.3f}')
+    ev(r0, 'KEY', 'string crescendo + airy riser', f'soft ticks accelerate from {acc0:.3f}, thin out by {CREST + 0.02:.3f}')
+    ev(CREST, 'KEY', 'build crest', 'strings + riser peak and fall away naturally (short tails)')
+
+    # ---- breath-in: reversed piano/pad reverb + soft reversed cymbal into 15.000 --
+    br = breath_in(A0 - SWELL0)
+    B['fx'].add(br, SWELL0, LV['breath'])
+    B['s_hall'].add(br, SWELL0, LV['breath'] * 0.15)
+    ev(SWELL0, 'KEY', 'breath-in swell', f'reverse-reverb Dm piano + pad + soft reversed cymbal, arrives exactly at {A0:.3f}')
 
 
 def render_drops(B):
@@ -1015,14 +1052,18 @@ def render_drops(B):
     chB = [(a, b, c) for a, b, c in CHORDS if a >= B0 - 1e-9]
     lines = [([(a, b, CH[c]['padB'][v]) for a, b, c in chB], [0.85, 0.7, 0.6, 0.5][v], [0.2, 0.55, 0.75, 0.9][v])
              for v in range(4)]
-    n = ns(B1) - ns(B0)
+    tb1 = B1 + 1.0                                   # pad rings out into the outro
+    n = ns(tb1) - ns(B0)
     tt = tvec(n) + B0
-    x = string_bed('pad-b', lines, B0, B1, logterp(tt, [B0, B1], [1500, 2100]),
-                   smoothstep((tt - B0) / 0.4) * np.interp(tt, [B0, B1], [0.85, 1.0]), voices=6, detune=0.18, vib=0.0015)
-    x *= (1 - 0.2 * (1 - duck_env(KICK_TIMES, 1.0, release=0.3)))[ns(B0):ns(B1)]
-    B['strings'].add(fade(x, 0.01, 0.003), B0, LV['pad_b'])
-    B['s_hall'].add(fade(x, 0.01, 0.003), B0, LV['pad_b'] * 0.5)
-    for i, t in enumerate(np.arange(B0, B1 - 1e-9, BEAT / 2)):
+    amp = smoothstep((tt - B0) / 0.4) * np.interp(tt, [B0, RING0], [0.85, 1.0])
+    amp *= np.where(tt < B1 - 0.1, 1.0, np.exp(-(tt - B1 + 0.1) / 0.35))      # natural decay 34.9 -> 35.8
+    x = string_bed('pad-b', lines, B0, tb1, logterp(tt, [B0, RING0, tb1], [1500, 2100, 1300]), amp,
+                   voices=6, detune=0.18, vib=0.0015)
+    x *= (1 - 0.2 * (1 - duck_env(KICK_TIMES, 1.0, release=0.3)))[ns(B0):ns(B0) + n]
+    B['strings'].add(fade(x, 0.01, 0.02), B0, LV['pad_b'])
+    B['s_hall'].add(fade(x, 0.01, 0.02), B0, LV['pad_b'] * 0.5)
+    B['s_space'].add(fade(x, 0.01, 0.02)[:, ns(RING0) - ns(B0):], RING0, LV['pad_b'] * 0.3)
+    for i, t in enumerate(np.arange(B0, RING0 - 1e-9, BEAT / 2)):     # pulse stops before the ring-out
         t = round(float(t), 6)
         c = chord_at(t)
         note = CH[c]['pulse'][i % 2]
@@ -1030,11 +1071,11 @@ def render_drops(B):
         B['pulse'].add(felt_pulse(note, v), t, LV['pulse'], 0.2 if i % 2 else -0.2)
         B['s_hall'].add(felt_pulse(note, v), t, LV['pulse'] * 0.2)
         ev(t, 'pulse', 'felt pulse ' + note)
-    for a, b, c in chB:
+    for bi, c in enumerate(['F', 'C', 'Dm', 'Bb']):
         for j, note in enumerate(MEL_B[c]):
-            t = a + j * BEAT
-            last = (c == 'Bb' and j == 2)
-            p = piano(note, 0.7 if j == 0 else 0.62, (B1 - t) if last else (1.6 if j == 2 else 1.0))
+            t = B0 + bi * BAR + j * BEAT
+            last = (bi == 3 and j == 2)
+            p = piano(note, 0.7 if j == 0 else 0.62, 2.0 if last else (1.6 if j == 2 else 1.0))
             B['piano'].add(p, t, LV['piano'] * 1.1)
             B['s_hall'].add(p, t, LV['piano'] * 0.45)
             B['s_delay'].add(p, t, LV['piano'] * 0.4)
@@ -1049,13 +1090,19 @@ def render_drops(B):
             B['fx'].add(pw, t - 0.26, LV['page'])
             B['s_hall'].add(pw, t - 0.26, LV['page'] * 0.3)
             ev(t, 'KEY', f'page whoosh "{text}"', 'swish PEAKS at this time (starts 0.26 s earlier)')
-    ev(STOP, 'KEY', 'STOP DEAD', 'all dry signals cut; only a faint reverb tail')
+    # ---- ring-out: kick + pulse gone, Bb -> F chord decays naturally into the outro --
+    for nm, v in RING_PIANO:
+        p = piano(nm, v, 1.6)
+        B['piano'].add(p, RING0, LV['ring'])
+        B['s_hall'].add(p, RING0, LV['ring'] * 0.5)
+        B['s_space'].add(p, RING0, LV['ring'] * 0.35)
+    ev(RING0, 'KEY', 'ring-out', 'kick + pulse out; piano F2 C4 F4 A4 + pad on F, decaying 35.0-35.8 into the softboom')
 
 
 def render_sub(B):
     """clean sine sub on the chord roots, phase-locked to each kick's tail so
     the kick hands over to the bass constructively (reset while ducked)"""
-    t0, t1 = A0, B1
+    t0, t1 = A0, B1 + 0.8
     n = ns(t1) - ns(t0)
     tt = tvec(n) + t0
     f = freq_line([(a, b, nf(CH[c]['sub'])) for a, b, c in CHORDS], t0, t1, 0.03)
@@ -1069,7 +1116,8 @@ def render_sub(B):
         ph[a:b] = cph[a:b] - cph[k0] + kick_phase(f[r], 0.1) - (cph[r] - cph[k0])
     sub = (np.sin(ph) + 0.1 * np.sin(2 * ph)) * duck_env(KICK_TIMES, 1.0, release=0.14, hold=0.06)[ns(t0):ns(t1)]
     sub *= np.where(tt < A1, 1.0, 0.7) * smoothstep((tt - t0) / 0.02)
-    B['sub'].add(fade(sub, 0.002, 0.003), t0, LV['sub'])
+    sub *= np.where(tt < RING0, 1.0, np.exp(-(tt - RING0) / 0.3))         # ring-out: sub fades with the chord
+    B['sub'].add(fade(sub, 0.002, 0.02), t0, LV['sub'])
 
 
 def render_outro(B):
@@ -1208,9 +1256,9 @@ def render():
               hall=make_ir('hall', 2.6, 1.3, 3.4, 0.022, er=0.25, lp_fc=9000, hp_fc=120),
               space=make_ir('space', 4.8, 2.2, 5.6, 0.045, er=0.25, lp_fc=9000, hp_fc=90))
     ret = dict(room=reverb(B['s_room'].x, IR['room'], 0.0, OPEN0),
-               dark=reverb(B['s_dark'].x, IR['dark'], OPEN0, STOP),
-               hall=reverb(B['s_hall'].x, IR['hall'], 0.0, STOP),
-               space=reverb(B['s_space'].x, IR['space'], OUT0, DUR),
+               dark=reverb(B['s_dark'].x, IR['dark'], OPEN0, B1),
+               hall=reverb(B['s_hall'].x, IR['hall'], 0.0, B1 + 1.0),
+               space=reverb(B['s_space'].x, IR['space'], RING0 - 0.01, DUR),
                delay=pingpong(lp(B['s_delay'].x, 1800, 4), delay=0.75 * BEAT, fb=0.3, taps=5, lp_fc=2200, hp_fc=400))
     print(f'  reverbs                {time.time() - t_start:6.1f} s')
 
@@ -1220,21 +1268,16 @@ def render():
     for k in ret:
         ret[k] *= gains[k]
 
-    m_sil = np.ones(N)
-    f2 = ns(0.002)
-    m_sil[ns(SIL0) - f2:ns(SIL0)] = np.cos(np.linspace(0, np.pi / 2, f2)) ** 2
-    m_sil[ns(SIL0):ns(A0)] = 0.0
-    m_stop = cut_mask(STOP)
+    # delay echoes of the drop-B melody fade out with the ring-out
+    dfade = np.ones(N)
+    d0, d1 = ns(B1 - 0.4), ns(B1 + 0.6)
+    dfade[d0:d1] = np.cos(np.linspace(0, np.pi / 2, d1 - d0)) ** 2
+    dfade[d1:] = 0.0
+    ret['delay'] *= dfade
     stems = {k: B[k].x for k in ['hook', 'hits', 'piano', 'strings', 'ost', 'pulse', 'kick', 'sub', 'ticks', 'fx', 'outro']}
-    tail = sum(ret[k] for k in ('hall', 'dark', 'delay')) * (1.0 - m_stop) * TAIL_GAIN
     for k, v in ret.items():
         stems['rev_' + k] = v
-    stems['rev_tail'] = tail
-    for k, v in stems.items():
-        v = hp(v, 20, 2) * m_sil
-        if k not in ('hook', 'outro', 'rev_room', 'rev_space', 'rev_tail'):
-            v = v * m_stop
-        stems[k] = v
+    stems = {k: hp(v, 20, 2) for k, v in stems.items()}
     mix = sum(stems.values())
 
     # ---- master: glue comp -> gain to -14 LUFS -> look-ahead limiter ----------
@@ -1254,7 +1297,6 @@ def render():
         if tp <= -1.05:
             break
         ceiling -= (tp + 1.05) + 0.05
-    y *= m_sil                                   # exact dead air
     fe = np.ones(N)
     f0, f1 = ns(DUR - 1.0), ns(DUR - 0.05)
     fe[f0:f1] = np.cos(np.linspace(0, np.pi / 2, f1 - f0)) ** 2
