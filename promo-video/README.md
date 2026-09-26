@@ -91,7 +91,7 @@ node render.mjs fire --stills 24.5,60,138 --dir build/stills
 
 ## 사용 자원과 라이선스
 
-- 글꼴: Noto Serif/Sans CJK KR (SIL OFL), Cormorant Garamond (SIL OFL, `common/fonts/OFL-CormorantGaramond.txt`)
+- 글꼴: Pretendard (SIL OFL, `common/fonts/OFL-Pretendard.txt`), Noto Serif/Sans CJK KR (SIL OFL), Cormorant Garamond (SIL OFL, `common/fonts/OFL-CormorantGaramond.txt`)
 - 악기 샘플: MuseScore General SoundFont (MIT, 일부 샘플 퍼블릭 도메인/CC0). 영상에 쓸 때 별도 표기 의무는 없습니다.
 - 로고: 홈페이지에 들어 있는 더함 로고 이미지를 추출해 사용했습니다.
 - 음악·효과음·그래픽은 모두 이 저장소의 코드로 새로 만든 것입니다.
