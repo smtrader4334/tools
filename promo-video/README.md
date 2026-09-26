@@ -1,12 +1,13 @@
 # 더함화재특종손해사정 홍보 영상
 
-더함 홈페이지(https://theham-consult.pages.dev/theham/ , 저장소 `smtrader4334/theham-consult`)의 내용을 바탕으로 만든 브랜드 영상 두 편과 세로 쇼츠 두 편입니다.
-홈페이지에서는 `media/film-embed.js`가 메인·유승민 대표·이도경 이사 상담 페이지에 영상 섹션을 붙입니다.
+더함 홈페이지(https://theham-consult.pages.dev/theham/ , 저장소 `smtrader4334/theham-consult`)의 내용을 바탕으로 만든 회사 소개 영상, 브랜드 영상 두 편, 세로 쇼츠 두 편입니다.
+홈페이지에서는 `media/film-embed.js`가 영상 섹션을 붙입니다: 메인에는 회사 소개, 유승민 대표 상담 페이지에는 화재, 이도경 이사 상담 페이지에는 누수 선임권 영상.
 모든 장면은 HTML/CSS/Canvas로 직접 디자인했고, 음악과 효과음도 이 영상을 위해 새로 작곡·합성했습니다.
 외부 스톡 영상, 이미지, 음원은 쓰지 않았습니다.
 
 | 파일 | 길이 | 내용 |
 |---|---|---|
+| `out/theham-company-film.mp4` | 2:02 | 회사 소개. 손해사정이 무엇인지, 누가 선임하는지, 더함의 업무 분야 네 가지와 일하는 기준, 구성원과 상담 창구, 지역을 한 편에 담았습니다. |
 | `out/theham-fire-brand-film.mp4` | 2:24 | 메인 브랜드 필름. 화재사고 중심으로 손해사정의 개념, 독립 손해사정의 필요성, 전문가 소개, 진행 절차를 다룹니다. |
 | `out/theham-leak-appointment-right.mp4` | 1:16 | 누수 사고 손해사정사 선임권 안내 영상. 법적 근거, 비용 부담 기준, 선임 타이밍을 설명합니다. |
 | `out/theham-fire-short-9x16.mp4` | 1:00 | 화재 영상의 세로(1080×1920) 쇼츠·릴스 편집본 |
@@ -14,6 +15,21 @@
 | `out/*.jpg` | — | 유튜브 썸네일·게시물용 대표 이미지 |
 
 규격: 1920×1080, 30fps, H.264(High, BT.709) + AAC. 메신저로도 보낼 수 있도록 파일당 29MiB 이하로 인코딩했습니다(`MAX_MIB`로 조정). 음량은 −15 LUFS / −1 dBTP로 맞춰 유튜브 등 플랫폼에서 따로 조정하지 않아도 됩니다.
+
+## 0. 회사 소개 (2:02)
+
+홈페이지 메인에 쓰는 영상입니다. 사이트와 같은 네이비·블루·흰 배경에 Pretendard를 쓰고, 음악은 B단조로 시작해 D장조로 밝아진 뒤 로고에서 Dadd9 사운드 로고로 끝납니다(화재 Fadd9, 누수 Gadd9와 같은 형식).
+
+| 시간 | 장면 | 화면 문구 |
+|---|---|---|
+| 0:00 | 사고 아이콘 네 개 | 사고는 예고 없이 찾아옵니다. · 화재 · 누수 · 배상책임 · 자연재해 → 무엇이, 얼마나 손해를 입었는지. 누군가는 근거로 설명해야 합니다. |
+| 0:12 | 손해사정이란 | 손해사정(損害査定): 보험사고로 생긴 손해를 조사하고, 손해액과 보험금을 산정하는 일 · 01 손해 사실 확인 · 02 약관·법규 적용 · 03 손해액·보험금 산정 → 보험금은 결국, 손해사정의 결과로 정해집니다. |
+| 0:26 | 누가 선임하는가 | 손해사정사는, 고객도 직접 선임할 수 있습니다. · 보험회사 측 손해사정 / 독립 손해사정·손해사정사 선임권(보험업법 제185조) → 더함은 고객이 선임한 손해사정사로 함께합니다. |
+| 0:38 | 업무 분야 | 사고의 모습은 달라도, 근거를 찾는 일은 같습니다. · 화재 손해 · 누수 손해 · 배상책임 · 풍수해·자연재해 (각 분야의 검토 항목은 홈페이지와 같음) |
+| 1:02 | 더함의 기준 | 답을 서두르기보다, 근거를 놓치지 않겠습니다. · 01 현장을 읽습니다 · 02 자료를 대조합니다 · 03 이해할 수 있게 설명합니다 |
+| 1:20 | 구성원 | 전문성은 분명하게. 상담은 필요한 곳으로. · 유승민 대표(손해사정 상담) · 이도경 이사(손해사정사 선임권 상담) |
+| 1:36 | 지역 | 가까운 현장에서, 함께 시작합니다. · 부산(본사) · 양산 · 김해 · 울산 · 창원, 경남 전역 |
+| 1:46 | 브랜드 | 손해의 근거를 찾고, 회복의 방향을 세웁니다. → 로고 → 두 상담 연락처 · 카카오톡 QR · 홈페이지 주소 · 등록번호 |
 
 ## 1. 브랜드 필름 — 화재 (2:24)
 
@@ -70,14 +86,15 @@
 
 ## 다시 만들기
 
-문구·타이밍은 `fire/scenes.js`, `leak/scenes.js`(장면 시간표)와 각 `index.html`(문구·레이아웃)에서 고칩니다.
-음악은 `audio/fire_score.py`, `audio/leak_score.py`에서 고칩니다. 음악의 강박은 화면 신호 시간과 맞춰 두었으므로, 장면 시간을 바꾸면 음악 쪽 시간도 함께 옮겨야 합니다.
+문구·타이밍은 `company/scenes.js`, `fire/scenes.js`, `leak/scenes.js`(장면 시간표)와 각 `index.html`(문구·레이아웃)에서 고칩니다.
+음악은 `audio/company_score.py`, `audio/fire_score.py`, `audio/leak_score.py`에서 고칩니다. 음악의 강박은 화면 신호 시간과 맞춰 두었으므로, 장면 시간을 바꾸면 음악 쪽 시간도 함께 옮겨야 합니다.
 
 ```bash
 # 필요: Node 18+ 와 Playwright(Chromium), ffmpeg, fluidsynth,
 #       MuseScore General 사운드폰트(musescore-general-soundfont-lossless),
 #       Noto Serif/Sans CJK KR 글꼴(fonts-noto-cjk, fonts-noto-cjk-extra),
 #       python3 + numpy scipy soundfile mido pyloudnorm
+./build.sh company  # → out/theham-company-film.mp4 (+ .jpg)
 ./build.sh fire     # → out/theham-fire-brand-film.mp4 (+ .jpg)
 ./build.sh leak     # → out/theham-leak-appointment-right.mp4 (+ .jpg)
 ./build.sh fire-short; ./build.sh leak-short   # 세로 쇼츠 (본편 음원을 편집 구간대로 잘라 사용)
