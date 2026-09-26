@@ -1,0 +1,64 @@
+@font-face { font-family: 'Cormorant'; font-weight: 300; src: url('fonts/cormorant-garamond-latin-300-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Cormorant'; font-weight: 400; src: url('fonts/cormorant-garamond-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Cormorant'; font-weight: 500; src: url('fonts/cormorant-garamond-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Cormorant'; font-weight: 600; src: url('fonts/cormorant-garamond-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Cormorant'; font-weight: 300; font-style: italic; src: url('fonts/cormorant-garamond-latin-300-italic.woff2') format('woff2'); }
+@font-face { font-family: 'Cormorant'; font-weight: 400; font-style: italic; src: url('fonts/cormorant-garamond-latin-400-italic.woff2') format('woff2'); }
+
+:root {
+  /* brand palette (from theham-consult.html) */
+  --navy: #1C1A3A; --navy-mid: #2A2850; --deep: #0D0B22; --logo-bg: #1d182f;
+  --gold: #C9A84C; --gold-l: #E8D08A; --gold-d: #8E6B28;
+  --cream: #F4EFE6; --paper: #F2EDE3; --ink: #1C1A3A; --ink-2: #55536A;
+  --muted: #9AA2B4; --ember: #FF7A2F; --water: #8CC8EC;
+  --serif: 'Noto Serif CJK KR', 'Noto Serif KR', serif;
+  --sans: 'Noto Sans CJK KR', 'Noto Sans KR', sans-serif;
+  --latin: 'Cormorant', 'Noto Serif CJK KR', serif;
+}
+
+html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+#stage {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: #08070F; color: var(--cream);
+  font-family: var(--sans); word-break: keep-all;
+  -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision;
+}
+.scene { position: absolute; inset: 0; display: none; }
+.abs { position: absolute; }
+.serif { font-family: var(--serif); }
+.sans { font-family: var(--sans); }
+.latin { font-family: var(--latin); font-variant-numeric: lining-nums; }
+.center { left: 0; right: 0; text-align: center; }
+.gold { color: var(--gold); }
+.goldl { color: var(--gold-l); }
+em { font-style: normal; }
+.ch { display: inline-block; white-space: pre; }
+.eyebrow {
+  font-family: var(--latin); font-weight: 500; font-size: 24px; letter-spacing: 0.34em;
+  text-transform: uppercase; color: var(--gold);
+}
+.eyebrow.ink { color: var(--gold-d); }
+canvas.fx { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; }
+.vignette {
+  position: absolute; inset: 0; pointer-events: none; z-index: 40;
+  background: radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.38) 100%);
+}
+.fade { position: absolute; inset: 0; background: #000; pointer-events: none; z-index: 60; opacity: 0; }
+.paper-bg {
+  background:
+    radial-gradient(ellipse 80% 60% at 30% 20%, rgba(255,255,255,0.55), rgba(255,255,255,0) 70%),
+    linear-gradient(180deg, #F4EFE6 0%, #EEE7DA 100%);
+  color: var(--ink);
+}
+.navy-bg {
+  background:
+    radial-gradient(ellipse 70% 60% at 70% 30%, rgba(60,56,120,0.35), rgba(0,0,0,0) 70%),
+    linear-gradient(160deg, #17152F 0%, #1C1A3A 55%, #121027 100%);
+}
+.hexgrid {
+  position: absolute; inset: -60px; opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='146' viewBox='0 0 84 146'%3E%3Cpath d='M42 0 L84 24 L84 73 L42 97 L0 73 L0 24 Z M42 97 L42 146' fill='none' stroke='%23C9A84C' stroke-width='1.2'/%3E%3C/svg%3E");
+  background-size: 84px 146px;
+}
+/* the `font` shorthand resets numeric variants; Cormorant defaults to old-style figures */
+#stage * { font-variant-numeric: lining-nums !important; }
