@@ -411,6 +411,12 @@
     if (V) film.setEdit((await fetch('../common/shorts.json').then((r) => r.json())).fire);
     buildS6();
     buildRing();
+    // the burning title is drawn on canvas, so it takes the theme's headline face explicitly
+    const face = getComputedStyle(document.documentElement).getPropertyValue('--serif').trim() || '"Noto Serif CJK KR"';
+    const font = `300 ${V ? 72 : 76}px ${face}`;
+    await document.fonts.load(font, '평생을 일궈 온 공간이 한순간, 재가 되었습니다.');
+    burn1.o.lines[0].font = font;
+    burn2.o.lines[0].font = font;
     burn1.init();
     burn2.init();
     await measureS10();

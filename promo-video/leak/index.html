@@ -117,10 +117,10 @@
 #legal { bottom: 44px; font: 300 20px/1.7 var(--sans); color: #8F97AA; letter-spacing: 0.04em; }
 </style>
 <script>
-  // ?v=1 renders the vertical 9:16 short (layout overrides in vertical.css, edit list in common/shorts.json)
+  // ?v=1 renders the vertical 9:16 short; ?theme=classic keeps the original navy/gold look (layout overrides in vertical.css, edit list in common/shorts.json)
   window.VERTICAL = new URLSearchParams(location.search).get('v') === '1';
   if (VERTICAL) { document.documentElement.classList.add('vertical'); document.write('<link rel="stylesheet" href="vertical.css">'); }
-  if (new URLSearchParams(location.search).get('theme') === 'site') document.write('<link rel="stylesheet" href="../common/theme-site.css">');
+  if (new URLSearchParams(location.search).get('theme') !== 'classic') document.write('<link rel="stylesheet" href="../common/theme-site.css">');
 </script>
 </head>
 <body>
