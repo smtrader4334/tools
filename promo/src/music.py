@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-music.py (v2) - original score for the 47.5 s 더함화재특종손해사정 brand film.
+music.py (v3) - original score for the 47.5 s 더함화재특종손해사정 brand film.
 
 Premium, restrained corporate score: felt piano, warm string beds, deep clean
 low hits, a soft pulse and a lot of air.  Everything is synthesised from
@@ -9,7 +9,7 @@ scratch with numpy + scipy (no samples, no downloads).  Deterministic: every
 random source is a numpy Generator seeded from a CRC32 of its name, so two
 renders are bit-identical.
 
-Reads   src/timeline.json (v2: 96 BPM, beat 0.625 s, bar 2.5 s, t = 0 downbeat)
+Reads   src/timeline.json (v3: 96 BPM, beat 0.625 s, bar 2.5 s, t = 0 downbeat)
 Writes  build/music.wav          48 kHz / 24-bit / stereo / exactly 47.500 s
         build/music_events.txt   every hit placed, with exact timestamps
 
@@ -26,15 +26,18 @@ Form
                    Dm  A4 F4 D4 | Bbmaj7 A4 F4 C5 | Gm9 Bb4 G4 D5 | A C#5 A4 E5
                    (phrase ends climb C5 -> D5 -> E5 -> F5/A5 in the build)
                    string bed swelling underneath + felt clock pulse on beats
-  build   12.5-15  Bbmaj7 -> A, string crescendo, airy riser, ticks
-                   accelerating; 14.375-15.0 exact digital silence
+  build   12.5-15  Bbmaj7 -> A, string crescendo + airy riser crest at 14.2
+                   and fall away (short tails), ticks accelerate then thin out;
+                   14.375-15.0 "breath-in": reverse-reverb Dm piano/pad + soft
+                   reversed cymbal rising into 15.000 (~13 dB under the drop)
   dropA   15-25    Dm | Bb | Gm A | F C : soft tuned kick every beat (sub
                    phase-locked to it), 8th string ostinato, taiko on bar
                    downbeats, felt accent per beat; lift at 22.5 (piano
                    A4 C5 E5 G5 on 복구 일상 제자리 회복, shimmer)
   dropB   25-35    F | C | Dm | Bb : piano melody (the motif turned major)
                    over a pad, gentle 8th pulse, kick on beats 1+3, UI ticks,
-                   page whooshes; stops dead at 35.0
+                   page whooshes; ring-out at 34.375: kick + pulse drop out,
+                   Bb -> F chord (piano + pad) decays naturally into the outro
   outro   35-47.5  softboom, Fmaj9 without its 3rd + piano A4 (the missing
                    third is "added"), subdrop + light sweep, piano-harmonic
                    chime, ember crackle + last low F, fade to silence
@@ -129,7 +132,7 @@ CH = {  # sub root | 8th ostinato tones (root, 5th, 8ve, 3rd) | drop-A strings |
               padB=('C2', 'E3', 'G3', 'D4'), pulse=('E3', 'C4')),
     'Fend': dict(sub='F1', padB=('F2', 'C3', 'A3', 'F4')),     # ring-out: plain F major
 }
-RING_PIANO = [('F2', 0.45), ('C4', 0.5), ('F4', 0.52), ('A4', 0.56)]
+RING_PIANO = [('F2', 0.5), ('C4', 0.6), ('F4', 0.62), ('A4', 0.66), ('A5', 0.58)]   # A5 re-struck from the melody
 BREATH_CHORD = [('D3', 0.5), ('A3', 0.5), ('D4', 0.55), ('F4', 0.55), ('A4', 0.5)]   # the drop's Dm
 OST_PATTERN = [0, 0, 1, 0, 2, 0, 1, 3]            # per 8th within a bar
 MEL_A = ['A4', 'C5', 'E5', 'G5']                  # 복구 / 일상 / 제자리 / 회복
@@ -158,9 +161,9 @@ def open_chord_at(t):
 LV = dict(
     room=0.010, hum=0.0045, spark=0.42, subswell=0.08,
     lowhit=0.53, piano=0.87, strings_open=0.16, tick=0.28,
-    riser=0.05, breath=0.10, kick=0.62, accent=0.30, air=0.08, taiko=0.36, ost=0.40,
+    riser=0.05, breath=0.36, kick=0.62, accent=0.30, air=0.08, taiko=0.36, ost=0.40,
     strings_a=0.13, sub=0.25, shimmer=0.035, impact=0.70, whoosh=0.10,
-    pad_b=0.12, pulse=0.16, ui=0.06, page=0.05, ring=0.87,
+    pad_b=0.12, pulse=0.16, ui=0.06, page=0.05, ring=0.52,
     softboom=0.42, pad_o=0.09, subdrop=0.36, sweep=0.04, chime=0.16, ember=0.28,
 )
 
@@ -742,21 +745,34 @@ def breath_in(dur):
     L = ns(1.6)
     tt = tvec(L)
     dry = np.zeros((2, L))
-    for nm, v in BREATH_CHORD:
-        p = piano(nm, v, 1.0)[:, :L]
+    for nm, v in BREATH_CHORD:                 # staccato source: its reverb is loudest at t = 0
+        p = piano(nm, v, 0.12)[:, :L]
         dry[:, :p.shape[1]] += p
     lines = [([(0.0, 1.6, nm)], g, sp) for nm, g, sp in [('D3', 0.8, 0.4), ('A3', 0.7, 0.7), ('F4', 0.6, 0.9)]]
-    pad = string_bed('breath-pad', lines, 0.0, 1.6, np.full(L, 1400.0), att(tt, 0.01) * np.exp(-tt / 0.5))
+    pad = string_bed('breath-pad', lines, 0.0, 1.6, np.full(L, 1400.0), att(tt, 0.01) * np.exp(-tt / 0.12))
     dry = lp(dry, 2500) + 0.5 * normpk(pad) * np.max(np.abs(dry))
     cym = lp(hp(stereo_noise(rng, L), 3000), 9000) * att(tt, 0.001) * np.exp(-tt / 0.6)
     ir = make_ir('breath', 2.2, 1.1, 2.8, 0.0, er=0.15, lp_fc=7000, hp_fc=120)
     wet = np.vstack([signal.oaconvolve(dry[ch], ir[ch]) for ch in range(2)])
     m = ns(dur)
-    x = (normpk(wet[:, ::-1][:, -m:]) + 0.3 * normpk(dry[:, ::-1][:, -m:])
-         + 0.15 * normpk(cym[:, ::-1][:, -m:]))
     u = tvec(m) / dur
-    x *= smoothstep(u / 0.6)                  # starts from nothing, rises smoothly
-    return fade(normpk(hp(x, 60)), 0.0, 0.004)
+    w = ns(0.02)
+
+    def flat(z):                               # remove the texture's own envelope (gain-limited)
+        env = np.sqrt(np.convolve(np.mean(z ** 2, axis=0), np.ones(w) / w, mode='same')) + 1e-9
+        return z * np.minimum(1.0 / env, 10.0 / np.max(env)) * np.max(env)
+
+    rise = 10.0 ** ((-30.0 + 30.0 * u ** 1.5) / 20.0) * smoothstep(u / 0.15)
+    # tonal part (reversed reverb + reversed dry, kept below ~3 kHz) peaks exactly at the end
+    tone = normpk(wet[:, ::-1][:, -m:]) + 0.3 * normpk(lp(dry, 1500)[:, ::-1][:, -m:])
+    tone = lp(flat(tone), 2000) * rise
+    # airy reversed-cymbal part crests ~40 ms early and is gone ~9 ms before the hit,
+    # so the drop's attack stays clean
+    ucym = np.minimum(u / 0.94, 1.0)
+    cymr = (flat(cym[:, ::-1][:, -m:]) * 10.0 ** ((-30.0 + 30.0 * ucym ** 1.5) / 20.0) * smoothstep(u / 0.15)
+            * np.cos(np.clip((u - 0.94) / 0.045, 0, 1) * np.pi / 2) ** 2)
+    x = normpk(tone) + 0.35 * normpk(cymr)
+    return fade(normpk(hp(x, 60)), 0.0, 0.006)
 
 
 def soft_whoosh(rng, dur=1.2):
@@ -910,7 +926,7 @@ def render_opening_and_build(B):
         note = MOTIF[min(pi, len(MOTIF) - 1)][min(idx, 2)]
         last = idx == len(MOTIF[min(pi, len(MOTIF) - 1)]) - 1
         vel = (0.78 if kind == 'phrase' else 0.64) + (0.06 if pi >= 3 else 0.0)
-        p = piano(note, vel, 1.9 if last else 1.2)
+        p = piano(note, vel, (1.1 if pi >= 4 else 1.9) if last else 1.2)   # build's last note damps at the crest
         B['piano'].add(p, t, LV['piano'])
         B['s_hall'].add(p, t, LV['piano'] * 0.45)
         if kind == 'phrase':
@@ -1075,7 +1091,7 @@ def render_drops(B):
         for j, note in enumerate(MEL_B[c]):
             t = B0 + bi * BAR + j * BEAT
             last = (bi == 3 and j == 2)
-            p = piano(note, 0.7 if j == 0 else 0.62, 2.0 if last else (1.6 if j == 2 else 1.0))
+            p = piano(note, 0.7 if j == 0 else 0.62, (RING0 - t - 0.125) if last else (1.6 if j == 2 else 1.0))
             B['piano'].add(p, t, LV['piano'] * 1.1)
             B['s_hall'].add(p, t, LV['piano'] * 0.45)
             B['s_delay'].add(p, t, LV['piano'] * 0.4)
@@ -1096,7 +1112,7 @@ def render_drops(B):
         B['piano'].add(p, RING0, LV['ring'])
         B['s_hall'].add(p, RING0, LV['ring'] * 0.5)
         B['s_space'].add(p, RING0, LV['ring'] * 0.35)
-    ev(RING0, 'KEY', 'ring-out', 'kick + pulse out; piano F2 C4 F4 A4 + pad on F, decaying 35.0-35.8 into the softboom')
+    ev(RING0, 'KEY', 'ring-out', 'kick + pulse out; piano F2 C4 F4 A4 A5 + pad on F (Bb -> F), decaying 35.0-35.8 into the softboom')
 
 
 def render_sub(B):
@@ -1125,7 +1141,7 @@ def render_outro(B):
         if t < OUT0:
             continue
         if kind == 'softboom':
-            h = low_hit(rng_for('softboom'), nf('F1'), 0.9, tail=1.3, mallet=0.7)
+            h = low_hit(rng_for('softboom'), nf('F1'), 0.9, tail=1.3, mallet=1.8)
             B['outro'].add(h, t, LV['softboom'])
             B['s_space'].add(h, t, LV['softboom'] * 0.7)
             ev(t, 'KEY', f'softboom "{text}"', 'warm low hit (F)')
@@ -1264,6 +1280,11 @@ def render():
 
     sc = duck_env(KICK_TIMES, 1.0, release=0.25)
     ret['hall'] *= 1 - 0.15 * (1 - sc)
+    # short build tails: the hall return eases down after the crest (the drop's
+    # own reverb only starts at 15.0 + pre-delay, so restoring at 15.0 is inaudible)
+    tt = tvec(N)
+    hdip = 1.0 - 0.6 * smoothstep((tt - CREST) / 0.35) * (tt < A0 + 0.005)
+    ret['hall'] *= hdip
     gains = dict(room=0.6, dark=0.4, hall=0.8, space=0.85, delay=1.3)
     for k in ret:
         ret[k] *= gains[k]
@@ -1383,8 +1404,9 @@ def verify(wav_path, stems, info):
     print('\nsection RMS / peak / max short-term LUFS (3 s) / L-R correlation')
     starts, ms = loudness_blocks(y, 3.0, 0.1)
     st_l = -0.691 + 10 * np.log10(ms + 1e-20)
-    extra = [('hook 1.6-2.3 decay', (1.6, 2.3)), ('DEAD AIR', (SIL0, A0)), ('pre-stop 34.8-35', (STOP - 0.2, STOP)),
-             ('post-stop 35-35.3', (STOP, STOP + 0.3)), ('post-stop 35-35.6', (STOP, STOP + 0.6)),
+    extra = [('hook 1.6-2.3 decay', (1.6, 2.3)), ('build crest 13.9-14.2', (CREST - 0.3, CREST)),
+             ('breath-in', (SWELL0, A0)), ('drop A start', (A0, A0 + 0.6)),
+             ('ring-out', (RING0, B1)), ('ring tail 35-35.6', (B1, B1 + 0.6)),
              ('last 50 ms', (DUR - 0.05, DUR))]
     for name, (a, b) in list(SEC.items()) + extra:
         seg = y[:, ns(a):ns(b)]
@@ -1396,11 +1418,28 @@ def verify(wav_path, stems, info):
     lg = info['lim_gr']
     print('  limiter max GR per section: ' + '  '.join(
         f'{nm} {-db(lg[ns(a):ns(b)].min()):.1f}' for nm, (a, b) in SEC.items()) + ' dB')
-    dz = y[:, ns(SIL0):ns(A0)]
-    print(f'  dead air {SIL0:.3f}-{A0:.3f}: {dz.shape[1]} samples, max |x| = {np.max(np.abs(dz)):.3e}, '
-          f'all zero: {bool(np.all(dz == 0))};  last 50 ms all zero: {bool(np.all(y[:, ns(DUR - 0.05):] == 0))}')
-    print(f'  hard stop at {STOP:.3f}: level drop (RMS 200 ms before vs 300 ms after) = '
-          f'{rms_db(STOP - 0.2, STOP) - rms_db(STOP, STOP + 0.3):.1f} dB')
+    kw = k_weight(y)
+
+    def kl(a, b):                                # K-weighted loudness of a window (LUFS-style)
+        return -0.691 + 10 * np.log10(np.sum(np.mean(kw[:, ns(a):ns(b)] ** 2, axis=1)) + 1e-20)
+
+    br, dr = kl(SWELL0, A0), kl(A0, A0 + 0.6)
+    print(f'  breath-in {SWELL0:.3f}-{A0:.3f}: {br:.1f} LUFS vs drop A {A0:.3f}-{A0 + 0.6:.3f}: {dr:.1f} LUFS '
+          f'-> {dr - br:.1f} dB quieter (need >= 8);  silent samples in window: '
+          f'{int(np.sum(np.all(y[:, ns(SWELL0):ns(A0)] == 0, axis=0)))}')
+    sl = [rms_db(SWELL0 + i * 0.125, SWELL0 + (i + 1) * 0.125) for i in range(5)]
+    print('  breath-in RMS per 125 ms: ' + '  '.join(f'{v:.1f}' for v in sl) + ' dBFS')
+    e5 = np.sqrt(np.convolve(y.mean(0) ** 2, np.ones(ns(0.005)) / ns(0.005), mode='same'))
+    w = e5[ns(A0 - 0.1):ns(A0)]
+    print(f'  breath-in arrives: loudest 5 ms point of the last 100 ms at {1000 * (np.argmax(w) / SR - 0.1):+.1f} ms '
+          f're {A0:.3f}')
+    e10 = np.sqrt(np.convolve(y.mean(0) ** 2, np.ones(ns(0.01)) / ns(0.01), mode='same'))
+    seg = 20 * np.log10(e10[ns(B1 - 0.1):ns(B1 + 0.1)] + 1e-12)
+    d20 = seg[ns(0.02):] - seg[:-ns(0.02)]
+    print(f'  continuity at {B1:.3f}: 10 ms RMS over {B1 - 0.1:.1f}-{B1 + 0.1:.1f} ranges {seg.min():.1f}..{seg.max():.1f} dBFS; '
+          f'largest drop within 20 ms = {-d20.min():.2f} dB (limit 6); level 35.0 vs 35.6: '
+          f'{rms_db(B1 - 0.02, B1 + 0.02):.1f} -> {rms_db(B1 + 0.58, B1 + 0.62):.1f} dBFS')
+    print(f'  last 50 ms all zero: {bool(np.all(y[:, ns(DUR - 0.05):] == 0))}')
 
     print('\nstem loudness per section (LUFS, 400 ms gated) and peak')
     for k, v in (stems or {}).items():
@@ -1441,9 +1480,11 @@ def verify(wav_path, stems, info):
     print('\nonsets of every timeline hit (HF onset strength, or LF envelope for low-only hits)')
     worst = 0.0
     for t, kind, text in HITS:
-        if kind == 'silence':
-            ok = bool(np.all(y[:, ns(t):ns(A0)] == 0)) and np.max(np.abs(y[:, ns(t) - ns(0.01):ns(t) - ns(0.003)])) > 0
-            print(f'  {t:7.3f} {kind:<9s} exact zero from here to {A0:.3f}: {ok}')
+        if kind == 'swell':                      # a swell has no attack: check its rise instead
+            a = rms_db(t, t + 0.1)
+            b = rms_db(A0 - 0.1, A0)
+            print(f'  {t:7.3f} {kind:<9s} swell (no attack): RMS {a:.1f} dBFS in first 100 ms -> {b:.1f} dBFS '
+                  f'in last 100 ms before {A0:.3f}; arrival checked above  {text}')
             continue
         k, to, jmp, rise = onset(t)
         worst = max(worst, abs(to - t))
