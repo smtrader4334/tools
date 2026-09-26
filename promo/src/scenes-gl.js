@@ -435,6 +435,121 @@ void main(){
   gl_FragColor=vec4(tone(col*1.15),1.);
 }`;
 
+// ---------------------------------------------------------------- 훅 v2: 멀티탭 스파크
+FS.strip = LIB + `
+const vec3 RO=vec3(.82,.55,-1.62);
+const vec3 TA=vec3(-.05,.08,.12);
+const vec3 SP=vec3(.055,.19,-.555);   // 스파크 위치 (앞쪽 플러그와 소켓 틈)
+float sdRBox(vec3 p, vec3 b, float r){vec3 q=abs(p)-b+r;return length(max(q,0.))+min(max(q.x,max(q.y,q.z)),0.)-r;}
+float sdCylY(vec3 p, float r, float h){vec2 d=abs(vec2(length(p.xz),p.y))-vec2(r,h);return min(max(d.x,d.y),0.)+length(max(d,0.));}
+float sdCap(vec3 p, vec3 a, vec3 b, float r){vec3 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);return length(pa-ba*h)-r;}
+// 재질: 1 바닥, 2 멀티탭, 3 플러그, 4 스위치, 5 전선
+vec2 map(vec3 p){
+  vec2 r=vec2(p.y,1.);
+  float body=sdRBox(p-vec3(0.,.09,.1),vec3(.2,.09,.95),.045);
+  for(int i=0;i<3;i++){
+    float z=-.46+float(i)*.46;
+    body=max(body,-sdCylY(p-vec3(0.,.18,z),.118,.035));   // 둥근 소켓 홈
+  }
+  if(body<r.x) r=vec2(body,2.);
+  float sw=sdRBox(p-vec3(0.,.185,.86),vec3(.07,.02,.05),.015);
+  if(sw<r.x) r=vec2(sw,4.);
+  for(int i=0;i<2;i++){
+    float z=i==0?-.46:.46;
+    float pl=sdCylY(p-vec3(0.,.235,z),.1,.065)-.012;
+    float cord=sdCap(p,vec3(0.,.3,z),vec3(i==0?-.6:.55,.03,z+.45),.022);
+    if(pl<r.x) r=vec2(pl,3.);
+    if(cord<r.x) r=vec2(cord,5.);
+  }
+  return r;
+}
+vec3 nrm(vec3 p){vec2 e=vec2(.0015,0.);return normalize(vec3(map(p+e.xyy).x-map(p-e.xyy).x,map(p+e.yxy).x-map(p-e.yxy).x,map(p+e.yyx).x-map(p-e.yyx).x));}
+float flash(float t){
+  float a=t-.625; if(a<0.) return 0.;
+  float f=exp(-a*9.)*2.6+exp(-a*2.2)*.25;
+  f*=.75+.25*sin(a*190.)*sin(a*77.);
+  return f;
+}
+vec3 proj(vec3 p, vec3 ro, vec3 rt, vec3 up, vec3 fw, float zm){vec3 q=p-ro;float z=dot(q,fw);return vec3(dot(q,rt)/z*zm,dot(q,up)/z*zm,z);}
+void main(){
+  vec2 uv=UV();
+  float t=T;
+  float shake=flash(t)*.004;
+  vec3 ro=RO+vec3(sin(t*97.)*shake,cos(t*83.)*shake,0.)+vec3(0.,0.,t*.05);
+  vec3 ta=TA; float zm=1.85;
+  if(A<1.){ ro+=vec3(.25,.18,-.25); ta=vec3(.02,.17,-.45); zm=1.35; }
+  vec3 fw=normalize(ta-ro), rt=normalize(cross(vec3(0,1,0),fw)), up=cross(fw,rt);
+  vec3 rd=normalize(uv.x*rt+uv.y*up+zm*fw);
+  float tt=0.; vec2 h=vec2(1.,0.);
+  for(int i=0;i<110;i++){h=map(ro+rd*tt); if(h.x<.0006||tt>6.) break; tt+=h.x*.9;}
+  float F=flash(t);
+  vec3 moon=normalize(vec3(-.6,.75,.35));
+  vec3 col=vec3(.004,.005,.008);
+  if(tt<6.){
+    vec3 p=ro+rd*tt, n=nrm(p);
+    vec3 alb; float spec=.2, rough=40.;
+    if(h.y==1.){ // 나무 바닥
+      float g=fbm(vec2(p.x*1.3,p.z*14.))*.6+fbm(vec2(p.x*9.,p.z*60.))*.4;
+      alb=mix(vec3(.16,.09,.05),vec3(.30,.18,.10),g)*(.85+.15*step(.5,fract(p.x*1.6+.2)));
+      spec=.15; rough=18.;
+    } else if(h.y==2.){ alb=vec3(.86,.86,.84); spec=.35; rough=60.;
+      float burn=smoothstep(.2,.0,length(p-SP))*smoothstep(.62,1.4,t);
+      alb=mix(alb,vec3(.08,.06,.05),burn*.8);
+      if(p.y<.16){ vec2 hp=vec2(abs(p.x)-.045,fract((p.z+.46)/.46+.5)*.46-.23); alb*=.55; alb*=mix(.15,1.,smoothstep(.012,.02,length(hp))); }
+    } else if(h.y==3.){ alb=vec3(.80,.80,.78); spec=.35; rough=50.;
+      float burn=smoothstep(.16,.0,length(p-SP))*smoothstep(.62,1.4,t); alb=mix(alb,vec3(.06,.05,.04),burn*.85); }
+    else if(h.y==4.){ alb=vec3(.9,.25,.12); spec=.4; rough=60.; }
+    else { alb=vec3(.72,.72,.70); spec=.25; rough=30.; }
+    // 달빛(창)
+    float dm=max(dot(n,moon),0.);
+    col=alb*vec3(.34,.37,.46)*(.16+dm*.75);
+    col+=alb*vec3(.55,.42,.30)*max(dot(n,normalize(vec3(.8,.35,-.5))),0.)*.10;
+    col+=vec3(.35,.45,.7)*pow(max(dot(reflect(rd,n),moon),0.),rough)*spec*.5;
+    // LED 빛
+    vec3 lp=vec3(0.,.22,.86); vec3 ld=lp-p; float ll=length(ld);
+    col+=alb*vec3(1.,.28,.12)*max(dot(n,ld/ll),0.)*.018/(ll*ll+.02);
+    // 스파크 빛
+    vec3 sd=SP-p; float sl=length(sd);
+    float lam=max(dot(n,sd/sl),0.);
+    vec3 sc=mix(vec3(1.,.72,.4),vec3(.8,.9,1.),exp(-(t-.625)*14.));
+    col+=alb*sc*lam*F*.09/(sl*sl+.004);
+    col+=sc*pow(max(dot(reflect(rd,n),sd/sl),0.),rough)*spec*F*.05/(sl*sl+.01);
+    col*=exp(-tt*.12);
+    // 스위치 LED 자체 발광
+    if(h.y==4.) col+=vec3(1.,.22,.08)*.9;
+  }
+  // 스크린 공간: 스파크 섬광과 불티
+  vec3 sp=proj(SP,ro,rt,up,fw,zm);
+  float d=length(uv-sp.xy);
+  col+=vec3(1.,.85,.6)*F*(exp(-d*d/.0004)*1.4+exp(-d*d/.006)*.35);
+  col+=vec3(.75,.85,1.)*F*exp(-d*d/.00005)*2.;
+  float a0=t-.625;
+  if(a0>0.){
+    for(int k=0;k<44;k++){
+      float fk=float(k);
+      float life=.25+.6*h11(fk+1.);
+      float a=a0-h11(fk+9.)*.08; if(a<0.||a>life) continue;
+      vec3 v=vec3((h11(fk)-.5)*1.6,.4+h11(fk+2.)*1.3,(h11(fk+3.)-.5)*1.4);
+      vec3 p1=SP+v*a+vec3(0.,-2.4*a*a,0.);
+      vec3 p0=SP+v*max(a-.028,0.)+vec3(0.,-2.4*max(a-.028,0.)*max(a-.028,0.),0.);
+      vec3 q1=proj(p1,ro,rt,up,fw,zm), q0=proj(p0,ro,rt,up,fw,zm);
+      vec2 pa=uv-q0.xy, ba=q1.xy-q0.xy; float hh=clamp(dot(pa,ba)/max(dot(ba,ba),1e-7),0.,1.);
+      float ds=length(pa-ba*hh);
+      float fade=1.-a/life;
+      col+=vec3(1.,.62,.25)*exp(-ds*ds/.0000035)*fade*1.6;
+    }
+    // 연기
+    vec2 q=uv-sp.xy;
+    float rise=clamp((a0-.12)/1.4,0.,1.);
+    float w=.03+q.y*.35;
+    float plume=smoothstep(w,0.,abs(q.x+(fbm(vec2(q.y*6.,t*.8))-.5)*.12*q.y*3.))*smoothstep(-.01,.03,q.y)*smoothstep(.05+rise*.55,rise*.3,q.y);
+    float sm=fbm(vec2(q.x*9.,q.y*7.-t*1.6))*plume*rise;
+    col=mix(col,vec3(.32,.33,.36)*(.25+F*1.2)+vec3(.05),clamp(sm*1.3,0.,.7));
+  }
+  col=tone(col*1.2);
+  gl_FragColor=vec4(col,1.);
+}`;
+
 function compile(key) {
   const sh = (type, src) => {
     const s = g.createShader(type); g.shaderSource(s, src); g.compileShader(s);

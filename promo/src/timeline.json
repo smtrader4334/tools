@@ -1,79 +1,319 @@
 {
-  "bpm": 120,
-  "beat": 0.5,
-  "duration": 46.0,
-  "fps": 30,
-  "sections": [
-    {"name": "hook",     "start": 0.0,  "end": 2.0},
-    {"name": "opening",  "start": 2.0,  "end": 12.0},
-    {"name": "build",    "start": 12.0, "end": 16.0},
-    {"name": "dropA",    "start": 16.0, "end": 24.0},
-    {"name": "dropB",    "start": 24.0, "end": 36.0},
-    {"name": "outro",    "start": 36.0, "end": 46.0}
-  ],
-  "words": [
-    {"t": 2.0,  "text": "누구에게나",  "hit": "boom"},
-    {"t": 2.5,  "text": "그날은",      "hit": "boom"},
-    {"t": 3.0,  "text": "옵니다.",     "hit": "boom"},
-    {"t": 4.0,  "text": "물이 새고,",  "hit": "boom"},
-    {"t": 4.5,  "text": "불이 나고,",  "hit": "boom"},
-    {"t": 5.0,  "text": "보험사에",    "hit": "boom"},
-    {"t": 5.5,  "text": "전화합니다.", "hit": "boom"},
-    {"t": 6.0,  "text": "며칠 뒤,",    "hit": "boom"},
-    {"t": 6.5,  "text": "통보된 금액", "hit": "boom"},
-    {"t": 7.0,  "text": "₩8,400,000",  "hit": "boom", "note": "number rolls down 7.0-7.5"},
-    {"t": 7.5,  "text": "₩3,200,000",  "hit": "lock", "note": "number locks with a dry click"},
-    {"t": 8.0,  "text": "이게,",       "hit": "boom"},
-    {"t": 8.5,  "text": "맞나요?",     "hit": "boom"},
-    {"t": 10.0, "text": "보험사 손해사정사는", "hit": "boom"},
-    {"t": 11.0, "text": "보험사",      "hit": "boom"},
-    {"t": 11.5, "text": "직원입니다.", "hit": "bigboom"},
-    {"t": 12.0, "text": "그럼,",       "hit": "boom"},
-    {"t": 12.5, "text": "누가",        "hit": "boom"},
-    {"t": 13.0, "text": "내 편에",     "hit": "boom"},
-    {"t": 13.5, "text": "서죠?",       "hit": "boom"},
-    {"t": 16.0, "text": "불.",       "bg": "fire"},
-    {"t": 16.5, "text": "물.",       "bg": "water"},
-    {"t": 17.0, "text": "그을음.",   "bg": "soot"},
-    {"t": 17.5, "text": "균열.",     "bg": "crack"},
-    {"t": 18.0, "text": "현장.",     "bg": "flashlight"},
-    {"t": 18.5, "text": "측정.",     "bg": "tape"},
-    {"t": 19.0, "text": "도면.",     "bg": "blueprint"},
-    {"t": 19.5, "text": "산정.",     "bg": "numbers"},
-    {"t": 20.0, "text": "누락.",     "bg": "missing"},
-    {"t": 20.5, "text": "근거.",     "bg": "documents"},
-    {"t": 21.0, "text": "협상.",     "bg": "negotiate"},
-    {"t": 21.5, "text": "합의.",     "bg": "agree"},
-    {"t": 22.0, "text": "복구.",     "bg": "paint"},
-    {"t": 22.5, "text": "일상.",     "bg": "sunlight"},
-    {"t": 23.0, "text": "제자리.",   "bg": "home"},
-    {"t": 23.5, "text": "당신 편.",  "bg": "gold"},
-    {"t": 24.0, "text": "그냥"},
-    {"t": 24.5, "text": "받으시겠습니까?"},
-    {"t": 25.0, "text": "지점장"},
-    {"t": 25.5, "text": "출신."},
-    {"t": 26.0, "text": "건축기사."},
-    {"t": 26.5, "text": "건설안전기사."},
-    {"t": 27.0, "text": "손실보상"},
-    {"t": 27.5, "text": "심의위원."},
-    {"t": 28.0, "text": "화재.",     "tap": true},
-    {"t": 28.5, "text": "조사."},
-    {"t": 29.0, "text": "산정."},
-    {"t": 29.5, "text": "협상."},
-    {"t": 30.0, "text": "수령."},
-    {"t": 30.5, "text": "누수.",     "tap": true},
-    {"t": 31.0, "text": "선임권."},
-    {"t": 31.5, "text": "0원."},
-    {"t": 32.5, "text": "빠를수록."},
-    {"t": 33.0, "text": "유리합니다."},
-    {"t": 33.5, "text": "지금,"},
-    {"t": 34.0, "text": "카톡으로.", "tap": true},
-    {"t": 34.5, "text": "당신"},
-    {"t": 35.0, "text": "편에서"},
-    {"t": 35.5, "text": "싸웁니다."},
-    {"t": 36.5, "text": "빠진 것을,", "hit": "softboom"},
-    {"t": 37.5, "text": "더합니다.",  "hit": "boom"},
-    {"t": 39.0, "text": "[logo]",     "hit": "subdrop"},
-    {"t": 44.0, "text": "[drip]",     "hit": "drip"}
-  ]
+ "version": 2,
+ "bpm": 96,
+ "beat": 0.625,
+ "duration": 47.5,
+ "fps": 30,
+ "sections": [
+  {
+   "name": "hook",
+   "start": 0.0,
+   "end": 2.5
+  },
+  {
+   "name": "opening",
+   "start": 2.5,
+   "end": 12.5
+  },
+  {
+   "name": "build",
+   "start": 12.5,
+   "end": 15.0
+  },
+  {
+   "name": "dropA",
+   "start": 15.0,
+   "end": 25.0
+  },
+  {
+   "name": "dropB",
+   "start": 25.0,
+   "end": 35.0
+  },
+  {
+   "name": "outro",
+   "start": 35.0,
+   "end": 47.5
+  }
+ ],
+ "keys": {
+  "minor": "D minor (0 - 22.5)",
+  "lift": "F major / Bb from 22.5 (복구)"
+ },
+ "words": [
+  {
+   "t": 0.625,
+   "text": "[spark] 멀티탭 스파크",
+   "hit": "spark"
+  },
+  {
+   "t": 2.5,
+   "text": "사고는",
+   "hit": "phrase"
+  },
+  {
+   "t": 3.125,
+   "text": "예고 없이",
+   "hit": "note"
+  },
+  {
+   "t": 3.75,
+   "text": "옵니다.",
+   "hit": "note"
+  },
+  {
+   "t": 5.0,
+   "text": "불이 나고,",
+   "hit": "phrase"
+  },
+  {
+   "t": 5.625,
+   "text": "연기가",
+   "hit": "note"
+  },
+  {
+   "t": 6.25,
+   "text": "번지고,",
+   "hit": "note"
+  },
+  {
+   "t": 7.5,
+   "text": "무엇이,",
+   "hit": "phrase"
+  },
+  {
+   "t": 8.125,
+   "text": "얼마나",
+   "hit": "note"
+  },
+  {
+   "t": 8.75,
+   "text": "손상됐는지.",
+   "hit": "note"
+  },
+  {
+   "t": 10.0,
+   "text": "설명할",
+   "hit": "phrase"
+  },
+  {
+   "t": 10.625,
+   "text": "근거가",
+   "hit": "note"
+  },
+  {
+   "t": 11.25,
+   "text": "필요합니다.",
+   "hit": "note"
+  },
+  {
+   "t": 12.5,
+   "text": "보이는 피해",
+   "hit": "phrase"
+  },
+  {
+   "t": 13.125,
+   "text": "너머까지.",
+   "hit": "note"
+  },
+  {
+   "t": 14.375,
+   "text": "[dead air 14.375-15.0]",
+   "hit": "silence"
+  },
+  {
+   "t": 15.0,
+   "text": "불.",
+   "bg": "fire",
+   "hit": "cut"
+  },
+  {
+   "t": 15.625,
+   "text": "연기.",
+   "bg": "smoke",
+   "hit": "cut"
+  },
+  {
+   "t": 16.25,
+   "text": "그을음.",
+   "bg": "soot",
+   "hit": "cut"
+  },
+  {
+   "t": 16.875,
+   "text": "소방수.",
+   "bg": "hose",
+   "hit": "cut"
+  },
+  {
+   "t": 17.5,
+   "text": "현장.",
+   "bg": "site",
+   "hit": "cut"
+  },
+  {
+   "t": 18.125,
+   "text": "측정.",
+   "bg": "tape",
+   "hit": "cut"
+  },
+  {
+   "t": 18.75,
+   "text": "도면.",
+   "bg": "blueprint",
+   "hit": "cut"
+  },
+  {
+   "t": 19.375,
+   "text": "약관.",
+   "bg": "policy",
+   "hit": "cut"
+  },
+  {
+   "t": 20.0,
+   "text": "누락.",
+   "bg": "missing",
+   "hit": "cut"
+  },
+  {
+   "t": 20.625,
+   "text": "근거.",
+   "bg": "evidence",
+   "hit": "cut"
+  },
+  {
+   "t": 21.25,
+   "text": "산정.",
+   "bg": "numbers",
+   "hit": "cut"
+  },
+  {
+   "t": 21.875,
+   "text": "설명.",
+   "bg": "explain",
+   "hit": "cut"
+  },
+  {
+   "t": 22.5,
+   "text": "복구.",
+   "bg": "rebuild",
+   "hit": "cut"
+  },
+  {
+   "t": 23.125,
+   "text": "일상.",
+   "bg": "room",
+   "hit": "cut"
+  },
+  {
+   "t": 23.75,
+   "text": "제자리.",
+   "bg": "keys",
+   "hit": "cut"
+  },
+  {
+   "t": 24.375,
+   "text": "회복.",
+   "bg": "sunrise",
+   "hit": "cut"
+  },
+  {
+   "t": 25.0,
+   "text": "근거를 찾고,"
+  },
+  {
+   "t": 25.625,
+   "text": "회복의 방향을."
+  },
+  {
+   "t": 26.25,
+   "text": "화재 손해.",
+   "ui": "tap"
+  },
+  {
+   "t": 26.875,
+   "text": "타버린 곳 너머,"
+  },
+  {
+   "t": 27.5,
+   "text": "현장을 읽고,"
+  },
+  {
+   "t": 28.125,
+   "text": "자료를 대조하고,"
+  },
+  {
+   "t": 28.75,
+   "text": "설명합니다."
+  },
+  {
+   "t": 29.375,
+   "text": "현직 손실보상심의위원.",
+   "ui": "page"
+  },
+  {
+   "t": 30.0,
+   "text": "보험사 조사회사 지점장 출신."
+  },
+  {
+   "t": 30.625,
+   "text": "건축기사 · 건설안전기사."
+  },
+  {
+   "t": 31.25,
+   "text": "선임권이면,",
+   "ui": "page"
+  },
+  {
+   "t": 31.875,
+   "text": "수임료 0원."
+  },
+  {
+   "t": 32.5,
+   "text": "부산 · 울산 · 경남.",
+   "ui": "page"
+  },
+  {
+   "t": 33.125,
+   "text": "지금,",
+   "ui": "tap"
+  },
+  {
+   "t": 33.75,
+   "text": "상담하세요."
+  },
+  {
+   "t": 35.625,
+   "text": "빠진 것을,",
+   "hit": "softboom"
+  },
+  {
+   "t": 36.875,
+   "text": "더합니다.",
+   "hit": "chord"
+  },
+  {
+   "t": 38.75,
+   "text": "[logo]",
+   "hit": "subdrop"
+  },
+  {
+   "t": 40.0,
+   "text": "[name + 손해의 근거, 회복의 방향.]",
+   "hit": "chime"
+  },
+  {
+   "t": 41.25,
+   "text": "[contacts]"
+  },
+  {
+   "t": 41.875,
+   "text": "[disclaimer]"
+  },
+  {
+   "t": 43.75,
+   "text": "[ember]",
+   "hit": "ember"
+  }
+ ]
 }

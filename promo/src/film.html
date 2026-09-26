@@ -4,96 +4,85 @@
 <meta charset="utf-8">
 <title>더함 브랜드 필름</title>
 <style>
+@font-face{font-family:P;font-weight:300;src:url(../node_modules/pretendard/dist/web/static/woff2/Pretendard-Light.woff2) format('woff2')}
 @font-face{font-family:P;font-weight:400;src:url(../node_modules/pretendard/dist/web/static/woff2/Pretendard-Regular.woff2) format('woff2')}
 @font-face{font-family:P;font-weight:500;src:url(../node_modules/pretendard/dist/web/static/woff2/Pretendard-Medium.woff2) format('woff2')}
 @font-face{font-family:P;font-weight:600;src:url(../node_modules/pretendard/dist/web/static/woff2/Pretendard-SemiBold.woff2) format('woff2')}
 @font-face{font-family:P;font-weight:700;src:url(../node_modules/pretendard/dist/web/static/woff2/Pretendard-Bold.woff2) format('woff2')}
 @font-face{font-family:P;font-weight:800;src:url(../node_modules/pretendard/dist/web/static/woff2/Pretendard-ExtraBold.woff2) format('woff2')}
-@font-face{font-family:P;font-weight:900;src:url(../node_modules/pretendard/dist/web/static/woff2/Pretendard-Black.woff2) format('woff2')}
 
+/* 최신 홈페이지(theham-consult)의 색 체계 */
 :root{
-  --white:#F5F5F7;
-  --red:#FF453A;
-  --gold1:#F3DFA2;
-  --gold2:#C9A84C;
-  --gold3:#8E6D2A;
-  --navy:#1C1A3A;
+  --white:#F5F7FA;
+  --muted:#A3AFBF;
+  --dim:#6B7788;
+  --blue:#285AF5;
+  --blue-l:#7EA0FF;
+  --navy:#101E30;
+  --navy-d:#0A1422;
 }
 html,body{margin:0;padding:0;background:#000;overflow:hidden}
-#stage{position:relative;overflow:hidden;background:#000;font-family:P,sans-serif}
+#stage{position:relative;overflow:hidden;background:#000;font-family:P,sans-serif;color:var(--white)}
 .layer{position:absolute;left:0;top:0;width:100%;height:100%}
 canvas.layer{display:block}
-#footage{object-fit:cover;display:none}
+.blue{color:var(--blue-l)}
+.ghost{opacity:0}
 
-/* ---------- words ---------- */
+/* 오프닝·빌드업 문장 */
+#phrase{display:flex;align-items:center;justify-content:center;pointer-events:none}
+#phraseIn{font-weight:700;letter-spacing:-.035em;line-height:1.22;text-align:center;
+  text-shadow:0 4px 30px rgba(0,0,0,.55),0 1px 6px rgba(0,0,0,.35)}
+#phraseIn .w{display:inline-block;will-change:transform,opacity,filter}
+
+/* 드롭 A 한 단어 */
 #words{display:flex;align-items:center;justify-content:center;pointer-events:none}
-#word{
-  color:var(--white);font-weight:800;letter-spacing:-0.045em;line-height:1.08;
-  text-align:center;white-space:nowrap;will-change:transform,opacity,filter;
-  font-feature-settings:"tnum" 1;
-}
-#word .red{color:var(--red)}
-#word .gold,.goldtxt{
-  background:linear-gradient(100deg,var(--gold3) 0%,var(--gold2) 22%,var(--gold1) 46%,var(--gold2) 62%,var(--gold3) 100%);
-  background-size:200% 100%;
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-#word .ghost,#tagline .ghost{opacity:0}
-#word.shadow{text-shadow:0 6px 40px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.4)}
-#word .sub{display:block;font-size:.2em;font-weight:500;letter-spacing:-.01em;color:rgba(245,245,247,.72);margin-top:.55em;line-height:1.35;white-space:normal}
+#word{font-weight:800;letter-spacing:-.045em;line-height:1.08;text-align:center;white-space:nowrap;
+  text-shadow:0 6px 40px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.4);will-change:transform,opacity}
 
-#note{position:absolute;font-weight:500;color:#6E6E78;letter-spacing:-.01em;white-space:nowrap}
-
-/* ---------- phone ---------- */
+/* 폰 */
 #phoneRig{visibility:hidden}
-#phone{
-  position:absolute;left:0;top:0;transform-origin:0 0;
-  width:418px;height:872px;border-radius:64px;
-  background:linear-gradient(145deg,#3a3a40,#0c0c0f 40%,#1b1b20 70%,#3a3a42);
-  box-shadow:0 60px 140px rgba(0,0,0,.65),0 0 0 1.5px rgba(255,255,255,.08) inset,0 0 80px rgba(201,168,76,.10);
-}
-#screen{
-  position:absolute;left:14px;top:14px;width:390px;height:844px;border-radius:50px;overflow:hidden;background:#000;
-}
-#site{position:absolute;left:0;top:50px;width:390px;height:794px;border:0;background:#fff}
-#statusbar{position:absolute;left:0;top:0;width:390px;height:50px;background:#1C1A3A;z-index:2}
-#island{position:absolute;left:50%;top:11px;width:112px;height:32px;margin-left:-56px;border-radius:20px;background:#000;z-index:5}
-#hl{position:absolute;display:none;border:3px solid var(--gold1);border-radius:16px;
-  box-shadow:0 0 0 2000px rgba(8,8,18,.26),0 0 24px rgba(243,223,162,.55);z-index:3;pointer-events:none}
-#tap{position:absolute;display:none;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;z-index:4;pointer-events:none;
-  background:radial-gradient(circle,rgba(255,255,255,.75) 0 38%,rgba(255,255,255,0) 40%)}
-#tapRing{position:absolute;display:none;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;z-index:4;pointer-events:none;
-  border:3px solid rgba(255,255,255,.9)}
+#phone{position:absolute;left:0;top:0;transform-origin:0 0;width:418px;height:872px;border-radius:64px;
+  background:linear-gradient(145deg,#3a3d45,#0d0e12 40%,#1c1e24 70%,#3b3f48);
+  box-shadow:0 60px 140px rgba(0,0,0,.6),0 0 0 1.5px rgba(255,255,255,.08) inset,0 0 90px rgba(40,90,245,.16)}
+#screen{position:absolute;left:14px;top:14px;width:390px;height:844px;border-radius:50px;overflow:hidden;background:#fff}
+#statusbar{position:absolute;left:0;top:0;width:390px;height:50px;background:#fff;z-index:2}
+.pg{position:absolute;left:0;top:50px;width:390px;height:794px;border:0;background:#fff;visibility:hidden}
+#island{position:absolute;left:50%;top:11px;width:112px;height:32px;margin-left:-56px;border-radius:20px;background:#000;z-index:6}
+#hl{position:absolute;display:none;border:3px solid var(--blue);border-radius:14px;
+  box-shadow:0 0 0 2000px rgba(10,20,34,.22),0 0 22px rgba(40,90,245,.45);z-index:3;pointer-events:none}
+#tap{position:absolute;display:none;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;z-index:4;
+  background:radial-gradient(circle,rgba(255,255,255,.8) 0 36%,rgba(255,255,255,0) 40%)}
+#tapRing{position:absolute;display:none;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;z-index:4;border:3px solid rgba(255,255,255,.9)}
+#kw{position:absolute;font-weight:700;letter-spacing:-.035em;line-height:1.15;will-change:transform,opacity}
+#kwSub{position:absolute;color:var(--muted);font-weight:500;letter-spacing:-.01em;line-height:1.5}
 
-#kw{position:absolute;color:var(--white);font-weight:800;letter-spacing:-.045em;line-height:1.08;white-space:nowrap;will-change:transform,opacity}
-#kw .gold{background:linear-gradient(100deg,var(--gold3) 0%,var(--gold2) 22%,var(--gold1) 46%,var(--gold2) 62%,var(--gold3) 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
-#kw .ghost{opacity:0}
-#kwSub{position:absolute;color:rgba(245,245,247,.62);font-weight:500;letter-spacing:-.01em;white-space:nowrap}
-
-/* ---------- end card ---------- */
+/* 엔딩 */
 #endcard{display:none}
 #logoWrap{position:absolute;left:50%;transform-origin:50% 50%}
-#logo{display:block;width:100%;height:100%;filter:drop-shadow(0 0 30px rgba(201,168,76,.28))}
+#logo{display:block;width:100%;height:100%;filter:drop-shadow(0 0 28px rgba(201,168,76,.22))}
 #logoSheen{position:absolute;inset:0;
   -webkit-mask:url(../assets/logo_gold.png) center/contain no-repeat;mask:url(../assets/logo_gold.png) center/contain no-repeat;
-  background:linear-gradient(115deg,rgba(255,255,255,0) 40%,rgba(255,250,230,.95) 50%,rgba(255,255,255,0) 60%);
-  background-size:300% 100%;mix-blend-mode:screen}
-#tagline{position:absolute;left:0;width:100%;text-align:center;color:var(--white);font-weight:800;letter-spacing:-.045em;white-space:nowrap}
+  background:linear-gradient(115deg,rgba(255,255,255,0) 40%,rgba(255,250,230,.9) 50%,rgba(255,255,255,0) 60%);background-size:300% 100%;mix-blend-mode:screen}
+#tagline{position:absolute;left:0;width:100%;text-align:center;font-weight:800;letter-spacing:-.04em;white-space:nowrap;transform-origin:50% 50%}
 #brandname{position:absolute;left:0;width:100%;text-align:center;font-weight:600;letter-spacing:.14em;white-space:nowrap}
-#cta{position:absolute;left:0;width:100%;text-align:center;color:#8C8C96;font-weight:500;letter-spacing:.01em;white-space:nowrap}
-#ring{position:absolute;border-radius:50%;border:2px solid rgba(232,208,138,.8);display:none}
+#official{position:absolute;left:0;width:100%;text-align:center;color:var(--muted);font-weight:500;letter-spacing:.02em;white-space:nowrap}
+#contacts{position:absolute;left:0;width:100%;text-align:center;color:#C9D2DE;font-weight:500;letter-spacing:.005em;line-height:1.7}
+#contacts b{color:var(--white);font-weight:600}
+#contacts .sep{color:#4A5668;margin:0 .9em}
+#disclaimer{position:absolute;left:0;width:100%;text-align:center;color:var(--dim);font-weight:400;letter-spacing:0}
 </style>
 </head>
 <body>
 <div id="stage">
   <canvas id="gl" class="layer"></canvas>
   <canvas id="c2" class="layer"></canvas>
-  <img id="footage" class="layer" alt="">
   <div id="phoneRig" class="layer">
     <div id="phone">
       <div id="screen">
         <div id="statusbar"></div>
-        <iframe id="site" src="/theham-consult.html" scrolling="no"></iframe>
+        <iframe class="pg" id="pg-home" src="../build/site/home.html" scrolling="no"></iframe>
+        <iframe class="pg" id="pg-sm" src="../build/site/sm.html" scrolling="no"></iframe>
+        <iframe class="pg" id="pg-dk" src="../build/site/dk.html" scrolling="no"></iframe>
         <div id="hl"></div>
         <div id="tapRing"></div>
         <div id="tap"></div>
@@ -103,15 +92,16 @@ canvas.layer{display:block}
     <div id="kw"></div>
     <div id="kwSub"></div>
   </div>
-  <div id="endcard" class="layer">
-    <div id="ring"></div>
-    <div id="logoWrap"><img id="logo" src="../assets/logo_gold.png" alt=""><div id="logoSheen"></div></div>
-    <div id="brandname" class="goldtxt">더함화재특종손해사정</div>
-    <div id="cta">카카오톡 무료 상담 &nbsp;·&nbsp; 010-3589-7193</div>
-  </div>
+  <div id="phrase" class="layer"><div id="phraseIn"></div></div>
   <div id="words" class="layer"><div id="word"></div></div>
+  <div id="endcard" class="layer">
+    <div id="logoWrap"><img id="logo" src="../assets/logo_gold.png" alt=""><div id="logoSheen"></div></div>
+    <div id="brandname">더함화재특종손해사정</div>
+    <div id="official">손해의 근거, 회복의 방향.</div>
+    <div id="contacts"></div>
+    <div id="disclaimer">보장 여부와 손해액은 보험계약 및 사고 내용에 따라 달라집니다.</div>
+  </div>
   <div id="tagline"></div>
-  <div id="note"></div>
   <canvas id="fx" class="layer"></canvas>
 </div>
 <script type="module" src="film.js"></script>

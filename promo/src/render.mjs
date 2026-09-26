@@ -20,8 +20,10 @@ const arg = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] :
 const FMT = arg('--fmt', 'h');
 const PREVIEW = arg('--preview', null);
 const FROM = parseFloat(arg('--from', '0'));
-const TO = parseFloat(arg('--to', '46'));
+const TO = parseFloat(arg('--to', '47.5'));
 const FPS = 30;
+const PAGE = arg('--page', 'film.html');
+const EXTRA = arg('--q', '');
 const [W, H] = FMT === 'v' ? [1080, 1920] : [1920, 1080];
 const FFMPEG = process.env.FFMPEG || 'ffmpeg';
 
@@ -45,7 +47,7 @@ const page = await browser.newPage({ viewport: { width: W, height: H }, deviceSc
 await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort());
 page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') console.log('[page]', m.text()); });
 page.on('pageerror', (e) => console.log('[pageerror]', e.message));
-await page.goto(`http://127.0.0.1:${PORT}/promo/src/film.html?fmt=${FMT}`);
+await page.goto(`http://127.0.0.1:${PORT}/promo/src/${PAGE}?fmt=${FMT}${EXTRA ? '&' + EXTRA : ''}`);
 await page.waitForFunction(() => window.filmReady === true, null, { timeout: 60000 });
 
 async function frame(t) {
@@ -58,7 +60,7 @@ if (PREVIEW) {
     const t = parseFloat(s);
     const t0 = Date.now();
     await frame(t);
-    const f = path.join(dir, `${FMT}_${t.toFixed(2)}.png`);
+    const f = path.join(dir, `${FMT}${PAGE === 'film.html' ? '' : '-' + PAGE.replace('.html', '')}_${t.toFixed(2)}.png`);
     await page.screenshot({ path: f });
     console.log(f, Date.now() - t0, 'ms');
   }

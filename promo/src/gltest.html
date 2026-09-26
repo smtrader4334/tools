@@ -1,0 +1,10 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style></head>
+<body><canvas id="c"></canvas><script type="module">
+import { initGL, drawGL } from './scenes-gl.js';
+const Q = new URLSearchParams(location.search), V = Q.get('fmt') === 'v';
+const W = V ? 1080 : 1920, H = V ? 1920 : 1080, c = document.getElementById('c');
+c.width = W / 2; c.height = H / 2; c.style.width = W + 'px'; c.style.height = H + 'px';
+initGL(c);
+window.renderFrame = async (t) => { drawGL(Q.get('key') || 'strip', t, t / 2.5); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); };
+window.filmReady = true;
+</script></body></html>
