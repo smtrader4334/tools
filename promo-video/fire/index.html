@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>더함화재특종손해사정 — 브랜드 필름 (화재)</title>
+<link rel="stylesheet" href="../common/base.css">
+<style>
+/* ---------- S2: the offer ---------- */
+#s2 .cool {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 55% at 72% 38%, rgba(70,80,120,0.28), rgba(0,0,0,0) 70%), #09080F;
+}
+.doc {
+  position: absolute; left: 1080px; top: 170px; width: 560px; height: 740px; box-sizing: border-box;
+  padding: 58px 56px; background: linear-gradient(180deg, #F6F2EA, #ECE6DA); color: #22213A;
+  border-radius: 6px; box-shadow: 0 40px 90px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.08);
+  transform-origin: 50% 60%;
+}
+.doc .kicker { font: 500 16px var(--sans); letter-spacing: 0.24em; color: #8A8799; }
+.doc .title { font: 600 34px var(--serif); margin-top: 14px; }
+.doc .rule { height: 2px; background: #22213A; margin: 26px 0 18px; }
+.doc .row { display: flex; align-items: center; justify-content: space-between; height: 64px; border-bottom: 1px solid #D9D2C4; font: 400 22px var(--sans); color: #44435A; }
+.doc .bar { display: block; height: 14px; border-radius: 7px; background: #C9C2B3; }
+.doc .total { display: flex; align-items: center; justify-content: space-between; margin-top: 34px; font: 600 24px var(--sans); }
+.doc .total .bar { height: 22px; border-radius: 11px; background: #22213A; }
+.doc .foot { position: absolute; left: 56px; right: 56px; bottom: 48px; font: 300 16px/1.6 var(--sans); color: #8A8799; }
+.doc .stamp {
+  position: absolute; right: 50px; bottom: 110px; width: 118px; height: 118px; border-radius: 50%;
+  border: 3px solid rgba(192,57,43,0.75); color: rgba(192,57,43,0.85); font: 700 30px var(--serif); letter-spacing: 0.06em;
+  box-shadow: inset 0 0 0 5px rgba(246,242,234,1), inset 0 0 0 7px rgba(192,57,43,0.55);
+  display: flex; align-items: center; justify-content: center; transform: rotate(-14deg);
+}
+#s2a { left: 200px; top: 382px; font: 300 30px var(--sans); color: var(--muted); letter-spacing: 0.04em; }
+#s2b { left: 200px; top: 440px; font: 400 60px/1.45 var(--serif); color: var(--cream); }
+#s2q { top: 378px; }
+#s2c { font: 300 60px var(--serif); color: var(--cream); }
+#s2d { font: 600 92px var(--serif); color: var(--gold); margin-top: 26px; letter-spacing: -0.01em; }
+
+/* ---------- S3: what is loss adjustment ---------- */
+#s3 .wipe { position: absolute; inset: 0; }
+#s3 .gl { position: absolute; left: 0; right: 0; height: 2px; background: var(--gold); }
+#s3-eb { left: 200px; top: 212px; }
+#s3w { left: 192px; top: 250px; font: 600 164px/1.1 var(--serif); color: var(--ink); letter-spacing: -0.02em; }
+#s3h { left: 204px; top: 450px; font: 300 44px var(--serif); color: var(--gold-d); }
+#s3h .it { font-family: var(--latin); font-style: italic; font-weight: 400; font-size: 42px; color: #7C7A8C; margin-left: 22px; }
+#s3r { left: 204px; top: 540px; width: 620px; height: 2px; background: var(--ink); transform-origin: 0 50%; }
+#s3d { left: 204px; top: 580px; font: 400 42px/1.6 var(--serif); color: var(--ink); }
+#s3d .tag { display: inline-block; font: 500 20px var(--sans); color: #fff; background: var(--ink); padding: 3px 12px 5px; border-radius: 3px; vertical-align: 10px; margin-right: 16px; }
+.steps3 { position: absolute; left: 1060px; top: 250px; width: 680px; }
+.step3 { position: relative; height: 180px; border-top: 1px solid rgba(28,26,58,0.22); }
+.step3:last-child { border-bottom: 1px solid rgba(28,26,58,0.22); }
+.step3 .num { position: absolute; left: 0; top: 34px; font: 300 64px var(--latin); color: var(--gold-d); }
+.step3 .tt { position: absolute; left: 120px; top: 44px; font: 600 42px var(--serif); color: var(--ink); }
+.step3 .dd { position: absolute; left: 122px; top: 108px; font: 400 29px var(--sans); color: var(--ink-2); }
+#s3i { top: 382px; font: 500 72px/1.55 var(--serif); color: var(--ink); }
+#s3i .u { position: relative; color: var(--gold-d); }
+#s3u { position: absolute; left: 0; right: 0; bottom: -4px; height: 4px; background: var(--gold); transform-origin: 0 50%; }
+
+/* ---------- S4: the scale ---------- */
+.s4t { top: 150px; font: 400 58px/1.4 var(--serif); color: var(--cream); }
+.s4t em { color: var(--gold); }
+#s4s { top: 256px; font: 300 30px var(--sans); color: #AEB5C6; letter-spacing: 0.02em; }
+#s4s b { font-weight: 500; color: var(--gold-l); }
+#scale { position: absolute; left: 410px; top: 350px; overflow: visible; }
+#scale .ln { fill: none; stroke: var(--gold); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+#scale .thin { stroke-width: 1.6; }
+#scale .lbl { font: 400 30px var(--sans); fill: var(--muted); text-anchor: middle; }
+#scale .wt rect { fill: url(#goldGrad); }
+#scale .wt text { font: 600 24px var(--sans); fill: #1C1A3A; text-anchor: middle; }
+
+/* ---------- S6: fire is different ---------- */
+#s6 .grid {
+  position: absolute; inset: 0; opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(140,160,210,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(140,160,210,0.07) 1px, transparent 1px),
+    linear-gradient(rgba(140,160,210,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(140,160,210,0.035) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+}
+#s6head { left: 150px; top: 96px; }
+#s6t { font: 500 66px var(--serif); color: var(--cream); margin-top: 18px; }
+#s6s { font: 300 30px var(--sans); color: #AEB5C6; margin-top: 18px; }
+#bldg { position: absolute; left: 110px; top: 330px; overflow: visible; }
+#bldg .bp { fill: none; stroke: #DCD3C0; stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
+#bldg .bp.soft { stroke: rgba(220,211,192,0.55); stroke-width: 1.2; }
+#bldg .dim { fill: none; stroke: rgba(201,168,76,0.75); stroke-width: 1.1; }
+#bldg .dimt { font: 400 17px var(--latin); fill: rgba(232,208,138,0.85); letter-spacing: 0.05em; }
+#bldg .fl { font: 500 18px var(--latin); fill: rgba(232,208,138,0.7); letter-spacing: 0.1em; }
+#bldg .hot { fill: none; stroke: #FF8A3D; stroke-width: 3.2; stroke-linejoin: round; stroke-linecap: round; filter: url(#glow); }
+#bldg .heat { mix-blend-mode: screen; }
+.list6 { position: absolute; left: 1230px; top: 318px; }
+.li6 { position: relative; height: 66px; width: 560px; border-bottom: 1px solid rgba(232,208,138,0.14); }
+.li6 svg { position: absolute; left: 0; top: 17px; overflow: visible; }
+.li6 .box { fill: none; stroke: rgba(232,208,138,0.55); stroke-width: 1.5; }
+.li6 .ck { fill: none; stroke: #FF9A4D; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+.li6 .n { position: absolute; left: 56px; top: 14px; font: 400 26px var(--latin); color: var(--gold); }
+.li6 .tx { position: absolute; left: 104px; top: 10px; font: 500 34px var(--serif); color: var(--cream); }
+.li6 .tx small { font: 300 22px var(--sans); color: var(--muted); margin-left: 10px; }
+#s6dim { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(8,7,15,0.9), rgba(8,7,15,0.75)); opacity: 0; }
+.s6big { top: 440px; font: 500 70px/1.4 var(--serif); color: var(--cream); }
+.s6big em { color: #FF9A4D; }
+#s6b2 { top: 470px; font-size: 62px; }
+#s6b2 em { color: var(--gold); }
+
+/* ---------- S7: the expert ---------- */
+#s7wm { right: -240px; top: 90px; width: 1000px; opacity: 0.06; }
+#s7h { top: 380px; font: 500 68px/1.5 var(--serif); color: var(--cream); }
+#s7h em { color: var(--gold); }
+#s7name { left: 170px; top: 360px; }
+#s7role { font: 400 28px var(--sans); color: var(--gold-l); letter-spacing: 0.08em; }
+#s7nm { font: 600 116px var(--serif); color: var(--cream); margin-top: 18px; white-space: nowrap; }
+#s7rule { width: 360px; height: 2px; background: var(--gold); margin-top: 34px; transform-origin: 0 50%; }
+#s7lic { font: 300 26px var(--sans); color: var(--muted); margin-top: 26px; letter-spacing: 0.04em; }
+.creds { position: absolute; left: 830px; top: 250px; width: 940px; }
+.cred { position: relative; height: 146px; border-top: 1px solid rgba(232,208,138,0.18); }
+.cred:last-child { border-bottom: 1px solid rgba(232,208,138,0.18); }
+.cred svg { position: absolute; left: 6px; top: 40px; overflow: visible; }
+.cred svg * { fill: none; stroke: var(--gold); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cred .ct { position: absolute; left: 104px; top: 30px; font: 600 40px var(--serif); color: var(--cream); }
+.cred .cd { position: absolute; left: 106px; top: 88px; font: 300 29px var(--sans); color: #AEB5C6; }
+#s7f { top: 930px; font: 400 38px var(--serif); color: var(--gold-l); letter-spacing: 0.02em; }
+
+/* ---------- S8: process ---------- */
+#s8head { left: 160px; top: 130px; }
+#s8t { font: 600 62px var(--serif); color: var(--ink); margin-top: 18px; }
+#s8track { left: 250px; top: 552px; width: 1420px; height: 2px; background: rgba(28,26,58,0.16); transform-origin: 0 50%; }
+#s8fill { left: 250px; top: 551px; width: 1420px; height: 4px; background: var(--gold); transform-origin: 0 50%; }
+.p8 { position: absolute; top: 380px; width: 400px; margin-left: -200px; text-align: center; }
+.p8 .num { font: 300 120px/1 var(--latin); color: var(--gold-d); height: 130px; }
+.p8 .node { position: absolute; left: 186px; top: 159px; width: 28px; height: 28px; border-radius: 50%; background: var(--paper); border: 3px solid var(--gold); box-sizing: border-box; }
+.p8 .node i { position: absolute; inset: 5px; border-radius: 50%; background: var(--gold); }
+.p8 .tt { margin-top: 84px; font: 600 42px var(--serif); color: var(--ink); }
+.p8 .dd { margin-top: 18px; font: 400 29px/1.6 var(--sans); color: var(--ink-2); }
+#s8f { top: 900px; font: 400 32px var(--sans); color: var(--ink); }
+#s8f span { display: inline-block; width: 60px; height: 2px; background: var(--gold); vertical-align: middle; margin: 0 26px; }
+
+/* ---------- S9: timing ---------- */
+#ring { position: absolute; left: 560px; top: 140px; overflow: visible; }
+#ring circle { fill: none; }
+#s9a { top: 420px; font: 500 80px var(--serif); color: var(--cream); }
+#s9b { top: 560px; font: 300 46px var(--serif); color: var(--gold-l); }
+
+/* ---------- S10: brand ---------- */
+#s10 { background: radial-gradient(ellipse 70% 60% at 50% 45%, #251F3C 0%, #1d182f 60%, #15112A 100%); }
+#s10a { top: 390px; font: 300 64px var(--serif); color: var(--cream); }
+#s10b { top: 500px; font: 600 96px var(--serif); color: var(--cream); white-space: nowrap; }
+#s10b .gold { color: var(--gold); }
+#s10m { font: 600 96px var(--serif); color: var(--gold); white-space: nowrap; }
+#s10m span { position: relative; display: inline-block; }
+#s10m .ham { position: absolute; left: 0; top: 0; }
+#logoWrap { left: 760px; top: 170px; width: 400px; height: 348px; }
+#logoWrap svg, #logoWrap img { position: absolute; left: 0; top: 0; width: 400px; height: 348px; }
+#logoWrap svg path { fill: none; stroke: var(--gold-l); stroke-width: 18; }
+#logoWrap .shine {
+  position: absolute; inset: 0; mix-blend-mode: screen; pointer-events: none;
+  -webkit-mask: url(../common/logo-gold.png) center / 100% 100% no-repeat; mask: url(../common/logo-gold.png) center / 100% 100% no-repeat;
+}
+#logoWrap .shine i {
+  position: absolute; top: -20%; bottom: -20%; width: 34%; left: 0;
+  background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,246,220,0.85) 50%, rgba(255,255,255,0) 100%);
+}
+#s10n { top: 590px; font: 600 64px var(--serif); color: var(--cream); letter-spacing: 0.04em; white-space: nowrap; }
+#s10n .rest { display: inline-block; overflow: hidden; vertical-align: top; white-space: nowrap; }
+#s10nA { color: var(--gold); }
+#s10tag { top: 700px; font: 300 28px var(--sans); color: var(--gold-l); letter-spacing: 0.3em; }
+#s10rep { top: 700px; font: 400 28px var(--sans); color: var(--muted); letter-spacing: 0.12em; }
+.endinfo { position: absolute; left: 1040px; top: 250px; width: 760px; }
+.endinfo .lab { font: 500 22px var(--sans); color: var(--gold); letter-spacing: 0.28em; }
+.endinfo .tel { font: 500 104px/1.1 var(--latin); color: var(--cream); margin-top: 12px; letter-spacing: 0.02em; }
+.endinfo .hrs { font: 300 28px var(--sans); color: #AEB5C6; margin-top: 6px; }
+.endinfo .kakao { display: flex; align-items: center; gap: 34px; margin-top: 50px; }
+.endinfo .qr { width: 236px; height: 236px; background: #F4EFE6; border-radius: 14px; padding: 18px; box-sizing: border-box; color: #1C1A3A; }
+.endinfo .qr img { width: 200px; height: 200px; display: block; }
+.endinfo .kt { font: 600 38px var(--serif); color: var(--cream); }
+.endinfo .kd { font: 300 27px/1.6 var(--sans); color: #AEB5C6; margin-top: 12px; }
+.endinfo .addr { font: 300 27px var(--sans); color: #AEB5C6; margin-top: 46px; }
+.endinfo .addr.area { margin-top: 14px; font-size: 24px; color: var(--gold-l); }
+#legal { bottom: 44px; font: 300 20px/1.7 var(--sans); color: #8F97AA; letter-spacing: 0.04em; }
+</style>
+<script>
+  // ?v=1 renders the vertical 9:16 short; ?theme=classic keeps the original navy/gold look (layout overrides in vertical.css, edit list in common/shorts.json)
+  window.VERTICAL = new URLSearchParams(location.search).get('v') === '1';
+  if (VERTICAL) { document.documentElement.classList.add('vertical'); document.write('<link rel="stylesheet" href="vertical.css">'); }
+  if (new URLSearchParams(location.search).get('theme') !== 'classic') document.write('<link rel="stylesheet" href="../common/theme-site.css">');
+</script>
+</head>
+<body>
+<div id="stage">
+  <canvas id="fxBack" class="fx" width="1920" height="1080"></canvas>
+
+  <!-- S2: the offer -->
+  <div id="s2" class="scene">
+    <div class="cool"></div>
+    <div class="doc" id="doc">
+      <div class="kicker">NOTICE</div>
+      <div class="title">보험금 산정 결과 안내</div>
+      <div class="rule"></div>
+      <div class="row"><span>건물</span><i class="bar" data-w="230"></i></div>
+      <div class="row"><span>시설 · 인테리어</span><i class="bar" data-w="170"></i></div>
+      <div class="row"><span>집기 · 비품</span><i class="bar" data-w="130"></i></div>
+      <div class="row"><span>재고자산</span><i class="bar" data-w="190"></i></div>
+      <div class="row"><span>잔존물 제거</span><i class="bar" data-w="100"></i></div>
+      <div class="total"><span>지급 예정 보험금</span><i class="bar" data-w="220"></i></div>
+      <div class="stamp" id="stamp">확인</div>
+      <div class="foot">위 금액은 보험회사의 손해사정 결과에 따라 산정되었습니다.</div>
+    </div>
+    <div class="abs" id="s2a">며칠 뒤,</div>
+    <div class="abs" id="s2b">보험사가 산정한<br>금액이 도착합니다.</div>
+    <div class="abs center" id="s2q">
+      <div id="s2c">보험사가 제시한 금액,</div>
+      <div id="s2d">그대로 받으시겠습니까?</div>
+    </div>
+  </div>
+
+  <!-- S3: definition -->
+  <div id="s3" class="scene">
+    <div class="wipe paper-bg" id="s3wipe"></div>
+    <div class="abs eyebrow ink" id="s3-eb">What is Loss Adjustment</div>
+    <div class="abs" id="s3w">손해사정</div>
+    <div class="abs" id="s3h">損害査定<span class="it">Loss Adjustment</span></div>
+    <div class="abs" id="s3r"></div>
+    <div class="abs" id="s3d"><span class="tag">뜻</span>보험사고로 생긴 손해를 조사하고,<br>손해액과 보험금을 산정하는 일</div>
+    <div class="steps3">
+      <div class="step3" id="st1"><div class="num">01</div><div class="tt">손해 사실 확인</div><div class="dd">사고 원인과 피해 범위를 조사합니다</div></div>
+      <div class="step3" id="st2"><div class="num">02</div><div class="tt">약관 · 법규 적용</div><div class="dd">보상 대상과 기준을 판단합니다</div></div>
+      <div class="step3" id="st3"><div class="num">03</div><div class="tt">손해액 · 보험금 산정</div><div class="dd">지급될 보험금을 계산합니다</div></div>
+    </div>
+    <div class="abs center" id="s3i">보험금은 결국,<br><span class="u">손해사정의 결과<i id="s3u"></i></span>로 정해집니다.</div>
+  </div>
+
+  <!-- S4: who adjusts? -->
+  <div id="s4" class="scene navy-bg">
+    <div class="hexgrid"></div>
+    <div class="abs center s4t" id="s4q1">그렇다면, 손해사정은 <em>누가</em> 할까요?</div>
+    <div class="abs center s4t" id="s4a1">보험금을 지급하는 <em>보험사가 선임한</em> 손해사정사입니다.</div>
+    <div class="abs center s4t" id="s4q2">그렇다면 당신의 편에는, <em>누가</em> 서 있습니까?</div>
+    <div class="abs center s4t" id="s4a2">보험계약자도 손해사정사를 <em>직접 선임</em>할 수 있습니다.</div>
+    <div class="abs center" id="s4s">당신의 편에서 손해를 조사·산정하는 전문가, <b>독립 손해사정사</b> &nbsp;·&nbsp; 보험업법 제185조</div>
+    <svg id="scale" width="1100" height="640" viewBox="0 0 1100 640">
+      <defs>
+        <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#F0DA9A"/><stop offset="0.5" stop-color="#C9A84C"/><stop offset="1" stop-color="#9C7A30"/>
+        </linearGradient>
+      </defs>
+      <path class="ln" id="scPost" pathLength="1" d="M550 96 V590"/>
+      <path class="ln" id="scBase" pathLength="1" d="M420 590 H680"/>
+      <path class="ln thin" id="scFoot" pathLength="1" d="M470 590 Q550 540 630 590"/>
+      <path class="ln" id="scTop" pathLength="1" d="M550 96 m-16 0 a16 16 0 1 0 32 0 a16 16 0 1 0 -32 0"/>
+      <g id="beam"><path class="ln" id="scBeam" pathLength="1" d="M170 96 H930"/></g>
+      <g id="panL">
+        <path class="ln thin" pathLength="1" d="M0 0 L-150 210 M0 0 L150 210"/>
+        <path class="ln" pathLength="1" d="M-170 210 Q0 268 170 210 Z"/>
+        <text class="lbl" x="0" y="318">보험사</text>
+        <g class="wt" id="wL"><rect x="-100" y="144" width="200" height="66" rx="6"/><text x="0" y="186">손해사정사</text></g>
+      </g>
+      <g id="panR">
+        <path class="ln thin" pathLength="1" d="M0 0 L-150 210 M0 0 L150 210"/>
+        <path class="ln" pathLength="1" d="M-170 210 Q0 268 170 210 Z"/>
+        <text class="lbl" x="0" y="318">보험계약자</text>
+        <g class="wt" id="wR"><rect x="-100" y="144" width="200" height="66" rx="6"/><text x="0" y="186">독립 손해사정사</text></g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- S6: fire is different -->
+  <div id="s6" class="scene">
+    <div class="grid"></div>
+    <div class="abs" id="s6head">
+      <div class="eyebrow" id="s6eb">Fire Loss</div>
+      <div id="s6t">특히 화재는, 다릅니다.</div>
+      <div id="s6s">건물 구조부터 마감재·설비·재고까지 — 화재 피해는 건물 전체에 걸쳐 있습니다.</div>
+    </div>
+    <svg id="bldg" width="1000" height="700" viewBox="0 0 1000 700"></svg>
+    <div class="list6" id="list6"></div>
+    <div id="s6dim"></div>
+    <div class="abs center s6big" id="s6b1">하나라도 빠지면,<br><em>그만큼 보상에서 빠집니다.</em></div>
+    <div class="abs center s6big" id="s6b2">건물 구조와 공사비를 모르면,<br><em>반박조차 어렵습니다.</em></div>
+  </div>
+
+  <!-- S7: the expert -->
+  <div id="s7" class="scene navy-bg">
+    <img class="abs" id="s7wm" src="../common/logo-gold.png" alt="">
+    <div class="abs center" id="s7h">보험사의 방식을 가장 잘 아는 사람이,<br><em>당신의 편에</em> 섭니다.</div>
+    <div class="abs" id="s7name">
+      <div id="s7role">대표 · 재물 손해사정사</div>
+      <div id="s7nm">유승민</div>
+      <div id="s7rule"></div>
+      <div id="s7lic">더함화재특종손해사정</div>
+    </div>
+    <div class="creds">
+      <div class="cred" id="c1">
+        <svg width="60" height="60" viewBox="0 0 60 60"><path pathLength="1" d="M8 56 V14 L30 4 L52 14 V56 Z"/><path pathLength="1" d="M8 56 H52 M18 22 H26 M34 22 H42 M18 32 H26 M34 32 H42 M25 56 V44 H35 V56"/></svg>
+        <div class="ct">보험사 조사회사 지점장 출신</div>
+        <div class="cd">조사 업무를 이끈 경험으로 사고 경위와 산정 근거를 살핍니다</div>
+      </div>
+      <div class="cred" id="c2">
+        <svg width="60" height="60" viewBox="0 0 60 60"><path pathLength="1" d="M12 4 H40 L50 14 V56 H12 Z"/><path pathLength="1" d="M20 20 H40 M20 29 H40 M20 38 H30"/><path pathLength="1" d="M40 44 m-7 0 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0"/></svg>
+        <div class="ct">재물 손해사정사</div>
+        <div class="cd">재물손해사정사 제PR00000099호</div>
+      </div>
+      <div class="cred" id="c3">
+        <svg width="60" height="60" viewBox="0 0 60 60"><path pathLength="1" d="M6 54 L6 8 L52 54 Z"/><path pathLength="1" d="M16 44 L16 32 L28 44 Z"/><path pathLength="1" d="M6 18 H11 M6 28 H11 M6 38 H11 M16 54 V49 M26 54 V49 M36 54 V49"/></svg>
+        <div class="ct">건축기사 · 건설안전기사</div>
+        <div class="cd">건물 구조와 복구 공정을 이해하고, 도면·견적을 함께 검토합니다</div>
+      </div>
+      <div class="cred" id="c4">
+        <svg width="60" height="60" viewBox="0 0 60 60"><path pathLength="1" d="M30 4 L52 12 V30 C52 44 42 52 30 57 C18 52 8 44 8 30 V12 Z"/><path pathLength="1" d="M30 18 C35 25 39 29 39 35 C39 41 35 45 30 45 C25 45 21 41 21 35 C21 31 24 28 26 26 C26 30 28 32 30 32 C30 27 28 23 30 18 Z"/></svg>
+        <div class="ct">現 부산소방재난본부 손실보상심의위원</div>
+        <div class="cd">현재 손실보상심의위원으로 활동하고 있습니다</div>
+      </div>
+    </div>
+    <div class="abs center" id="s7f">작은 흔적도, 중요한 근거가 되기에.</div>
+  </div>
+
+  <!-- S8: process -->
+  <div id="s8" class="scene">
+    <div class="wipe paper-bg" id="s8wipe" style="position:absolute;inset:0"></div>
+    <div class="abs" id="s8head">
+      <div class="eyebrow ink" id="s8eb">Process</div>
+      <div id="s8t">처음부터 끝까지, 더함이 함께합니다.</div>
+    </div>
+    <div class="abs" id="s8track"></div>
+    <div class="abs" id="s8fill"></div>
+    <div class="p8" id="p1" style="left:250px"><div class="num">01</div><div class="node"><i></i></div><div class="tt">사고 상황 상담</div><div class="dd">사고 경위 · 보험 접수 확인<br>필요 자료 안내</div></div>
+    <div class="p8" id="p2" style="left:723px"><div class="num">02</div><div class="node"><i></i></div><div class="tt">현장 · 자료 검토</div><div class="dd">피해 현장 조사<br>약관 · 복구 자료 확인</div></div>
+    <div class="p8" id="p3" style="left:1197px"><div class="num">03</div><div class="node"><i></i></div><div class="tt">손해액 산정</div><div class="dd">신축 단가 · 감가율 적용<br>항목별 산출 근거</div></div>
+    <div class="p8" id="p4" style="left:1670px"><div class="num">04</div><div class="node"><i></i></div><div class="tt">손해사정서 작성</div><div class="dd">산정 결과 정리<br>검토 내용 설명</div></div>
+    <div class="abs center" id="s8f"><span></span>사고 상담부터 손해사정서 작성까지, 진행 상황에 맞춰 안내합니다<span></span></div>
+  </div>
+
+  <!-- S9: timing -->
+  <div id="s9" class="scene">
+    <svg id="ring" width="800" height="800" viewBox="0 0 800 800">
+      <circle cx="400" cy="400" r="330" stroke="rgba(201,168,76,0.16)" stroke-width="1.5"/>
+      <circle id="ringArc" cx="400" cy="400" r="330" stroke="rgba(232,208,138,0.7)" stroke-width="2.5" pathLength="1" transform="rotate(-90 400 400)" stroke-linecap="round"/>
+      <g id="ticks" stroke="rgba(201,168,76,0.35)" stroke-width="1.5"></g>
+    </svg>
+    <div class="abs center" id="s9a">사고 초기일수록, 유리합니다.</div>
+    <div class="abs center" id="s9b">자료가 없어도 괜찮습니다. 지금 상황부터 말씀해 주세요.</div>
+  </div>
+
+  <!-- S10: brand + end card -->
+  <div id="s10" class="scene">
+    <div class="hexgrid" style="opacity:0.035"></div>
+    <div class="abs center" id="s10a">당신의 일상에,</div>
+    <div class="abs center" id="s10b"><span id="s10b1">근거를 </span><span id="s10b2" class="gold">더하</span><span id="s10b3">다.</span></div>
+    <div class="abs" id="s10m"><span>더</span><span><span id="s10ha">하</span><span class="ham" id="s10hm">함</span></span></div>
+    <div class="abs" id="logoWrap">
+      <svg id="logoLines" viewBox="0 0 1368 1191"></svg>
+      <img id="logoImg" src="../common/logo-gold.png" alt="">
+      <div class="shine"><i id="shineBar"></i></div>
+    </div>
+    <div class="abs center" id="s10n"><span id="s10nA">더함</span><span class="rest" id="s10nB">화재특종손해사정</span></div>
+    <div class="abs center" id="s10tag">손해의 근거, 회복의 방향.</div>
+    <div class="abs center" id="s10rep">대표 · 재물손해사정사 유승민</div>
+    <div class="endinfo" id="endinfo">
+      <div class="lab" id="e1">상담 문의</div>
+      <div class="tel" id="e2">010-3589-7193</div>
+      <div class="hrs" id="e3">평일 09:00 – 18:00</div>
+      <div class="kakao" id="e4">
+        <div class="qr"><img src="../common/qr-kakao.svg" alt=""></div>
+        <div><div class="kt">카카오톡 상담</div><div class="kd">QR 코드를 스캔하면<br>상담 채널로 바로 연결됩니다</div></div>
+      </div>
+      <div class="addr" id="e5">부산광역시 연제구 중앙대로 1113, 8층 (연산동, 진보빌딩)</div>
+      <div class="addr area" id="e6">화재 · 누수 · 배상책임 · 풍수해 손해사정 &nbsp;|&nbsp; 부산 · 울산 · 경남</div>
+    </div>
+    <div class="abs center" id="legal">보장 여부와 손해액은 보험계약 및 사고 내용에 따라 달라집니다.<br>금융감독원 손해사정업 등록 제G0002711호 &nbsp;·&nbsp; 재물손해사정사 제PR00000099호 &nbsp;·&nbsp; 사업자등록번호 711-50-00987</div>
+  </div>
+
+  <canvas id="fxFront" class="fx" width="1920" height="1080"></canvas>
+  <div class="vignette"></div>
+  <div class="fade" id="fade"></div>
+</div>
+<script src="../common/engine.js"></script>
+<script src="../common/fx.js"></script>
+<script src="scenes.js"></script>
+</body>
+</html>

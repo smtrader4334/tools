@@ -1,0 +1,34 @@
+/* 9:16 short (1080×1920): layout overrides for the scenes used in the vertical cut */
+#stage { width: 1080px; height: 1920px; }
+canvas.fx { width: 1080px; height: 1920px; }
+
+/* S2 the notice */
+.doc { left: 260px; top: 250px; }
+#s2a { left: 110px; top: 1090px; }
+#s2b { left: 110px; top: 1145px; font-size: 62px; }
+#s2q { top: 820px; }
+#s2c { font-size: 56px; }
+#s2d { font-size: 80px; }
+
+/* S6 fire is different */
+#s6head { left: 90px; top: 170px; width: 900px; }
+#s6t { font-size: 70px; }
+#s6s { font-size: 32px; line-height: 1.6; }
+#bldg { left: 40px; top: 470px; }
+.list6 { left: 150px; top: 1230px; }
+.li6 { width: 780px; height: 70px; }
+.li6 .tx { font-size: 38px; }
+.s6big { top: 820px; font-size: 68px; }
+#s6b2 { top: 840px; font-size: 62px; }
+
+/* S10 brand + end card */
+#s10a { top: 700px; }
+#s10b { top: 800px; }
+#logoWrap { left: 340px; top: 470px; }
+#s10n { top: 880px; }
+#s10tag { top: 1000px; font-size: 27px; letter-spacing: 0.1em; }
+#s10rep { top: 660px; }
+.endinfo { left: 90px; top: 880px; width: 900px; text-align: center; }
+.endinfo .kakao { justify-content: center; text-align: left; margin-top: 60px; }
+.endinfo .addr { font-size: 26px; }
+#legal { left: 30px; right: 30px; bottom: 90px; font-size: 17px; line-height: 1.8; letter-spacing: 0; }

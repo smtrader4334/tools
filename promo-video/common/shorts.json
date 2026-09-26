@@ -1,0 +1,5 @@
+{
+  "_comment": "Vertical 9:16 short cuts: source-time segments of each film, joined at musical bar lines.",
+  "fire": [[4, 28], [64, 80], [120, 140]],
+  "leak": [[0, 10], [24, 52], [64, 76]]
+}

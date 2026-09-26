@@ -1,0 +1,38 @@
+/* 9:16 short (1080×1920): layout overrides for the scenes used in the vertical cut */
+#stage { width: 1080px; height: 1920px; }
+canvas.fx { width: 1080px; height: 1920px; }
+
+/* L1 the drop */
+#l1t1 { top: 860px; font-size: 62px; }
+#l1t2 { top: 800px; font-size: 54px; }
+
+/* L3 the right */
+#l3eb { top: 620px; }
+#l3h { top: 690px; font-size: 80px; }
+.law { left: 70px; top: 560px; width: 940px; padding: 54px 52px 58px; }
+.law .hd { font-size: 25px; }
+.law .bd { font-size: 44px; }
+#l3f { top: 820px; font-size: 62px; }
+
+/* L4 timing */
+#tl { width: 1080px; height: 1920px; }
+#l4eb { left: 90px; top: 220px; }
+#l4t { left: 90px; top: 260px; font-size: 72px; }
+.tcard { left: 90px !important; width: 900px; padding: 30px 36px 34px; }
+#cA { top: 820px !important; }
+#cB { top: 1080px !important; }
+#cC { top: 1340px !important; }
+.tcard .tt { font-size: 40px; }
+.tcard .dd { font-size: 32px; }
+#l4c { top: 1640px; left: 90px; right: 90px; font-size: 46px; line-height: 1.5; }
+
+/* L6 CTA + end card */
+#l6a { top: 720px; }
+#l6b { top: 810px; left: 80px; right: 80px; font-size: 70px; line-height: 1.45; white-space: normal; }
+#logoWrap { left: 380px; top: 230px; }
+#l6n { width: 1080px; top: 540px; }
+#l6rep { width: 1080px; top: 630px; }
+.endinfo { left: 90px; top: 780px; width: 900px; text-align: center; }
+.endinfo .kakao { justify-content: center; text-align: left; margin-top: 60px; }
+.endinfo .addr { font-size: 26px; }
+#legal { left: 30px; right: 30px; bottom: 90px; font-size: 17px; line-height: 1.8; letter-spacing: 0; }
