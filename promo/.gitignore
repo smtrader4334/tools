@@ -1,0 +1,4 @@
+node_modules/
+build/
+footage/
+__pycache__/
