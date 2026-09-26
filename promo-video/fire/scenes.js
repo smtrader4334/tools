@@ -347,9 +347,14 @@
     const morph = T >= 4.5;
     setStyle($('s10b'), { opacity: T < 1.5 ? 0 : lineIn, transform: `translate3d(0,${((1 - lineIn) * 22).toFixed(2)}px,0)`, filter: blurCss((1 - lineIn) * 12) });
     const fadeSide = P(T, 4.3, 0.8, E.inQuad);
-    setStyle($('s10b1'), { opacity: 1 - fadeSide, filter: blurCss(fadeSide * 8) });
-    setStyle($('s10b3'), { opacity: 1 - fadeSide, filter: blurCss(fadeSide * 8) });
-    $('s10b2').style.visibility = morph ? 'hidden' : 'visible';
+    // 자식에 visibility:visible을 주면 부모(#s10b)의 숨김을 덮어써 줄이 미리 보인다.
+    // 자식은 opacity/filter만 바꾸고 visibility는 부모를 따르게 둔다.
+    for (const id of ['s10b1', 's10b3']) {
+      const s = $(id).style;
+      s.opacity = (1 - fadeSide).toFixed(4);
+      s.filter = blurCss(fadeSide * 8);
+    }
+    $('s10b2').style.visibility = morph ? 'hidden' : '';
     // "더하" → "더함", then glides into the brand name
     const mv = $('s10m');
     if (!morph || T > 7.2) {
