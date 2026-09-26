@@ -74,14 +74,14 @@ const PHRASES = [
   { t0: bt(8), t1: bt(12), bg: 'op2', br: 1, words: [['불이 나고,', 8], ['연기가', 9], ['번지고,', 10]] },
   { t0: bt(12), t1: bt(16), bg: 'op3', br: 2, words: [['무엇이,', 12], ['얼마나', 13], ['손상됐는지.', 14]] },
   { t0: bt(16), t1: bt(20), bg: 'op4', br: 2, words: [['설명할', 16], ['<span class="blue">근거가</span>', 17], ['필요합니다.', 18]] },
-  { t0: bt(20), t1: bt(23), bg: 'build', br: 1, words: [['보이는 피해', 20], ['너머까지.', 21]], build: true },
+  { t0: bt(20), t1: bt(24), bg: 'build', br: 1, words: [['보이는 피해', 20], ['너머까지.', 21]], build: true },
 ];
 const phraseEl = $('phraseIn');
 function renderPhrase(t) {
   const p = PHRASES.find((p) => t >= p.t0 && t < p.t1);
   if (!p) { phraseEl.innerHTML = ''; return null; }
   let out = 1 - lin(t, p.t1 - 0.32, p.t1);
-  if (p.build) out = 1;
+  if (p.build) out = 1 - eInOut(lin(t, 14.2, 14.75));
   const html = p.words.map(([w, b], i) => {
     const u = (t - bt(b)) / 0.5;
     const st = u < 0 ? 'opacity:0' : reveal(u);
@@ -90,7 +90,7 @@ function renderPhrase(t) {
   phraseEl.innerHTML = html;
   phraseEl.style.fontSize = S(p.build ? 124 : 112, p.build ? 116 : 104) + 'px';
   let sc = 1;
-  if (p.build) sc = 1 + 0.07 * eInOut(lin(t, bt(21.5), bt(23)));
+  if (p.build) sc = 1 + 0.035 * eInOut(lin(t, bt(21), 14.75));
   phraseEl.style.opacity = out;
   phraseEl.style.transform = `scale(${sc})`;
   return p;
@@ -133,9 +133,9 @@ const DB = [
   { b: 47, page: 'sm', kw: '부산소방재난본부<br>손실보상심의위원.', sub: '현직 · 유승민 대표', scroll: { sel: 'h3', text: '보험사 조사회사' }, hl: { sel: 'h3', text: '현직 손실보상', up: 1 } },
   { b: 48, page: 'sm', kw: '보험사 조사회사<br>지점장 출신.', hl: { sel: 'h3', text: '보험사 조사회사', up: 1 } },
   { b: 49, page: 'sm', kw: '건축기사 ·<br>건설안전기사.', hl: { sel: 'h3', text: '건축기사', up: 1 } },
-  { b: 50, page: 'dk', kw: '선임권이면,', sub: '이도경 이사 · 손해사정사 선임권 상담', scroll: { sel: '#cost-title' }, hl: { sel: '#cost-title' } },
-  { b: 51, page: 'dk', kw: '수임료 <span class="blue">0원.</span>', big: true, sub: '선임권 한정 · 보험회사 동의 등 요건 충족 시<br>보험회사가 손해사정 보수를 부담합니다.', hl: { sel: '#cost-title', up: 1 } },
-  { b: 52, page: 'home', kw: '부산 · 울산 · 경남.', sub: '가까운 현장에서, 함께 시작합니다.', scroll: { sel: '#co-regions-title' }, hl: { sel: '#co-regions-title' } },
+  { b: 50, page: 'dk', kw: words2(['손해사정사 선택,', '고객님의 <span class="blue">권리</span>입니다.'], 1, [1]), sub: '이도경 이사 · 손해사정사 선임권 상담', scroll: { sel: '#appointment-title', at: 380 }, hl: { sel: '#appointment-title' } },
+  { b: 51, page: 'dk', kw: words2(['손해사정사 선택,', '고객님의 <span class="blue">권리</span>입니다.'], 2, [1]), add: true, sub: '이도경 이사 · 손해사정사 선임권 상담', hl: { sel: '#appointment-title' } },
+  { b: 52, page: 'home', kw: '부산 · 울산 · 경남.', sub: '가까운 현장에서, 함께 시작합니다.', scroll: { sel: '#co-regions-title', mode: 'top' }, hl: { sel: '#co-regions-title' } },
   { b: 53, page: 'home', kw: words2(['지금,', '상담하세요.'], 1, [1]), tap: { sel: 'a.co-dock-kakao' }, hl: { sel: 'a.co-dock-kakao' } },
   { b: 54, page: 'home', kw: words2(['지금,', '상담하세요.'], 2, [1]), add: true, hl: { sel: 'a.co-dock-kakao' } },
 ];
@@ -169,7 +169,7 @@ function precompute() {
       else {
         p.win.scrollTo(0, 0);
         const r = find(c.page, c.scroll).getBoundingClientRect();
-        target = c.scroll.mode === 'top' ? r.top - p.top - 90 : r.top + r.height / 2 - (p.top + p.bottom) / 2;
+        target = c.scroll.at !== undefined ? r.top - c.scroll.at : c.scroll.mode === 'top' ? r.top - p.top - 90 : r.top + r.height / 2 - (p.top + p.bottom) / 2;
         target = clamp(Math.round(target), 0, p.max);
       }
     }
@@ -214,12 +214,13 @@ function renderPhone(t) {
   const pw = 418 * s, ph = 872 * s;
   let px = S(620 - pw / 2, 540 - pw / 2), py = S(64, H - ph - 120);
   const ein = eOutExpo(lin(t, 25.0, 25.45));
-  py += (1 - ein) * H * 0.6;
-  phone.style.transform = `translate(${px}px,${py + Math.sin(t * 1.1) * 4}px) scale(${s})`;
-  phone.style.opacity = clamp(ein * 2);
+  const eout = eInOut(lin(t, 34.45, 35.0));
+  py += (1 - ein) * H * 0.6 + eout * H * 0.35;
+  phone.style.transform = `translate(${px}px,${py + Math.sin(t * 1.1) * 4}px) scale(${s * (1 - 0.04 * eout)})`;
+  phone.style.opacity = clamp(ein * 2) * (1 - eInOut(lin(t, 34.6, 35.0)));
 
   // 하이라이트
-  if (c.hl && sw >= 1) {
+  if (c.hl && sw >= 1 && t < 34.45) {
     const el = find(c.page, c.hl);
     const r = el.getBoundingClientRect();
     const pad = 7;
@@ -231,6 +232,7 @@ function renderPhone(t) {
     hl.style.opacity = fresh ? clamp(u) : 1;
     hl.style.transform = `scale(${fresh ? 1 + 0.04 * (1 - eOutExpo(u)) : 1})`;
   } else hl.style.display = 'none';
+  if (t >= 34.45) hl.style.display = 'none';
 
   // 탭 터치
   const tc = DB.find((b) => b.tap && t >= b.t - 0.08 && t < b.t + 0.45);
@@ -269,6 +271,8 @@ function renderPhone(t) {
   }
   const kwH = kw.scrollHeight, kwW = kw.scrollWidth;
   const subH = c.sub ? S(34, 36) * 1.5 * (c.sub.split('<br>').length) + 18 : 0;
+  const kfade = 1 - eInOut(lin(t, 34.4, 34.8));
+  kw.style.opacity = parseFloat(kw.style.opacity || 1) * kfade;
   const kx = S(1060, (W - kwW) / 2);
   const ky = S(H / 2 - (kwH + subH) / 2, 400 - (kwH + subH) / 2);
   kw.style.left = kx + 'px'; kw.style.top = ky + 'px';
@@ -281,7 +285,7 @@ function renderPhone(t) {
     kwSub.style.left = S(kx + 4, 0) + 'px';
     kwSub.style.width = V ? W + 'px' : '760px';
     kwSub.style.top = ky + kwH + 18 + 'px';
-    kwSub.style.opacity = clamp((t - c.t - 0.15) / 0.3);
+    kwSub.style.opacity = clamp((t - c.t - 0.15) / 0.3) * kfade;
   } else kwSub.style.display = 'none';
 }
 
@@ -370,10 +374,12 @@ async function renderBG(t, phrase, word) {
   if (phrase) {
     const lt = t - phrase.t0, u = lt / (phrase.t1 - phrase.t0);
     if (phrase.bg === 'build') {
-      if (t < bt(23)) { glTo2D('flashlight', lt, u); ctx.fillStyle = 'rgba(4,8,16,.25)'; ctx.fillRect(0, 0, W, H); }
+      if (!(await drawFootage('build', Math.min(lt, 2.49), 0.1 * eInOut(u)))) glTo2D('flashlight', lt, u);
+      const d = eInOut(lin(t, 14.2, 14.85));
+      if (d > 0) { ctx.fillStyle = `rgba(0,0,0,${d})`; ctx.fillRect(0, 0, W, H); }
     } else await drawFootage(phrase.bg, lt, 0.07 * eInOut(u));
     if (phrase.bg === 'op1') { const f = 1 - lin(t, 2.5, 2.85); if (f > 0) { ctx.fillStyle = `rgba(0,0,0,${f})`; ctx.fillRect(0, 0, W, H); } }
-    return t < bt(23) ? 'opening' : 'black';
+    return 'opening';
   }
   if (word) {
     const lt = t - word.t, u = lt / BEAT;
@@ -382,7 +388,12 @@ async function renderBG(t, phrase, word) {
     }
     return 'dropA';
   }
-  if (t >= 25 && t < 35) { navyBG(t); return 'dropB'; }
+  if (t >= 25 && t < 35) {
+    navyBG(t);
+    const d = eInOut(lin(t, 34.5, 35.0));
+    if (d > 0) { ctx.fillStyle = `rgba(0,0,0,${d})`; ctx.fillRect(0, 0, W, H); }
+    return 'dropB';
+  }
   if (t >= 35) { outroBG(t); return 'outro'; }
   return 'black';
 }

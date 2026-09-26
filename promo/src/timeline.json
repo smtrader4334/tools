@@ -1,5 +1,5 @@
 {
- "version": 2,
+ "version": 3,
  "bpm": 96,
  "beat": 0.625,
  "duration": 47.5,
@@ -118,8 +118,8 @@
   },
   {
    "t": 14.375,
-   "text": "[dead air 14.375-15.0]",
-   "hit": "silence"
+   "text": "[breath-in swell 14.375-15.0, picture dims to black]",
+   "hit": "swell"
   },
   {
    "t": 15.0,
@@ -261,12 +261,12 @@
   },
   {
    "t": 31.25,
-   "text": "선임권이면,",
+   "text": "손해사정사 선택,",
    "ui": "page"
   },
   {
    "t": 31.875,
-   "text": "수임료 0원."
+   "text": "고객님의 권리입니다."
   },
   {
    "t": 32.5,
@@ -281,6 +281,11 @@
   {
    "t": 33.75,
    "text": "상담하세요."
+  },
+  {
+   "t": 34.375,
+   "text": "[drop B ring-out: phone leaves, final chord decays into outro]",
+   "hit": "ringout"
   },
   {
    "t": 35.625,
