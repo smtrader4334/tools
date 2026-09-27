@@ -92,7 +92,8 @@
   film.scene('c4', 37.8, 63.0, (lt, t) => {
     const w = P(t, 37.8, 0.9, E.inOutQuart);
     $('c4').style.clipPath = w < 1 ? `inset(${((1 - w) * 100).toFixed(3)}% 0 0 0)` : 'none';
-    $('c4').style.opacity = env(t, 37.8, 63.0, 0, 0).toFixed(4);
+    // the short cuts from here to the navy map at 56: fade the white page out to navy first
+    $('c4').style.opacity = (V ? env(t, 37.8, 56.0, 0, 0.8, E.outCubic, E.inOutSine) : env(t, 37.8, 63.0, 0, 0)).toFixed(4);
     show($('c4eb'), t, 38.5, 999, { y: 10 });
     chars($('c4h'), t, 38.8, 999, { stagger: 0.04, y: 20, blur: 10 });
     CARDS.forEach((id, i) => {
