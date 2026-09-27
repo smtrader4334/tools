@@ -10,6 +10,7 @@
 | `out/theham-company-film.mp4` | 1:46 | 회사 소개. 손해사정이 무엇인지, 누가 선임하는지, 더함의 업무 분야 네 가지와 일하는 기준, 구성원과 상담 창구, 지역을 한 편에 담았습니다. |
 | `out/theham-fire-brand-film.mp4` | 2:24 | 메인 브랜드 필름. 화재사고 중심으로 손해사정의 개념, 독립 손해사정의 필요성, 전문가 소개, 진행 절차를 다룹니다. |
 | `out/theham-leak-appointment-right.mp4` | 1:16 | 누수 사고 손해사정사 선임권 안내 영상. 법적 근거, 비용 부담 기준, 선임 타이밍을 설명합니다. |
+| `out/theham-company-short-9x16.mp4` | 0:58 | 회사 소개 영상의 세로(1080×1920) 쇼츠·릴스 편집본 |
 | `out/theham-fire-short-9x16.mp4` | 1:00 | 화재 영상의 세로(1080×1920) 쇼츠·릴스 편집본 |
 | `out/theham-leak-short-9x16.mp4` | 0:50 | 누수 선임권 영상의 세로 쇼츠·릴스 편집본 |
 | `out/*.jpg` | — | 유튜브 썸네일·게시물용 대표 이미지 |
@@ -64,8 +65,9 @@
 ## 3. 세로 쇼츠 (9:16)
 
 본편과 같은 장면·음악을 세로 화면에 맞게 다시 배치하고, 음악의 마디 경계에서 잘라 60초 이내로 편집했습니다.
-편집 구간은 `common/shorts.json`, 세로 레이아웃은 `fire/vertical.css`, `leak/vertical.css`에 있습니다.
+편집 구간은 `common/shorts.json`, 세로 레이아웃은 `company/vertical.css`, `fire/vertical.css`, `leak/vertical.css`에 있습니다. 회사 소개 영상은 음악이 편집 후 시간 기준이라 음악용 구간(`company_audio`)을 따로 둡니다.
 
+- 회사 소개 쇼츠 (0:58): 사고 아이콘 오프닝 → 손해사정사는 고객도 직접 선임할 수 있습니다 → 업무 분야 네 가지 → 지역 → 브랜드 라인·로고·두 상담 연락처
 - 화재 쇼츠 (1:00): 오프닝(불타는 문장) → 보험사 통지서와 질문 → 화재 손해 항목 8가지 → "당신의 일상에, 근거를 더하다" → 로고·연락처
 - 누수 쇼츠 (0:50): 물방울 오프닝 → 선임권과 법적 근거 → 비용 부담 타임라인 → 행동 유도 → 로고·연락처
 
@@ -97,7 +99,7 @@
 ./build.sh company  # → out/theham-company-film.mp4 (+ .jpg)
 ./build.sh fire     # → out/theham-fire-brand-film.mp4 (+ .jpg)
 ./build.sh leak     # → out/theham-leak-appointment-right.mp4 (+ .jpg)
-./build.sh fire-short; ./build.sh leak-short   # 세로 쇼츠 (본편 음원을 편집 구간대로 잘라 사용)
+./build.sh company-short; ./build.sh fire-short; ./build.sh leak-short   # 세로 쇼츠 (본편 음원을 편집 구간대로 잘라 사용)
 
 # 특정 시점의 정지 화면만 확인할 때
 node render.mjs fire --stills 24.5,60,138 --dir build/stills

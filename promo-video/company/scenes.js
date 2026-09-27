@@ -21,11 +21,12 @@
   const film = new M.Film({ duration: 122, fps: 30 });
   // Scene times below are on the 122 s source timeline; EDIT removes three held stretches.
   const EDIT = [[0, 56], [62, 76], [80, 90], [96, 122]];
-  const W = 1920, H = 1080;
+  const V = !!window.VERTICAL, W = V ? 1080 : 1920, H = V ? 1920 : 1080;
   M.fitStage($('stage'), W, H);
+  for (const c of [$('fxBack'), $('fxFront')]) { c.width = W; c.height = H; }
 
   const back = $('fxBack'), bctx = back.getContext('2d');
-  const dust = new FX.Dust({ count: 90, seed: 31, color: '142,175,247', size: [0.8, 2.4], speed: 9, alpha: 0.45 });
+  const dust = new FX.Dust({ count: 90, seed: 31, w: W, h: H, color: '142,175,247', size: [0.8, 2.4], speed: 9, alpha: 0.45 });
 
   // soft light sweeping across the navy scenes
   function glow(ctx, t, k) {
@@ -91,7 +92,8 @@
   film.scene('c4', 37.8, 63.0, (lt, t) => {
     const w = P(t, 37.8, 0.9, E.inOutQuart);
     $('c4').style.clipPath = w < 1 ? `inset(${((1 - w) * 100).toFixed(3)}% 0 0 0)` : 'none';
-    $('c4').style.opacity = env(t, 37.8, 63.0, 0, 0).toFixed(4);
+    // the short cuts from here to the navy map at 56: fade the white page out to navy first
+    $('c4').style.opacity = (V ? env(t, 37.8, 56.0, 0, 0.8, E.outCubic, E.inOutSine) : env(t, 37.8, 63.0, 0, 0)).toFixed(4);
     show($('c4eb'), t, 38.5, 999, { y: 10 });
     chars($('c4h'), t, 38.8, 999, { stagger: 0.04, y: 20, blur: 10 });
     CARDS.forEach((id, i) => {
@@ -224,8 +226,15 @@
   });
 
   M.boot(film, async () => {
-    // Drop the static holds after C4, C5 and C6 (cuts on bar lines between identical still frames): 122 s → 106 s.
-    film.setEdit(EDIT);
+    if (V) {
+      // 9:16 short: C1 → C3 → C4 → C7 tail → C8, cut on bar lines (common/shorts.json)
+      film.setEdit((await fetch('../common/shorts.json').then((r) => r.json())).company);
+      $('c3f').innerHTML = '더함은 <em>고객이 선임한<br>손해사정사</em>로 함께합니다.';
+      $('c8i').innerHTML = '<b>theham-consult.pages.dev</b><br>부산광역시 연제구 중앙대로 1113, 8층<br>평일 09:00–18:00 &nbsp;·&nbsp; 부산 · 울산 · 경남';
+    } else {
+      // Drop the static holds after C4, C5 and C6 (cuts on bar lines between identical still frames): 122 s → 106 s.
+      film.setEdit(EDIT);
+    }
     buildMap();
     await loadLogo();
   });

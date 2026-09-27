@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>더함 영상 썸네일</title>
+<!-- 썸네일 6장: ?id=company|fire|leak, &v=1 이면 세로(1080×1920) 쇼츠 커버. render_thumbs.mjs 가 PNG/JPG로 저장합니다. -->
+<style>
+@font-face { font-family: 'Pretendard'; font-weight: 400; src: url('../common/fonts/Pretendard-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Pretendard'; font-weight: 500; src: url('../common/fonts/Pretendard-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'Pretendard'; font-weight: 600; src: url('../common/fonts/Pretendard-SemiBold.woff2') format('woff2'); }
+@font-face { font-family: 'Pretendard'; font-weight: 700; src: url('../common/fonts/Pretendard-Bold.woff2') format('woff2'); }
+:root { --nv: #101e30; --b: #285af5; --bl: #8eaff7; --bll: #b9cdfa; --tx2: #a9b6c8; --ember: #ff8a3d; --ember-l: #ffb27a; }
+html, body { margin: 0; background: #000; }
+* { box-sizing: border-box; }
+.board {
+  position: relative; overflow: hidden; width: 1280px; height: 720px;
+  font-family: 'Pretendard', sans-serif; color: #fff; letter-spacing: -0.02em; word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+  background: radial-gradient(ellipse 70% 70% at 75% 30%, rgba(40,90,245,0.20), rgba(0,0,0,0) 70%),
+              linear-gradient(155deg, #0e1d31 0%, #101e30 50%, #08131f 100%);
+}
+.board.v { width: 1080px; height: 1920px; }
+.hex { position: absolute; inset: -60px; opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='146' viewBox='0 0 84 146'%3E%3Cpath d='M42 0 L84 24 L84 73 L42 97 L0 73 L0 24 Z M42 97 L42 146' fill='none' stroke='%238eaff7' stroke-width='1.2'/%3E%3C/svg%3E");
+  background-size: 84px 146px; }
+.abs { position: absolute; }
+.brand { display: flex; align-items: center; gap: 16px; }
+.brand img { width: 62px; height: 54px; }
+.brand span { font-weight: 700; font-size: 27px; }
+.brand span b { color: #c9a84c; font-weight: 700; }
+.eb { font-weight: 600; font-size: 24px; color: var(--bl); letter-spacing: 0.02em; }
+.hl { font-weight: 700; font-size: 84px; line-height: 1.2; letter-spacing: -0.035em; }
+.hl em { font-style: normal; color: var(--bl); }
+.sub { font-weight: 500; font-size: 27px; color: var(--tx2); }
+.tag { display: inline-flex; align-items: center; gap: 12px; font-weight: 600; font-size: 24px; padding: 12px 22px 13px; border-radius: 40px; background: var(--b); color: #fff; }
+.tag.nv { background: #173047; border: 1px solid rgba(142,175,247,0.35); }
+.tag small { font-weight: 500; font-size: 22px; opacity: 0.85; }
+svg { overflow: visible; }
+.ln * { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- company: 네 가지 업무 타일 */
+.tiles { display: grid; grid-template-columns: repeat(2, 200px); gap: 22px; }
+.tile { width: 200px; height: 200px; border-radius: 26px; border: 1.5px solid rgba(142,175,247,0.35);
+  background: linear-gradient(160deg, rgba(40,90,245,0.18), rgba(40,90,245,0.04)); display: grid; place-items: center; align-content: center; gap: 16px; }
+.tile svg { width: 78px; height: 78px; }
+.tile svg * { stroke: #fff; stroke-width: 2.4; }
+.tile div { font-weight: 600; font-size: 27px; }
+.tile.on { background: linear-gradient(160deg, #285af5, #1f47c9); border-color: #5d85f7; box-shadow: 0 20px 50px rgba(40,90,245,0.35); }
+
+/* ---------- fire */
+.fire { background: radial-gradient(ellipse 55% 60% at 78% 88%, rgba(255,110,40,0.38), rgba(255,110,40,0) 70%),
+                    radial-gradient(ellipse 70% 70% at 70% 20%, rgba(40,90,245,0.14), rgba(0,0,0,0) 70%),
+                    linear-gradient(155deg, #0e1d31 0%, #101e30 50%, #0b111a 100%); }
+.fire .hl em { color: var(--ember-l); }
+.fire .eb { color: var(--ember-l); }
+.bldg * { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.bldg .w { stroke: rgba(255,255,255,0.75); stroke-width: 2.2; }
+.bldg .s { stroke: rgba(255,255,255,0.28); stroke-width: 1.5; }
+.bldg .h { stroke: var(--ember); stroke-width: 3; filter: drop-shadow(0 0 6px rgba(255,138,61,0.8)); }
+.chip { position: absolute; display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 22px; padding: 9px 16px 10px; border-radius: 12px;
+  background: rgba(16,30,48,0.88); border: 1px solid rgba(255,178,122,0.55); white-space: nowrap; }
+.chip i { width: 10px; height: 10px; border-radius: 50%; background: var(--ember); box-shadow: 0 0 10px var(--ember); }
+
+/* ---------- leak */
+.leak { background: radial-gradient(ellipse 60% 60% at 72% 40%, rgba(95,178,230,0.22), rgba(0,0,0,0) 70%),
+                    linear-gradient(155deg, #0c1c30 0%, #0f1f33 50%, #07121e 100%); }
+.apt * { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.apt .w { stroke: rgba(255,255,255,0.75); stroke-width: 2.2; }
+.apt .s { stroke: rgba(255,255,255,0.5); stroke-width: 1.8; }
+.apt .water { stroke: #5fb2e6; stroke-width: 4; filter: drop-shadow(0 0 6px rgba(95,178,230,0.8)); }
+.apt .drop { fill: #8cc8ec; stroke: none; filter: drop-shadow(0 0 8px rgba(140,200,236,0.9)); }
+.apt .stain { fill: rgba(95,178,230,0.42); stroke: none; }
+.apt .ring { stroke: rgba(140,200,236,0.6); stroke-width: 2; }
+.apt text { font-family: 'Pretendard'; font-weight: 600; font-size: 20px; fill: rgba(255,255,255,0.55); letter-spacing: 0.14em; }
+.law { display: inline-flex; gap: 10px; align-items: center; font-weight: 600; font-size: 22px; color: var(--bll); }
+.law i { width: 34px; height: 2px; background: var(--bl); }
+</style>
+</head>
+<body>
+
+<!-- ============ company 1280×720 ============ -->
+<div class="board" id="company">
+  <div class="hex"></div>
+  <div class="abs brand" style="left:72px; top:60px"><img src="../common/logo-gold.png" alt=""><span><b>더함</b>화재특종손해사정</span></div>
+  <div class="abs eb" style="left:74px; top:176px">회사 소개 · 손해사정이란</div>
+  <div class="abs hl" style="left:70px; top:220px">보험금을 정하는 일,<br><em>손해사정</em></div>
+  <div class="abs sub" style="left:74px; top:446px">화재 · 누수 · 배상책임 · 풍수해</div>
+  <div class="abs" style="left:72px; top:520px"><span class="tag nv">부산 · 울산 · 경남</span></div>
+  <div class="abs tiles" style="left:808px; top:110px">
+    <div class="tile on"><svg class="ln" viewBox="0 0 64 64"><path d="M32 60C19 60 11 52 11 41C11 31 18 25 22 17C23 23 26 26 29 27C29 18 33 10 40 4C39 13 43 19 47 25C50 30 53 35 53 41C53 52 45 60 32 60Z"/><path d="M32 60C26 60 23 56 23 51C23 46 26 43 28 39C29 42 31 44 33 44C34 41 35 39 37 37C39 41 41 44 41 48C41 55 37 60 32 60Z"/></svg><div>화재</div></div>
+    <div class="tile"><svg class="ln" viewBox="0 0 64 64"><path d="M32 4C24 19 13 29 13 42A19 19 0 0 0 51 42C51 29 40 19 32 4Z"/><path d="M23 44A9 9 0 0 0 32 53"/></svg><div>누수</div></div>
+    <div class="tile"><svg class="ln" viewBox="0 0 64 64"><path d="M32 8V56M18 56H46M10 16H54"/><path d="M10 16L3 34H17ZM54 16L47 34H61ZM3 34A7 5 0 0 0 17 34M47 34A7 5 0 0 0 61 34"/></svg><div>배상책임</div></div>
+    <div class="tile"><svg class="ln" viewBox="0 0 64 64"><path d="M18 40A10 10 0 0 1 19 20A15 15 0 0 1 47 23A9 9 0 0 1 46 40Z"/><path d="M22 47L18 57M33 47L29 57M44 47L40 57"/></svg><div>풍수해</div></div>
+  </div>
+</div>
+
+<!-- ============ fire 1280×720 ============ -->
+<div class="board fire" id="fire">
+  <div class="abs brand" style="left:72px; top:60px"><img src="../common/logo-gold.png" alt=""><span><b>더함</b>화재특종손해사정</span></div>
+  <div class="abs eb" style="left:74px; top:170px">화재 손해사정</div>
+  <div class="abs hl" style="left:70px; top:212px; font-size:78px">화재 손해,<br><em>빠진 항목</em>은<br>없나요?</div>
+  <div class="abs" style="left:72px; top:520px"><span class="tag">손해사정사 상담 <small>유승민 대표</small></span></div>
+  <svg class="abs bldg" style="left:700px; top:110px" width="520" height="470" viewBox="0 0 520 470">
+    <path class="w" d="M20 450H500M60 450V170L260 40L460 170V450"/>
+    <path class="w" d="M60 300H460M60 170H460"/>
+    <path class="s" d="M100 300V450M420 300V450M160 170V300M360 170V300"/>
+    <path class="s" d="M110 210h60v50h-60zM230 210h60v50h-60zM350 210h60v50h-60z"/>
+    <path class="s" d="M120 360h70v90M250 340h90v60h-90zM380 390h30v60h-30z"/>
+    <path class="h" d="M230 210h60v50h-60zM250 340h90v60h-90z"/>
+    <path class="h" d="M232 206C236 186 250 180 252 166C262 178 266 188 262 204M270 206C272 196 280 190 282 182C288 192 290 198 288 206"/>
+    <path class="h" d="M258 336C262 314 278 306 282 290C294 304 298 318 292 334M300 336C304 324 312 318 314 308C322 320 324 328 320 336"/>
+  </svg>
+  <div class="chip" style="left:708px; top:80px"><i></i>건물 · 내외장</div>
+  <div class="chip" style="left:1030px; top:212px"><i></i>전기 · 설비</div>
+  <div class="chip" style="left:682px; top:365px"><i></i>집기 · 재고자산</div>
+  <div class="chip" style="left:1046px; top:480px"><i></i>그을음 · 소화수</div>
+</div>
+
+<!-- ============ leak 1280×720 ============ -->
+<div class="board leak" id="leak">
+  <div class="abs brand" style="left:72px; top:60px"><img src="../common/logo-gold.png" alt=""><span><b>더함</b>화재특종손해사정</span></div>
+  <div class="abs eb" style="left:74px; top:170px">누수 사고 · 손해사정사 선임권</div>
+  <div class="abs hl" style="left:70px; top:210px; font-size:76px">누수 사고,<br><em>조사 전</em>에<br>확인하세요</div>
+  <div class="abs" style="left:72px; top:560px"><span class="tag">손해사정 선임권 상담 <small>이도경 이사</small></span></div>
+  <svg class="abs apt" style="left:720px; top:70px" width="500" height="520" viewBox="0 0 500 520">
+    <text x="24" y="46">UPPER UNIT</text>
+    <path class="w" d="M10 10H490V30H10ZM10 250H490V284H10ZM10 490H490V512H10Z"/>
+    <path class="w" d="M10 30V250M490 30V250M10 284V490M490 284V490"/>
+    <path class="s" d="M160 250V205Q160 195 170 195H330Q340 195 340 205V250M300 195V175H324"/>
+    <path class="s" d="M120 264H380M120 272H380"/>
+    <ellipse class="stain" cx="250" cy="286" rx="120" ry="12"/>
+    <path class="water" d="M250 262L242 272L256 280L248 290"/>
+    <text x="24" y="330">LOWER UNIT</text>
+    <path class="s" d="M60 490V430Q60 418 72 418H200Q212 418 212 430V490M320 490V380M306 380H334L328 352H312Z"/>
+    <path class="drop" d="M250 318C241 338 232 349 232 361A18 18 0 0 0 268 361C268 349 259 338 250 318Z"/>
+    <path class="water" style="stroke-width:3;stroke-dasharray:8 12" d="M250 384V470"/>
+    <ellipse class="stain" cx="250" cy="488" rx="90" ry="7"/>
+    <ellipse class="ring" cx="250" cy="488" rx="130" ry="11"/><ellipse class="ring" cx="250" cy="488" rx="175" ry="15" style="opacity:0.5"/>
+  </svg>
+  <div class="abs law" style="left:74px; top:505px"><i></i>보험업법 제185조 · 2024년 8월 시행</div>
+</div>
+
+<!-- ============ vertical covers 1080×1920 ============ -->
+<div class="board v" id="company-v">
+  <div class="hex"></div>
+  <div class="abs brand" style="left:0; right:0; top:230px; justify-content:center"><img src="../common/logo-gold.png" alt=""><span><b>더함</b>화재특종손해사정</span></div>
+  <div class="abs eb" style="left:0; right:0; top:470px; text-align:center; font-size:30px">회사 소개 · 손해사정이란</div>
+  <div class="abs hl" style="left:0; right:0; top:530px; text-align:center; font-size:104px">보험금을<br>정하는 일,<br><em>손해사정</em></div>
+  <div class="abs tiles" style="left:318px; top:1000px">
+    <div class="tile on"><svg class="ln" viewBox="0 0 64 64"><path d="M32 60C19 60 11 52 11 41C11 31 18 25 22 17C23 23 26 26 29 27C29 18 33 10 40 4C39 13 43 19 47 25C50 30 53 35 53 41C53 52 45 60 32 60Z"/><path d="M32 60C26 60 23 56 23 51C23 46 26 43 28 39C29 42 31 44 33 44C34 41 35 39 37 37C39 41 41 44 41 48C41 55 37 60 32 60Z"/></svg><div>화재</div></div>
+    <div class="tile"><svg class="ln" viewBox="0 0 64 64"><path d="M32 4C24 19 13 29 13 42A19 19 0 0 0 51 42C51 29 40 19 32 4Z"/><path d="M23 44A9 9 0 0 0 32 53"/></svg><div>누수</div></div>
+    <div class="tile"><svg class="ln" viewBox="0 0 64 64"><path d="M32 8V56M18 56H46M10 16H54"/><path d="M10 16L3 34H17ZM54 16L47 34H61ZM3 34A7 5 0 0 0 17 34M47 34A7 5 0 0 0 61 34"/></svg><div>배상책임</div></div>
+    <div class="tile"><svg class="ln" viewBox="0 0 64 64"><path d="M18 40A10 10 0 0 1 19 20A15 15 0 0 1 47 23A9 9 0 0 1 46 40Z"/><path d="M22 47L18 57M33 47L29 57M44 47L40 57"/></svg><div>풍수해</div></div>
+  </div>
+  <div class="abs" style="left:0; right:0; top:1500px; text-align:center"><span class="tag nv" style="font-size:28px">부산 · 울산 · 경남</span></div>
+</div>
+
+<div class="board v fire" id="fire-v">
+  <div class="abs brand" style="left:0; right:0; top:230px; justify-content:center"><img src="../common/logo-gold.png" alt=""><span><b>더함</b>화재특종손해사정</span></div>
+  <div class="abs eb" style="left:0; right:0; top:470px; text-align:center; font-size:30px">화재 손해사정</div>
+  <div class="abs hl" style="left:0; right:0; top:530px; text-align:center; font-size:104px">화재 손해,<br><em>빠진 항목</em>은<br>없나요?</div>
+  <svg class="abs bldg" style="left:280px; top:950px" width="520" height="470" viewBox="0 0 520 470">
+    <path class="w" d="M20 450H500M60 450V170L260 40L460 170V450"/>
+    <path class="w" d="M60 300H460M60 170H460"/>
+    <path class="s" d="M100 300V450M420 300V450M160 170V300M360 170V300"/>
+    <path class="s" d="M110 210h60v50h-60zM230 210h60v50h-60zM350 210h60v50h-60z"/>
+    <path class="s" d="M120 360h70v90M250 340h90v60h-90zM380 390h30v60h-30z"/>
+    <path class="h" d="M230 210h60v50h-60zM250 340h90v60h-90z"/>
+    <path class="h" d="M232 206C236 186 250 180 252 166C262 178 266 188 262 204M270 206C272 196 280 190 282 182C288 192 290 198 288 206"/>
+    <path class="h" d="M258 336C262 314 278 306 282 290C294 304 298 318 292 334M300 336C304 324 312 318 314 308C322 320 324 328 320 336"/>
+  </svg>
+  <div class="chip" style="left:150px; top:1010px"><i></i>건물 · 내외장</div>
+  <div class="chip" style="left:700px; top:1140px"><i></i>전기 · 설비</div>
+  <div class="chip" style="left:120px; top:1260px"><i></i>집기 · 재고자산</div>
+  <div class="chip" style="left:680px; top:1380px"><i></i>그을음 · 소화수</div>
+  <div class="abs" style="left:0; right:0; top:1500px; text-align:center"><span class="tag" style="font-size:28px">손해사정사 상담 <small>유승민 대표</small></span></div>
+</div>
+
+<div class="board v leak" id="leak-v">
+  <div class="abs brand" style="left:0; right:0; top:230px; justify-content:center"><img src="../common/logo-gold.png" alt=""><span><b>더함</b>화재특종손해사정</span></div>
+  <div class="abs eb" style="left:0; right:0; top:470px; text-align:center; font-size:30px">누수 사고 · 손해사정사 선임권</div>
+  <div class="abs hl" style="left:0; right:0; top:530px; text-align:center; font-size:104px">누수 사고,<br><em>조사 전</em>에<br>확인하세요</div>
+  <svg class="abs apt" style="left:290px; top:940px" width="500" height="520" viewBox="0 0 500 520">
+    <text x="24" y="46">UPPER UNIT</text>
+    <path class="w" d="M10 10H490V30H10ZM10 250H490V284H10ZM10 490H490V512H10Z"/>
+    <path class="w" d="M10 30V250M490 30V250M10 284V490M490 284V490"/>
+    <path class="s" d="M160 250V205Q160 195 170 195H330Q340 195 340 205V250M300 195V175H324"/>
+    <path class="s" d="M120 264H380M120 272H380"/>
+    <ellipse class="stain" cx="250" cy="286" rx="120" ry="12"/>
+    <path class="water" d="M250 262L242 272L256 280L248 290"/>
+    <text x="24" y="330">LOWER UNIT</text>
+    <path class="s" d="M60 490V430Q60 418 72 418H200Q212 418 212 430V490M320 490V380M306 380H334L328 352H312Z"/>
+    <path class="drop" d="M250 318C241 338 232 349 232 361A18 18 0 0 0 268 361C268 349 259 338 250 318Z"/>
+    <path class="water" style="stroke-width:3;stroke-dasharray:8 12" d="M250 384V470"/>
+    <ellipse class="stain" cx="250" cy="488" rx="90" ry="7"/>
+    <ellipse class="ring" cx="250" cy="488" rx="130" ry="11"/><ellipse class="ring" cx="250" cy="488" rx="175" ry="15" style="opacity:0.5"/>
+  </svg>
+  <div class="abs" style="left:0; right:0; top:1520px; text-align:center"><span class="tag" style="font-size:28px">손해사정 선임권 상담 <small>이도경 이사</small></span></div>
+</div>
+
+</body>
+</html>
