@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build a finished film:  ./build.sh fire | leak | fire-short | leak-short  (shorts = 9:16 vertical cuts)
+# Build a finished film:  ./build.sh company | fire | leak | fire-short | leak-short  (shorts = 9:16 vertical cuts)
 #   1. render every frame from <film>/index.html (headless Chromium)
 #   2. render the original score  (audio/<film>_score.py)
 #   3. encode H.264 (BT.709) + AAC into out/<name>.mp4, plus a poster frame
@@ -8,9 +8,10 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-film=${1:?usage: ./build.sh fire|leak}
+film=${1:?usage: ./build.sh company|fire|leak}
 vflag=()
 case "$film" in
+  company) name=theham-company-film; poster=11.0 ;;
   fire) name=theham-fire-brand-film; poster=24.5 ;;
   leak) name=theham-leak-appointment-right; poster=26.5 ;;
   fire-short) name=theham-fire-short-9x16; poster=20.5; vflag=(--vertical) ;;
