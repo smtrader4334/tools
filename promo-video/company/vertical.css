@@ -1,0 +1,53 @@
+/* 9:16 short (1080×1920): layout overrides for the scenes used in the vertical cut (C1, C3, C4, C7 tail, C8) */
+#stage { width: 1080px; height: 1920px; }
+canvas.fx { width: 1080px; height: 1920px; }
+
+/* C1: 사고는 예고 없이 — icons in a 2×2 grid */
+#c1t { top: 540px; font-size: 60px; }
+.acc { width: 300px; }
+#a1 { left: 170px !important; top: 760px; }
+#a2 { left: 610px !important; top: 760px; }
+#a3 { left: 170px !important; top: 1100px; }
+#a4 { left: 610px !important; top: 1100px; }
+#c1q { top: 1460px; font-size: 42px; }
+
+/* C3: 누가 선임하는가 — the two paths stacked */
+#c3h { top: 330px; font-size: 58px; }
+.path3 { left: 140px !important; width: 800px; height: 370px; padding: 40px 48px; }
+#p3a { top: 620px; }
+#p3b { top: 1030px; }
+.path3 .tt { font-size: 42px; }
+.path3 .dd { font-size: 28px; }
+#c3f { top: 1470px; font-size: 44px; line-height: 1.5; }
+
+/* C4: 업무 분야 — 2×2 cards */
+#c4eb { left: 90px; top: 170px; }
+#c4h { left: 90px; top: 210px; font-size: 58px; }
+.svc { width: 440px; height: 560px; padding: 34px 30px; }
+#v1 { left: 80px !important; top: 430px; }
+#v2 { left: 560px !important; top: 430px; }
+#v3 { left: 80px !important; top: 1015px; }
+#v4 { left: 560px !important; top: 1015px; }
+.svc .tt { font-size: 38px; }
+.svc .tg { font-size: 27px; }
+.svc li { font-size: 22px; white-space: normal; }
+#c4n { left: 90px; right: 90px; top: 1610px; font-size: 22px; }
+
+/* C7: 지역 — text above the map */
+#c7eb { left: 110px; top: 250px; }
+#c7h { left: 110px; top: 292px; font-size: 62px; }
+#c7s { left: 110px; top: 500px; font-size: 30px; }
+#map { left: 130px; top: 700px; }
+
+/* C8: brand line, logo, contacts stacked */
+#c8a { top: 780px; font-size: 56px; }
+#c8b { top: 870px; font-size: 64px; }
+#logoWrap { top: 330px; }
+#c8n { top: 640px; font-size: 60px; }
+#c8m { top: 732px; font-size: 30px; }
+.ct { left: 140px !important; width: 800px; height: 180px; }
+#ct1 { top: 830px; }
+#ct2 { top: 1036px; }
+#ctq { top: 1242px; width: 800px; justify-content: center; }
+#c8i { left: 60px; right: 60px; top: 1470px; font-size: 26px; line-height: 1.8; }
+#legal { left: 30px; right: 30px; bottom: 90px; font-size: 17px; line-height: 1.8; letter-spacing: 0; }

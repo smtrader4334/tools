@@ -14,7 +14,8 @@ import soundfile as sf
 import score_lib as S
 
 film, src, out = sys.argv[1:4]
-edit = json.load(open(os.path.join(os.path.dirname(__file__), '..', 'common', 'shorts.json')))[film]
+cfg = json.load(open(os.path.join(os.path.dirname(__file__), '..', 'common', 'shorts.json')))
+edit = cfg.get(film + '_audio', cfg[film])  # a film whose score follows its own edit list gives audio times separately
 x, sr = sf.read(src, dtype='float32', always_2d=True)
 assert sr == S.SR
 X = 0.12  # half crossfade length (s)

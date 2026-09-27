@@ -1,5 +1,59 @@
 {
-  "_comment": "Vertical 9:16 short cuts: source-time segments of each film, joined at musical bar lines.",
-  "fire": [[4, 28], [64, 80], [120, 140]],
-  "leak": [[0, 10], [24, 52], [64, 76]]
+  "_comment": "Vertical 9:16 short cuts: source-time segments of each film, joined at musical bar lines. company_audio is the same cut on the company film's 106 s soundtrack timeline (its score is written after the landscape edit list).",
+  "fire": [
+    [
+      4,
+      28
+    ],
+    [
+      64,
+      80
+    ],
+    [
+      120,
+      140
+    ]
+  ],
+  "leak": [
+    [
+      0,
+      10
+    ],
+    [
+      24,
+      52
+    ],
+    [
+      64,
+      76
+    ]
+  ],
+  "company": [
+    [
+      0,
+      12
+    ],
+    [
+      28,
+      56
+    ],
+    [
+      104,
+      122
+    ]
+  ],
+  "company_audio": [
+    [
+      0,
+      12
+    ],
+    [
+      28,
+      56
+    ],
+    [
+      88,
+      106
+    ]
+  ]
 }
