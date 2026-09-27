@@ -1,11 +1,13 @@
 """
-Original score + sound design for the company film (122 s, 120 BPM, D major).
+Original score + sound design for the company film (106 s, 120 BPM, D major).
 
 The piece opens in B minor over the four accident icons, brightens into
 D major when "손해사정" is defined at 12 s, builds through the practice areas,
 drops to a breakdown for the region map and lands on the brand's add9 sonic
 logo (Dadd9 here; the fire film uses Fadd9, the leak film Gadd9) when the logo
-draws at 110 s. Cue times match company/scenes.js (every cue on a 0.5 s beat).
+draws at 94 s. Times are on the film's cut timeline: company/scenes.js keeps a
+122 s source timeline and removes 56–62, 76–80 and 90–96 with an edit list, so
+source cues from 62 play 6 s earlier, from 80 10 s earlier and from 96 16 s earlier.
 
     python3 audio/company_score.py build/company-audio.wav
 """
@@ -14,7 +16,7 @@ import numpy as np
 import score_lib as S
 from score_lib import Part, n
 
-LEN = 124.0
+LEN = 108.0
 norm_active = S.norm_active
 
 # bar = 2 s at 120 BPM
@@ -34,21 +36,20 @@ SONG = [
     # C3 who adjusts
     (26, 'Em'), (28, 'G'), (30, 'D'), (32, 'A'), (34, 'Em'), (36, 'Asus'),
     # C4 practice areas (full)
-    (38, 'D'), (40, 'A'), (42, 'Bm'), (44, 'G'), (46, 'D'), (48, 'A'), (50, 'Bm'), (52, 'G'),
-    (54, 'Em'), (56, 'D/F#'), (58, 'G'), (60, 'Asus'),
+    (38, 'D'), (40, 'A'), (42, 'Bm'), (44, 'G'), (46, 'D'), (48, 'A'), (50, 'Bm'), (52, 'G'), (54, 'Asus'),
     # C5 standard (medium)
-    (62, 'Bm'), (64, 'G'), (66, 'D'), (68, 'A'), (70, 'Bm'), (72, 'G'), (74, 'Em'), (76, 'A'), (78, 'Asus'),
+    (56, 'Bm'), (58, 'G'), (60, 'D'), (62, 'A'), (64, 'Bm'), (66, 'G'), (68, 'Asus'),
     # C6 people (full)
-    (80, 'G'), (82, 'A'), (84, 'F#m'), (86, 'Bm'), (88, 'G'), (90, 'A'), (92, 'D'), (94, 'D/F#'),
+    (70, 'G'), (72, 'A'), (74, 'F#m'), (76, 'Bm'), (78, 'D/F#'),
     # C7 region (breakdown)
-    (96, 'Bm'), (98, 'G'), (100, 'Em'), (102, 'G'), (104, 'Asus'),
+    (80, 'Bm'), (82, 'G'), (84, 'Em'), (86, 'G'), (88, 'Asus'),
     # C8 brand line
-    (106, 'G'), (108, 'Asus'),
+    (90, 'G'), (92, 'Asus'),
 ]
-END_OF_SONG = 110.0
-FULL = [(38, 62), (80, 96)]
-MEDIUM = [(62, 80)]
-BREAK = [(96, 110)]
+END_OF_SONG = 94.0
+FULL = [(38, 56), (70, 80)]
+MEDIUM = [(56, 70)]
+BREAK = [(80, 94)]
 
 
 def within(t, spans):
@@ -85,7 +86,7 @@ def compose():
     cello.note(7.5, 'G2', 4.4, 56)
     cello.ramp(7.5, 9.5, 0, 80).ramp(10.5, 11.95, 80, 40)
 
-    # ---------------- groove sections 12–110
+    # ---------------- groove sections 12–94
     pad.cc(0, 11, 0)
     for i, (t0, c) in enumerate(SONG):
         voicing, root, arp = PROG[c]
@@ -99,19 +100,19 @@ def compose():
             piano.seq(t0, arp, 0.25, 0.24, vel, accents=[8, 0, 3, 0, 5, 0, 3, 0])
         piano.pedal(t0 + 0.01, t0 + dur - 0.03)
         pad.chord(t0, voicing, dur + 0.03, 48)
-        if not brk and t0 < 106:
+        if not brk and t0 < 90:
             for q in range(int(dur / 0.5)):
                 if q % 2 == 0 or full:
                     pizz.note(t0 + q * 0.5, n(root) + 12, 0.3, 62 + (10 if q == 0 else 0))
-        if full or med or t0 >= 106:
+        if full or med or t0 >= 90:
             bass.note(t0, root, dur + 0.03, 50 if med else 54)
         if full:
             cello.note(t0, n(root) + 12, dur + 0.03, 50)
     pad.ramp(12.0, 14.0, 0, 64).ramp(25.0, 26.2, 64, 84).ramp(37.0, 38.2, 84, 100)
-    pad.ramp(61.0, 62.2, 100, 86).ramp(79.0, 80.2, 86, 102).ramp(95.0, 96.4, 102, 70)
-    pad.ramp(106.0, 109.9, 70, 104)
+    pad.ramp(55.0, 56.2, 100, 86).ramp(69.0, 70.2, 86, 102).ramp(79.0, 80.4, 102, 70)
+    pad.ramp(90.0, 93.9, 70, 104)
     bass.cc(37.9, 11, 88)
-    cello.ramp(37.5, 38.5, 40, 70).ramp(61.5, 62.0, 70, 0).ramp(79.5, 80.5, 0, 72).ramp(95.5, 96.0, 72, 0)
+    cello.ramp(37.5, 38.5, 40, 70).ramp(55.5, 56.0, 70, 0).ramp(69.5, 70.5, 0, 72).ramp(79.5, 80.0, 72, 0)
 
     # C2 definition + three steps + conclusion
     glock.note(12.8, 'D6', 1.6, 44, exact=True)
@@ -133,42 +134,42 @@ def compose():
         cel.note(t0 + 0.25, n(notes[-1]) + 12, 1.2, 46, exact=True)
     glock.note(54.0, 'A6', 1.8, 42, exact=True)
     # C5 three standards
-    for t, p_ in [(66.0, 'F#5'), (68.0, 'A5'), (70.0, 'D6')]:
+    for t, p_ in [(60.0, 'F#5'), (62.0, 'A5'), (64.0, 'D6')]:
         cel.note(t, p_, 1.6, 56, exact=True)
         mar.note(t, n(p_) - 12, 0.6, 56, exact=True)
     # C6 two people
-    for t, notes in [(83.0, ['C#5', 'E5', 'A5']), (85.0, ['C#5', 'F#5', 'A5'])]:
+    for t, notes in [(73.0, ['C#5', 'E5', 'A5']), (75.0, ['C#5', 'F#5', 'A5'])]:
         for i, p_ in enumerate(notes):
             harp.note(t + i * 0.08, p_, 1.4, 58 + i * 4, exact=True)
     # C7 map: headquarters pulse and the four cities
-    glock.note(98.0, 'D6', 2.0, 46, exact=True)
+    glock.note(82.0, 'D6', 2.0, 46, exact=True)
     for i, p_ in enumerate(['F#5', 'A5', 'B5', 'D6']):
-        mar.note(99.5 + i * 0.5, p_, 0.6, 58, exact=True)
+        mar.note(83.5 + i * 0.5, p_, 0.6, 58, exact=True)
 
     # ---------------- C8: brand line -> sonic logo (Dadd9) -> outro
-    for t, p_, d, v in [(106.5, 'F#4', 0.9, 44), (107.5, 'A4', 0.9, 44), (108.0, 'B4', 1.0, 46), (109.0, 'E5', 0.9, 44)]:
+    for t, p_, d, v in [(90.5, 'F#4', 0.9, 44), (91.5, 'A4', 0.9, 44), (92.0, 'B4', 1.0, 46), (93.0, 'E5', 0.9, 44)]:
         piano.note(t, p_, d, v)
-    piano.chord(110.0, ['D1', 'D2'], 4.5, 72, exact=True)
-    piano.chord(110.0, ['A2', 'D3', 'F#3', 'A3', 'E4', 'F#4'], 4.5, 62, strum=0.012, exact=True)
-    piano.pedal(109.98, 115.0)
-    pad.cc(109.95, 11, 100)
-    pad.chord(110.0, ['D2', 'A2', 'D3', 'F#3', 'A3', 'E4', 'F#4'], 5.0, 56)
-    pad.ramp(111.0, 115.0, 100, 78)
-    bass.cc(109.95, 11, 100)
-    bass.note(110.0, 'D1', 5.0, 66)
-    cello.note(110.0, 'D2', 5.0, 58)
-    cello.ramp(109.95, 110.3, 0, 76).ramp(113.0, 115.0, 76, 30)
+    piano.chord(94.0, ['D1', 'D2'], 4.5, 72, exact=True)
+    piano.chord(94.0, ['A2', 'D3', 'F#3', 'A3', 'E4', 'F#4'], 4.5, 62, strum=0.012, exact=True)
+    piano.pedal(93.98, 99.0)
+    pad.cc(93.95, 11, 100)
+    pad.chord(94.0, ['D2', 'A2', 'D3', 'F#3', 'A3', 'E4', 'F#4'], 5.0, 56)
+    pad.ramp(95.0, 99.0, 100, 78)
+    bass.cc(93.95, 11, 100)
+    bass.note(94.0, 'D1', 5.0, 66)
+    cello.note(94.0, 'D2', 5.0, 58)
+    cello.ramp(93.95, 94.3, 0, 76).ramp(97.0, 99.0, 76, 30)
     for i, p_ in enumerate(['A5', 'D6', 'E6', 'F#6', 'A6']):
-        cel.note(110.0 + i * 0.06, p_, 2.6, 60, exact=True)
-    glock.note(110.0, 'A6', 2.0, 44, exact=True)
-    for t0, ch, root, d in [(115.0, ['D3', 'G3', 'B3', 'D4'], 'G1', 2.0), (117.0, ['D3', 'F#3', 'A3', 'E4'], 'D2', 5.0)]:
+        cel.note(94.0 + i * 0.06, p_, 2.6, 60, exact=True)
+    glock.note(94.0, 'A6', 2.0, 44, exact=True)
+    for t0, ch, root, d in [(99.0, ['D3', 'G3', 'B3', 'D4'], 'G1', 2.0), (101.0, ['D3', 'F#3', 'A3', 'E4'], 'D2', 5.0)]:
         pad.chord(t0, ch, d, 44)
         bass.note(t0, root, d, 44)
-    pad.ramp(118.5, 121.9, 80, 0)
-    bass.ramp(118.5, 121.9, 100, 0)
-    for t, p_, d, v in [(115.0, 'B4', 1.0, 38), (116.0, 'A4', 1.0, 36), (117.0, 'F#4', 2.0, 34), (119.0, 'E4', 2.5, 30)]:
+    pad.ramp(102.5, 105.9, 80, 0)
+    bass.ramp(102.5, 105.9, 100, 0)
+    for t, p_, d, v in [(99.0, 'B4', 1.0, 38), (100.0, 'A4', 1.0, 36), (101.0, 'F#4', 2.0, 34), (103.0, 'E4', 2.5, 30)]:
         piano.note(t, p_, d, v)
-    piano.pedal(115.05, 122.5)
+    piano.pedal(99.05, 106.5)
     return P
 
 
@@ -176,7 +177,7 @@ LEVELS = {
     'piano': (-21.5, 0.32), 'pad': (-25.0, 0.40), 'warm': (-27.0, 0.40), 'pizz': (-26.5, 0.30), 'mar': (-26.5, 0.38),
     'cel': (-28.0, 0.52), 'glock': (-31.0, 0.52), 'harp': (-26.5, 0.45), 'bass': (-27.0, 0.26), 'cello': (-29.0, 0.35),
 }
-RIDE = [(0, -1), (11.9, -1), (12.1, 0), (109.8, 0), (110.1, 0.5), (124, 0.5)]
+RIDE = [(0, -1), (11.9, -1), (12.1, 0), (93.8, 0), (94.1, 0.5), (108, 0.5)]
 
 
 def ride(x):
@@ -205,15 +206,15 @@ def sound_design(mix):
     for i in range(4):  # icon strokes
         mix.add(norm_active(S.tick(0.25, 2400 + i * 300, seed=202 + i), -40.0), 3.0 + i * 0.5, send=0.3)
     # scene transitions
-    for i, t in enumerate([11.3, 25.3, 37.3, 61.3, 79.3, 95.3, 105.3]):
+    for i, t in enumerate([11.3, 25.3, 37.3, 55.3, 69.3, 79.3, 89.3]):
         mix.add(norm_active(S.whoosh(1.0, 350, 3200, peak=0.55, seed=210 + i), -35.0), t, send=0.35)
     mix.add(norm_active(S.reverse_cymbal(1.2, seed=220), -32.0), 10.8, send=0.4)
     mix.add(norm_active(S.reverse_cymbal(1.2, seed=221), -32.0), 36.8, send=0.4)
     mix.add(norm_active(S.boom(3.0, 70, 40, seed=222, click=0.05), -32.0), 38.0, send=0.3)
-    mix.add(norm_active(S.reverse_cymbal(1.2, seed=223), -32.0), 78.8, send=0.4)
+    mix.add(norm_active(S.reverse_cymbal(1.2, seed=223), -32.0), 68.8, send=0.4)
     # groove percussion: soft kick on 1 & 3, snap on 2 & 4, hats on the off-beats
     kick = S.thud(0.8, 58, seed=230)
-    for b in range(int((96.0 - 26.0) / 0.5)):
+    for b in range(int((80.0 - 26.0) / 0.5)):
         t = 26.0 + b * 0.5
         beat = b % 4
         full, med = within(t, FULL), within(t, MEDIUM)
@@ -222,13 +223,13 @@ def sound_design(mix):
         if full and beat in (1, 3):
             mix.add(norm_active(snap(seed=300 + b), -37.0), t, send=0.25)
         mix.add(norm_active(hat(seed=400 + b), -41.0 if not full else -39.5), t + 0.25, send=0.1)
-        if 42.0 <= t < 60.0:
+        if 42.0 <= t < 54.0:
             mix.add(norm_active(hat(seed=500 + b), -45.0), t + 0.125, send=0.1)
             mix.add(norm_active(hat(seed=600 + b), -45.0), t + 0.375, send=0.1)
     # the logo
-    mix.add(norm_active(S.riser(2.2, seed=240, f0=250, f1=7000), -32.0), 107.8, send=0.35)
-    mix.add(norm_active(S.reverse_cymbal(1.6, seed=241), -30.0), 108.4, send=0.45)
-    mix.add(norm_active(S.boom(4.5, 62, 32, seed=242, click=0.1), -28.0), 110.0, send=0.4)
+    mix.add(norm_active(S.riser(2.2, seed=240, f0=250, f1=7000), -32.0), 91.8, send=0.35)
+    mix.add(norm_active(S.reverse_cymbal(1.6, seed=241), -30.0), 92.4, send=0.45)
+    mix.add(norm_active(S.boom(4.5, 62, 32, seed=242, click=0.1), -28.0), 94.0, send=0.4)
 
 
 def build(out):
@@ -251,7 +252,7 @@ def build(out):
     sound_design(mix)
     irs = {'hall': S.make_ir(2.6, pre=0.025, seed=19)}
     y = mix.render(irs, {'hall': -3.5})
-    y = S.master(y, target_lufs=-15.0, ceiling_db=-1.0, fade_out=(120.8, 122.0))
+    y = S.master(y, target_lufs=-15.0, ceiling_db=-1.0, fade_out=(104.8, 106.0))
     S.write(out, y)
     print('LUFS', round(S.loudness(y), 2), 'peak', round(20 * np.log10(np.abs(y).max()), 2))
 

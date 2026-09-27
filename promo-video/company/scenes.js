@@ -1,5 +1,9 @@
 /*
- * 더함 회사 소개 — 122 s @ 30 fps (music at 120 BPM: every cue on a 0.5 s beat, bars every 2 s)
+ * 더함 회사 소개 — 106 s @ 30 fps (music at 120 BPM: every cue on a 0.5 s beat, bars every 2 s)
+ *
+ * Times in this file are on a 122 s source timeline; EDIT cuts the held stretches 56–62, 76–80 and 90–96
+ * (bar lines, identical still frames on both sides), so the film plays 106 s and audio/company_score.py
+ * is written on the cut timeline (source time t ≥ 96 plays at t − 16).
  *
  *   0–12    C1 사고는 예고 없이: 화재 · 누수 · 배상책임 · 자연재해
  *  12–26    C2 손해사정이란 (정의와 세 단계)
@@ -15,6 +19,8 @@
   const $ = (id) => document.getElementById(id);
   const TAU = Math.PI * 2;
   const film = new M.Film({ duration: 122, fps: 30 });
+  // Scene times below are on the 122 s source timeline; EDIT removes three held stretches.
+  const EDIT = [[0, 56], [62, 76], [80, 90], [96, 122]];
   const W = 1920, H = 1080;
   M.fitStage($('stage'), W, H);
 
@@ -35,7 +41,7 @@
   film.layer((t) => {
     bctx.clearRect(0, 0, W, H);
     // C1, C3, C5, C7, C8 are navy scenes with the dust bed behind them
-    const k = Math.max(env(t, 0, 12.4, 1.2, 0.6), env(t, 26.0, 38.4, 0.6, 0.6), env(t, 62.0, 80.4, 0.6, 0.6), env(t, 96.0, 106.4, 0.6, 0.6), env(t, 106.0, 122, 0.6, 0));
+    const k = Math.max(env(t, 0, 12.4, 1.2, 0.6), env(t, 26.0, 38.4, 0.6, 0.6), env(t, 62.0, 80.6, 0.6, 0.6), env(t, 96.0, 106.4, 0.6, 0.6), env(t, 106.0, 122, 0.6, 0));
     glow(bctx, t, k);
     dust.draw(bctx, t, k);
     const fade = Math.max(1 - P(t, 0, 0.8, E.outQuad), P(t, 120.8, 1.2, E.inOutSine));
@@ -82,10 +88,10 @@
 
   /* ------------------------------------------- C4: four practice areas */
   const CARDS = ['v1', 'v2', 'v3', 'v4'], CARD_T = [42.0, 45.0, 48.0, 51.0];
-  film.scene('c4', 37.8, 62.8, (lt, t) => {
+  film.scene('c4', 37.8, 63.0, (lt, t) => {
     const w = P(t, 37.8, 0.9, E.inOutQuart);
     $('c4').style.clipPath = w < 1 ? `inset(${((1 - w) * 100).toFixed(3)}% 0 0 0)` : 'none';
-    $('c4').style.opacity = env(t, 37.8, 62.8, 0, 0).toFixed(4);
+    $('c4').style.opacity = env(t, 37.8, 63.0, 0, 0).toFixed(4);
     show($('c4eb'), t, 38.5, 999, { y: 10 });
     chars($('c4h'), t, 38.8, 999, { stagger: 0.04, y: 20, blur: 10 });
     CARDS.forEach((id, i) => {
@@ -104,8 +110,8 @@
   });
 
   /* ------------------------------------------------ C5: the standard */
-  film.scene('c5', 61.8, 80.4, (lt, t) => {
-    $('c5').style.opacity = env(t, 61.8, 80.4, 0.9, 0.6, E.inOutSine).toFixed(4);
+  film.scene('c5', 62.0, 80.6, (lt, t) => {
+    $('c5').style.opacity = env(t, 62.0, 80.6, 0.9, 0.6, E.inOutSine).toFixed(4);
     show($('c5eb'), t, 62.5, 999, { y: 10 });
     chars($('c5h'), t, 62.8, 999, { stagger: 0.045, y: 22, blur: 10 });
     draw($('c5line').querySelector('path'), t, 66.0, 5.0, E.inOutSine);
@@ -117,10 +123,10 @@
   });
 
   /* ---------------------------------------------------- C6: people */
-  film.scene('c6', 79.8, 96.8, (lt, t) => {
-    const w = P(t, 79.8, 0.9, E.inOutQuart);
+  film.scene('c6', 80.0, 97.0, (lt, t) => {
+    const w = P(t, 80.0, 0.9, E.inOutQuart);
     $('c6').style.clipPath = w < 1 ? `inset(0 ${((1 - w) * 100).toFixed(3)}% 0 0)` : 'none';
-    $('c6').style.opacity = env(t, 79.8, 96.8, 0, 0).toFixed(4);
+    $('c6').style.opacity = env(t, 80.0, 97.0, 0, 0).toFixed(4);
     show($('c6eb'), t, 80.5, 999, { y: 10 });
     chars($('c6h'), t, 80.8, 999, { stagger: 0.045, y: 20, blur: 10 });
     show($('m1'), t, 83.0, 999, { x: -40, y: 0, blur: 8, fin: 1.1 });
@@ -166,8 +172,8 @@
     const all = mk('text', { x: 40, y: 770, class: 'sub', opacity: 0 }, svg); all.textContent = '경남 전역 상담 안내';
     map.all = all;
   }
-  film.scene('c7', 95.8, 106.4, (lt, t) => {
-    $('c7').style.opacity = env(t, 95.8, 106.4, 0.9, 0.6, E.inOutSine).toFixed(4);
+  film.scene('c7', 96.0, 106.4, (lt, t) => {
+    $('c7').style.opacity = env(t, 96.0, 106.4, 0.9, 0.6, E.inOutSine).toFixed(4);
     show($('c7eb'), t, 96.5, 999, { y: 10 });
     chars($('c7h'), t, 96.8, 999, { stagger: 0.05, y: 22, blur: 10 });
     show($('c7s'), t, 98.5, 999, { y: 12, blur: 6 });
@@ -218,6 +224,8 @@
   });
 
   M.boot(film, async () => {
+    // Drop the static holds after C4, C5 and C6 (cuts on bar lines between identical still frames): 122 s → 106 s.
+    film.setEdit(EDIT);
     buildMap();
     await loadLogo();
   });
