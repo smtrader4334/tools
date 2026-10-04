@@ -27,7 +27,7 @@
   --tabh:62px;
 }
 @media (prefers-color-scheme:dark){
-  :root{
+  :root:not([data-theme="light"]){
     --bg:#06181B; --paper:#0C262A; --ink:#E6F2F0; --ink2:#9AB6B7; --line:#1C3E43;
     --sea:#45C7C1; --sea2:#2FA9A8; --on-sea:#04262A; --foam:#11353A;
     --mango:#FFC53D; --pitaya:#FF6F9B; --leaf:#55CE98; --warn:#FFC978; --warn-bg:#3A2A08;
@@ -300,10 +300,53 @@ details.tip li b{font-weight:700}
 .toast{width:max-content;border-radius:18px}
 #gm-slot{height:min(44vh,380px)}
 
+
+/* Refined responsive layout and reading preferences */
+:root{--ff:"Be Vietnam Pro", "Noto Sans KR", "Malgun Gothic",sans-serif;--fd:var(--ff)}
+:root[data-theme="dark"]{--bg:#06181B; --paper:#0C262A; --ink:#E6F2F0; --ink2:#9AB6B7; --line:#1C3E43; --sea:#45C7C1; --sea2:#2FA9A8; --on-sea:#04262A; --foam:#11353A; --mango:#FFC53D; --pitaya:#FF6F9B; --leaf:#55CE98; --warn:#FFC978; --warn-bg:#3A2A08; --hero:#0D434B;;color-scheme:dark}
+:root[data-theme="light"]{color-scheme:light}
+html{scroll-padding-top:20px}
+body{background-image:radial-gradient(ellipse at 0 0,var(--foam),transparent 65%);background-attachment:fixed}
+.skip{position:fixed;top:-80px;left:16px;z-index:100;background:var(--paper);padding:12px}.skip:focus{top:10px}
+.apphead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0 20px}
+.brand{font-weight:800;font-size:18px;letter-spacing:-.04em}.brand small{display:block;font-size:11px;letter-spacing:.12em;color:var(--ink2);font-weight:500}
+.head-actions{display:flex;gap:6px}.head-actions button{border:1px solid var(--line);background:var(--paper);border-radius:12px;min-height:42px;min-width:42px;font-size:13px;padding:8px 10px}
+.connection{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);margin:0 2px 14px;flex-wrap:wrap}.connection::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--leaf)}.connection[data-offline="true"]::before{background:var(--warn)}
+.vh{font-weight:800;letter-spacing:-.04em}.sec-h h2,.dayhead h2,.sheet h2,.cg h3{font-weight:700;letter-spacing:-.025em}
+.box,.place{box-shadow:0 4px 16px rgba(4,40,40,.035)}
+.ticket{box-shadow:0 12px 28px rgba(5,59,63,.15);background-image:radial-gradient(circle at 96% 5%,rgba(255,184,28,.15),transparent 36%),radial-gradient(ellipse at 0 100%,rgba(39,181,179,.25),transparent 55%);background-size:auto}.tk-top{padding:22px 22px 20px}.tk-route{margin-top:14px}.tk-bot{padding:16px 22px 18px}
+.tk-big{font-size:clamp(30px,8vw,46px)}.tk-sub{min-width:0}.tk-sub b{font-size:14px}.tk-port b{font-size:32px}
+.heart{color:var(--ink2);min-width:44px;min-height:44px}.chip{min-height:40px}.btn{min-height:44px}.more{min-height:40px}
+.tk-bot button:focus-visible,.theme:focus-visible,.tl .dot button:focus-visible{outline:3px solid var(--mango);outline-offset:3px}
+.tl .dot button{position:relative}.tl .dot button::before{content:"";position:absolute;inset:-10px}
+.places-grid{display:grid;gap:10px}.places-grid .place{margin:0}.pl-h h3{overflow-wrap:anywhere}.pl-a{margin-top:auto;padding-top:12px}.place{display:flex;flex-direction:column}.pl-d{margin-bottom:8px}
+.day-summary{display:flex;justify-content:space-between;gap:8px;color:var(--ink2);font-size:13px;margin:12px 2px}.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.cg{padding:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper)}
+.chips:not(.wrap),.wx-days,.days{margin-left:0;margin-right:0;padding-left:0;padding-right:0}.seg{scrollbar-width:thin}.field>span{font-size:13px}.f2>*{min-width:0}.in{max-width:100%}button,a{touch-action:manipulation}p,b,span{overflow-wrap:break-word}
+.summary-card{padding:18px;border-radius:var(--r);background:var(--foam);margin-top:16px}.summary-card b{display:block;font-size:22px;margin:3px 0}
+.sheet-in{overscroll-behavior:contain}.show .c{width:100%;max-width:700px;margin:auto}
+.modal-close{float:right;border:1px solid var(--line);border-radius:50%;background:var(--paper);min-width:40px;min-height:40px;margin-left:8px}
+.print-only{display:none}
+html[data-large="true"] body{font-size:17px}html[data-large="true"] .note,html[data-large="true"] .pl-d,html[data-large="true"] .ck .tx,html[data-large="true"] .tl .it .m{font-size:16px}html[data-large="true"] .tl .it b,html[data-large="true"] .in{font-size:18px}html[data-large="true"] .field>span,html[data-large="true"] .ck .tx small{font-size:14px}
+@media(min-width:900px){
+ #app{max-width:1180px;padding:30px 30px 50px 190px}.apphead{margin-top:0}.brand{font-size:22px}
+ .tabs{left:max(18px,calc((100vw - 1180px)/2 + 24px));right:auto;top:142px;bottom:auto;border:1px solid var(--line);border-radius:20px;width:136px;padding:8px;box-shadow:0 6px 20px rgba(4,40,40,.04)}
+ .tabs div{height:auto;display:flex;flex-direction:column;gap:6px}.tabs button{display:flex;align-items:center;justify-content:flex-start;gap:12px;font-size:14px;padding:14px 12px;border-radius:12px}.tabs button[aria-current=page]{background:var(--foam)}.tabs button[aria-current=page]::before{display:none}
+ #view[data-tab="home"]{display:grid;grid-template-columns:1.1fr 1fr;gap:22px}#view[data-tab="home"]>.ticket,#view[data-tab="home"]>.home-title{grid-column:1/-1}#view[data-tab="home"]>.sec{margin:0;min-width:0}
+ .tk-top{min-height:200px}.tk-route{max-width:45%}.tk-status{position:absolute;right:22px;top:64px;max-width:45%;flex-direction:column;align-items:flex-end}.tk-bot{grid-template-columns:1fr 1fr 1fr}.tk-port b{font-size:38px}
+ .places-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.conv{grid-template-columns:1fr 1fr}.notes{grid-template-columns:repeat(6,1fr)}
+ .sheet{align-items:center}.sheet-in{border-radius:22px;max-height:85vh;padding-bottom:22px}.toast{bottom:24px}.days{margin:0;padding-left:0;padding-right:0}
+}
+@media(max-width:360px){#app{padding-left:12px;padding-right:12px}.tk-top{padding:16px}.tk-bot{padding:14px 16px}.tk-sub b{font-size:12px}.brand{font-size:16px}.head-actions button{padding:6px}.notes{grid-template-columns:repeat(2,1fr)}.seg button{padding:8px 10px}.cats div{grid-template-columns:74px 1fr auto}.sum b{font-size:26px}}
+@media print{
+ @page{margin:15mm;size:A4}body{background:#fff;color:#111;font:12px/1.6 sans-serif}#app,.tabs,.sheet,.show,.toast,.skip{display:none!important}.print-only{display:block!important} .print-day{break-inside:avoid;margin:0 0 18px;border-bottom:1px solid #ddd;padding-bottom:12px}.print-day h2{font-size:16px}.print-day ol{padding-left:20px}.print-day li{margin:6px 0}.print-day small{display:block;color:#444}a{color:#111}.print-only h1{font-size:24px}.print-only>p{margin:5px 0 20px}
+}
+
 </style>
 </head>
 <body>
-<div id="app"><main id="view" tabindex="-1"><noscript>이 앱은 자바스크립트가 켜져 있어야 동작해요.</noscript></main></div>
+<a class="skip" href="#view">본문으로 건너뛰기</a>
+<div id="app"><header class="apphead"><div class="brand"><small>OUR FAMILY GETAWAY</small>나트랑, 함께 떠나요</div><div class="head-actions"><button data-act="appearance" id="appearance" aria-label="화면 테마 변경">화면</button><button data-act="large-text" id="large-text" aria-pressed="false" aria-label="큰 글씨">가+</button></div></header><div class="connection" id="connection" role="status"></div><main id="view" tabindex="-1"><noscript>이 앱은 자바스크립트가 켜져 있어야 동작해요.</noscript></main></div>
 <nav class="tabs" aria-label="메뉴"><div>
   <button data-act="tab" data-v="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</button>
   <button data-act="tab" data-v="plan"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>일정</button>
@@ -313,6 +356,7 @@ details.tip li b{font-weight:700}
 </div></nav>
 <div id="sheet" class="sheet" hidden><div class="sheet-in" id="sheet-in" role="dialog" aria-modal="true"></div></div>
 <div id="show" class="show" role="dialog" aria-modal="true" hidden></div>
+<div id="print-area" class="print-only"></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>
 (() => {
@@ -346,7 +390,7 @@ const PFILTERS = [
   ['sight', '관광'], ['shop', '쇼핑'], ['kid', '아이와'], ['rain', '비 오는 날']
 ];
 
-/* 평점(r)·리뷰 수(n)는 구글 리뷰 기준으로 2026년에 수집된 참고값 */
+/* 평점(r)·리뷰 수(n)는 원본의 참고값이며 수집 날짜·출처가 검증되지 않음 */
 const PLACES = [
   // 맛집
   { id: '4ps', c: 'food', ko: '피자 포피스', lo: "Pizza 4P's Nha Trang", q: "Pizza 4P's Nha Trang", d: '바다가 보이는 화덕 피자집. 아이 입맛 걱정 없는 한 끼로 좋아요. 저녁은 예약을 권해요.', r: 4.9, n: 15712, t: ['kid', 'rain', 'ac', 'book'] },
@@ -356,7 +400,7 @@ const PLACES = [
   { id: 'chaomao', c: 'food', ko: '짜오마오', lo: 'Nhà hàng Chào Mào', q: 'Nhà hàng Chào Mào Nha Trang', d: '현지 분위기가 살아 있는 베트남 가정식 식당.', r: 4.8, n: 7186, t: [] },
   { id: 'nhabep', c: 'food', ko: '냐벱', lo: 'Nhà Bếp Nha Trang', q: 'Nhà Bếp Nha Trang', d: '에어컨이 있는 깔끔한 베트남 가정식당.', r: 4.8, n: 3432, t: ['ac', 'rain'] },
   { id: 'madam', c: 'food', ko: '마담프엉', lo: 'Madam Phương', q: 'Madam Phương Nha Trang', d: '시내 중심의 깔끔한 현대식 베트남 레스토랑. 한국인 입맛에 잘 맞는다는 평.', r: 4.5, n: 5841, t: ['ac'] },
-  { id: 'chuon', c: 'food', ko: '촌촌킴', lo: 'Chuồn Chuồn Kim', q: 'Chuồn Chuồn Kim Nha Trang', d: '미슐랭 가이드에 소개된 가정식집. 식물과 목제 가구로 꾸민 가정집 분위기.', r: 4.3, n: 4396, t: [] },
+  { id: 'chuon', c: 'food', ko: '촌촌킴', lo: 'Chuồn Chuồn Kim', q: 'Chuồn Chuồn Kim Nha Trang', d: '베트남 가정식집. 식물과 목제 가구로 꾸민 가정집 분위기.', r: 4.3, n: 4396, t: [] },
   { id: 'langngon', c: 'food', ko: '랑응온', lo: 'Làng Ngon', q: 'Làng Ngon Nha Trang', d: '정원과 연못, 등불이 어우러진 전통 마을 분위기의 식당.', r: 4.5, n: 3407, t: [] },
   { id: 'anhoi', c: 'food', ko: '안어이 퍼', lo: 'Anh Ơi Phở', q: 'Anh Ơi Phở Nha Trang', d: '깔끔하고 조용한 쌀국수집. 아침 식사로 좋아요.', r: 4.8, n: 2418, t: ['kid'] },
   { id: 'phothin', c: 'food', ko: '퍼틴 쌀국수', lo: 'Phở Thìn 13 Lò Đúc', q: 'Phở Thìn 13 Lò Đúc Nha Trang', d: '에어컨이 있는 쾌적한 하노이식 소고기 쌀국수. 롯데마트 1층에도 지점이 있어요.', r: 4.8, n: 530, t: ['ac', 'kid', 'rain'] },
@@ -440,8 +484,8 @@ const NUMS = [['1', 'một', '못'], ['2', 'hai', '하이'], ['3', 'ba', '바'],
 const CHECK = [
   { g: '서류·입국', l: [
     ['passport', '가족 모두 여권 유효기간 6개월 이상 남았는지 확인', ''],
-    ['pai', '사전입국신고(PAI) 작성하고 QR 저장', '도착 72시간 전부터 무료로 작성. 깜란공항 적용 여부는 항공사 안내 확인', 'https://prearrival.immigration.gov.vn'],
-    ['health', '건강신고서 제출 대상인지 확인', '2026년 7월 시행으로 보도됨. 실제 적용은 항공사·공항 안내 확인'],
+    ['pai', '사전입국신고 대상 확인, 필요하면 QR 저장', '대상 공항·작성 시점은 항공사와 공식 사이트에서 확인', 'https://prearrival.immigration.gov.vn'],
+    ['health', '건강신고서 제출 대상인지 확인', '출발 전 항공사·공항의 공식 안내 확인'],
     ['eticket', 'e티켓·숙소 바우처 캡처해 두기', '데이터가 안 터질 때를 대비'],
     ['insure', '여행자보험 가입', '우기라 항공 지연·결항 보장도 확인'],
     ['copy', '여권 사본과 여권 사진 따로 챙기기', ''],
@@ -551,7 +595,7 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const uid = () => Math.random().toString(36).slice(2, 10);
 const nf = n => Math.round(n).toLocaleString('ko-KR');
 const pad = n => String(n).padStart(2, '0');
-const num = s => Number(String(s).replace(/[^\d.]/g, '')) || 0;
+const num = s => { const n = Number(String(s ?? '').replace(/,/g, '').trim()); return Number.isFinite(n) && n >= 0 ? n : 0; };
 const TZ_VN = 'Asia/Ho_Chi_Minh', TZ_KR = 'Asia/Seoul';
 const ymd = tz => new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
 const hm = tz => new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date());
@@ -579,24 +623,65 @@ const DEF = () => ({
   v: 1,
   trip: { from: '부산', code: 'PUS', start: '2026-10-23', end: '2026-11-02', out: '', back: '', hotel: '', addr: '', tel: '', guardian: '', memo: '' },
   plan: {}, theme: {}, seeded: false, fav: [], mine: [], spend: [], budget: 0,
-  rate: { v: 19.15, at: '', ts: 0, manual: false }, check: {}, custom: [], wx: null, gkey: ''
+  rate: { v: 19.15, at: '', ts: 0, manual: false }, check: {}, custom: [], wx: null, gkey: '', appearance: 'auto', largeText: false
 });
-function load() {
+
+const isObj = x => !!x && typeof x === 'object' && !Array.isArray(x);
+const validDate = x => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x) && Number.isFinite(toUTC(x)) && new Date(toUTC(x)).toISOString().slice(0, 10) === x;
+const txt = (x, max = 300) => typeof x === 'string' ? x.slice(0, max) : '';
+const recordMap = (obj, fn) => Object.fromEntries(Object.entries(isObj(obj) ? obj : {}).filter(([k]) => validDate(k)).map(([k,v]) => [k,fn(v)]));
+function normalize(j, strict = false) {
+  if (!isObj(j) || !isObj(j.trip) || !isObj(j.plan)) throw new Error('잘못된 백업 구조');
   const d = DEF();
-  try {
-    const j = JSON.parse(localStorage.getItem(KEY) || 'null');
-    if (j && typeof j === 'object') {
-      Object.assign(d, j);
-      d.trip = Object.assign(DEF().trip, j.trip || {});
-      d.rate = Object.assign(DEF().rate, j.rate || {});
-    }
-  } catch (e) { /* 저장소를 못 쓰는 환경이면 기본값으로 */ }
+  if(strict){
+    for(const k of ['spend','mine','custom','fav'])if(j[k]!==undefined&&(!Array.isArray(j[k])||j[k].length>5000))throw new Error('잘못된 목록');
+    for(const k of ['check','theme','rate'])if(j[k]!==undefined&&!isObj(j[k]))throw new Error('잘못된 저장값');
+    if(j.spend?.some(x=>!isObj(x)||!validDate(x.d)||!Number.isFinite(x.amt)||x.amt<=0||x.amt>1e12||!['KRW','VND'].includes(x.cur)))throw new Error('잘못된 지출');
+    if(j.rate&&(!Number.isFinite(j.rate.v)||j.rate.v<=1||j.rate.v>=100))throw new Error('잘못된 환율');
+    if(Object.values(j.plan).some(l=>Array.isArray(l)&&l.length>5000))throw new Error('일정이 너무 많음');
+  }
+  if (strict && (!validDate(j.trip.start) || !validDate(j.trip.end) || j.trip.end < j.trip.start || diffDays(j.trip.end,j.trip.start)>30)) throw new Error('잘못된 여행 날짜');
+  for (const k of Object.keys(d.trip)) if (typeof j.trip[k] === 'string') d.trip[k] = txt(j.trip[k], k === 'memo' ? 3000 : 300);
+  if (!validDate(d.trip.start) || !validDate(d.trip.end) || d.trip.end < d.trip.start || diffDays(d.trip.end,d.trip.start)>30) { d.trip.start=DEF().trip.start; d.trip.end=DEF().trip.end; }
+  const array = x => Array.isArray(x) ? x.filter(isObj).slice(0,5000) : [];
+  if (strict && Object.entries(j.plan).some(([date,list]) => !validDate(date) || !Array.isArray(list) || list.some(x => !isObj(x) || typeof x.title !== 'string'))) throw new Error('잘못된 일정');
+  d.plan = recordMap(j.plan, l => array(l).filter(x=>txt(x.title,60).trim()).map(x=>({id:txt(x.id,80)||uid(),t:/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(x.t)?x.t:'',title:txt(x.title,60),note:txt(x.note),q:txt(x.q,80),cat:CATS.some(c=>c.k===x.cat)?x.cat:'etc',done:x.done===true})));
+  d.theme=recordMap(j.theme,v=>txt(v,60)); d.seeded=j.seeded===true || Object.keys(d.plan).length>0;
+  d.fav=Array.isArray(j.fav)?j.fav.filter(id=>PLACES.some(p=>p.id===id)):[];
+  d.mine=array(j.mine).filter(x=>txt(x.name,60).trim()).map(x=>({id:txt(x.id,80)||uid(),name:txt(x.name,60),note:txt(x.note,300),u:/^https:\/\//.test(x.u||'')?txt(x.u,2000):''}));
+  d.spend=array(j.spend).filter(x=>validDate(x.d)&&Number.isFinite(x.amt)&&x.amt>0&&x.amt<=1e12).map(x=>({id:txt(x.id,80)||uid(),d:x.d,amt:x.amt,cur:x.cur==='KRW'?'KRW':'VND',cat:SPCATS.some(c=>c.k===x.cat)?x.cat:'etc',memo:txt(x.memo,100),rate:Number.isFinite(x.rate)&&x.rate>1&&x.rate<100?x.rate:undefined}));
+  d.budget=Number.isFinite(j.budget)&&j.budget>=0?Math.min(j.budget,1e12):0;
+  if(isObj(j.rate)&&Number.isFinite(j.rate.v)&&j.rate.v>1&&j.rate.v<100) d.rate={v:j.rate.v,at:txt(j.rate.at,40),ts:Number.isFinite(j.rate.ts)?j.rate.ts:0,manual:j.rate.manual===true};
+  // Freeze legacy entries at the loaded rate so later refreshes do not change totals.
+  d.spend.forEach(x=>{if(!x.rate)x.rate=d.rate.v;});
+  d.custom=array(j.custom).filter(x=>/^c[a-z0-9]+$/i.test(x.id||'')&&txt(x.text,100).trim()).map(x=>({id:x.id,text:txt(x.text,100)}));
+  const ids=new Set(CHECK.flatMap(g=>g.l.map(x=>x[0])).concat(d.custom.map(x=>x.id)));
+  d.check=Object.fromEntries(Object.entries(isObj(j.check)?j.check:{}).filter(([k,v])=>ids.has(k)&&v===true));
+  if(isObj(j.wx)&&isObj(j.wx.cur)&&Array.isArray(j.wx.d)&&Number.isFinite(j.wx.at)&&['t','c','h'].every(k=>Number.isFinite(j.wx.cur[k]))&&j.wx.d.every(x=>isObj(x)&&validDate(x.d)&&['c','hi','lo'].every(k=>Number.isFinite(x[k]))))d.wx=j.wx;
+  d.gkey=/^[A-Za-z0-9_-]{20,}$/.test(j.gkey||'')?j.gkey:'';
+  d.appearance=['auto','light','dark'].includes(j.appearance)?j.appearance:'auto'; d.largeText=j.largeText===true;
   return d;
 }
+let storageIssue = false, recoveryText = '';
+function load() {
+  let raw='';
+  try {raw=localStorage.getItem(KEY)||'';recoveryText=localStorage.getItem(KEY+'-recovery')||'';const j=JSON.parse(raw||'null'); return j?normalize(j):DEF(); }
+  catch(e){storageIssue=true;if(raw){recoveryText=raw;try{localStorage.setItem(KEY+'-recovery',raw);}catch(e2){}}return DEF();}
+}
 let S = load();
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
+function connection() {
+  const el=document.getElementById('connection');if(!el)return;
+  el.dataset.offline=String(!navigator.onLine);
+  el.textContent=storageIssue?'저장소를 사용할 수 없어요 · 백업 파일로 기록을 보관하세요':navigator.onLine?'이 기기에 저장 · 가족 공유는 설정에서':'오프라인 · 저장된 일정과 기록을 볼 수 있어요';
+}
+function save() { try { localStorage.setItem(KEY,JSON.stringify(S));storageIssue=false;connection();return true; }catch(e){storageIssue=true;connection();toast('기기에 저장하지 못했어요. 설정에서 백업을 저장해 주세요');return false;} }
+function applyAppearance(){
+  document.documentElement.dataset.theme=S.appearance;document.documentElement.dataset.large=String(S.largeText);
+  const b=document.getElementById('appearance');b.textContent={auto:'자동',light:'밝게',dark:'어둡게'}[S.appearance];b.setAttribute('aria-label','화면 테마: '+b.textContent+' · 눌러 변경');
+  document.getElementById('large-text').setAttribute('aria-pressed',String(S.largeText));
+}
 
-const ui = { tab: 'home', day: null, mapView: 'search', mq: '', mterm: '', mbase: 'center', coords: null, pf: 'all', guide: 'check', phr: 0, spCur: 'VND', wxErr: false };
+const ui = { tab: 'home', day: null, mapView: 'search', mq: '', mterm: '', mbase: 'center', coords: null, pf: 'all', guide: 'check', phr: 0, spCur: 'VND', wxErr: false, pq: '', wxBusy: false, rateBusy: false };
 const view = $('#view'), sheet = $('#sheet'), sheetIn = $('#sheet-in'), show = $('#show'), toastEl = $('#toast');
 
 function tripDays() {
@@ -627,7 +712,7 @@ const sorted = list => list.map((x, i) => [x, i]).sort((a, b) => {
   if (ta) return -1; if (tb) return 1; return a[1] - b[1];
 }).map(x => x[0]);
 const catOf = k => CATS.find(c => c.k === k) || CATS[CATS.length - 1];
-const toKrw = x => x.cur === 'KRW' ? x.amt : x.amt / S.rate.v;
+const toKrw = x => x.cur === 'KRW' ? x.amt : x.amt / (x.rate || S.rate.v);
 
 /* ───────── 날씨 · 환율 ───────── */
 function WX(c) {
@@ -637,10 +722,11 @@ function WX(c) {
 }
 const wxOf = date => S.wx && S.wx.d ? S.wx.d.find(x => x.d === date) : null;
 async function loadWx(force) {
-  if (!force && S.wx && Date.now() - S.wx.at < 3600e3) return;
+  if(ui.wxBusy)return;ui.wxBusy=true;
+  if (!force && S.wx && Date.now() - S.wx.at < 3600e3) {ui.wxBusy=false;return;}
   try {
     const u = 'https://api.open-meteo.com/v1/forecast?latitude=12.2388&longitude=109.1967&current=temperature_2m,weather_code,relative_humidity_2m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum&timezone=Asia%2FHo_Chi_Minh&forecast_days=16';
-    const r = await fetch(u); if (!r.ok) throw new Error('wx');
+    const r = await fetch(u, {signal:AbortSignal.timeout(12000)}); if (!r.ok) throw new Error('wx');
     const j = await r.json(), D = j.daily;
     S.wx = {
       at: Date.now(),
@@ -649,33 +735,42 @@ async function loadWx(force) {
     };
     ui.wxErr = false; save();
   } catch (e) { ui.wxErr = true; }
-  if (ui.tab === 'home' || ui.tab === 'plan') render();
+  ui.wxBusy=false;
+  if (ui.tab === 'home' || ui.tab === 'plan') refreshView();
 }
 async function loadRate(force) {
+  if(ui.rateBusy)return false;
   if (!force && (S.rate.manual || Date.now() - (S.rate.ts || 0) < 6 * 3600e3)) return true;
-  const set = (v, at) => { S.rate = { v, at, ts: Date.now(), manual: false }; save(); };
+  ui.rateBusy=true;const initialRate=S.rate;
+  const set = (v, at) => { if(S.rate!==initialRate)return; S.rate = { v, at, ts: Date.now(), manual: false }; save(); };
   try {
-    const j = await (await fetch('https://open.er-api.com/v6/latest/KRW')).json();
+    const j = await (await fetch('https://open.er-api.com/v6/latest/KRW', {signal:AbortSignal.timeout(10000)})).json();
     if (!(j && j.rates && j.rates.VND > 0)) throw new Error('rate');
     set(j.rates.VND, ymd(TZ_KR));
   } catch (e) {
     try {
-      const j = await (await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/krw.min.json')).json();
+      const j = await (await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/krw.min.json', {signal:AbortSignal.timeout(10000)})).json();
       if (!(j && j.krw && j.krw.vnd > 0)) throw new Error('rate');
       set(j.krw.vnd, j.date || ymd(TZ_KR));
-    } catch (e2) { return false; }
+    } catch (e2) { ui.rateBusy=false;return false; }
   }
-  if (ui.tab === 'home' || ui.tab === 'wallet') render();
+  ui.rateBusy=false;
+  if (ui.tab === 'home' || ui.tab === 'wallet') refreshView();
   return true;
 }
 
 /* ───────── 공통 UI ───────── */
 let toastT;
 function toast(msg) { toastEl.textContent = msg; toastEl.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('on'), 2600); }
-function openSheet(html) { sheetIn.innerHTML = html; sheet.hidden = false; sheetIn.scrollTop = 0; document.body.style.overflow = 'hidden'; }
-function closeSheet() { sheet.hidden = true; sheetIn.innerHTML = ''; if (show.hidden) document.body.style.overflow = ''; }
-function showCard(html) { show.innerHTML = `<button class="x" data-act="show-close">닫기</button><div class="c">${html}</div>`; show.hidden = false; document.body.style.overflow = 'hidden'; }
-function closeShow() { show.hidden = true; show.innerHTML = ''; try { speechSynthesis.cancel(); } catch (e) { } if (sheet.hidden) document.body.style.overflow = ''; }
+
+let sheetFocus=null,showFocus=null;
+function syncModals(){const active=!sheet.hidden||!show.hidden;document.getElementById('app').inert=active;document.querySelector('.tabs').inert=active;sheet.inert=!show.hidden;document.body.style.overflow=active?'hidden':'';}
+function focusModal(el){el.setAttribute('aria-label',el.querySelector('h2,.k')?.textContent||'상세 화면');el.tabIndex=-1;const f=el.querySelector('input:not([type=hidden]),select,textarea,button,a[href]');(f||el).focus({preventScroll:true});}
+function openSheet(html){if(sheet.hidden)sheetFocus=document.activeElement;sheetIn.innerHTML='<button class="modal-close" data-act="sheet-close" aria-label="닫기">✕</button>'+html;sheet.hidden=false;sheetIn.scrollTop=0;syncModals();focusModal(sheetIn);}
+function closeSheet(){sheet.hidden=true;sheetIn.innerHTML='';pendingOk=null;syncModals();if(sheetFocus?.isConnected)sheetFocus.focus({preventScroll:true});else view.focus({preventScroll:true});}
+function showCard(html){showFocus=document.activeElement;show.innerHTML=`<button class="x" data-act="show-close">닫기</button><div class="c">${html}</div>`;show.hidden=false;syncModals();focusModal(show);}
+function closeShow(){show.hidden=true;show.innerHTML='';try{speechSynthesis.cancel();}catch(e){}syncModals();if(showFocus?.isConnected)showFocus.focus({preventScroll:true});else view.focus({preventScroll:true});}
+
 let pendingOk = null;
 function ask(title, body, okLabel, fn, danger) {
   pendingOk = fn;
@@ -683,13 +778,13 @@ function ask(title, body, okLabel, fn, danger) {
     <div class="row" style="margin-top:18px"><button class="btn ghost grow" data-act="sheet-close">취소</button><button class="btn ${danger ? 'danger' : 'pri'} grow" data-act="ask-ok">${esc(okLabel)}</button></div>`);
 }
 async function copyText(text) {
-  try { await navigator.clipboard.writeText(text); }
-  catch (e) {
-    const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
-    document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e2) { } ta.remove();
-  }
-  toast('복사했어요. 카카오톡에 붙여넣으세요');
+  let ok=false;
+  try{await navigator.clipboard.writeText(text);ok=true;}
+  catch(e){const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0';const host=!sheet.hidden?sheetIn:document.body;host.appendChild(ta);ta.select();try{ok=document.execCommand('copy');}catch(e2){}ta.remove();}
+  if(ok)toast('복사했어요. 메시지에 붙여넣으세요');
+  else openSheet(`<h2>내용 직접 복사</h2><p class="note">내용을 길게 누르거나 전체 선택해서 복사하세요.</p><textarea class="in" readonly style="min-height:200px">${esc(text)}</textarea>`);
 }
+
 async function shareText(title, text) {
   if (navigator.share) { try { await navigator.share({ title, text }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
   copyText(text);
@@ -709,26 +804,28 @@ function wxHTML() {
   const w = S.wx, days = tripDays();
   if (!w) return `<div class="box note">${ui.wxErr ? '날씨를 불러오지 못했어요. 인터넷 연결을 확인한 뒤 다시 시도해 주세요. <button class="btn sm" style="margin-top:8px" data-act="wx-reload">날씨 다시 불러오기</button>' : '날씨를 불러오는 중이에요…'}</div>`;
   const [e, l] = WX(w.cur.c);
+  const stale=Date.now()-w.at>3600e3;
   const any = w.d.some(x => days.includes(x.d));
   const first = addDays(S.trip.start, -15);
-  return `<div class="wx-now"><span class="ic" aria-hidden="true">${e}</span><div><b>${Math.round(w.cur.t)}°</b> <span>지금 나트랑은 ${l}, 습도 ${Math.round(w.cur.h)}%</span></div></div>
+  return `<div class="wx-now"><span class="ic" aria-hidden="true">${e}</span><div><b>${Math.round(w.cur.t)}°</b> <span>${stale?'저장된 나트랑 날씨는':'지금 나트랑은'} ${l}, 습도 ${Math.round(w.cur.h)}%</span></div></div>
     <div class="wx-days">${w.d.map(x => {
     const [de, dl] = WX(x.c), tr = days.includes(x.d), p = x.p == null ? null : Math.round(x.p);
     return `<div class="wx-d${tr ? ' trip' : ''}" title="${dl}"><div class="dt">${mdDot(x.d)} ${dow(x.d)}</div><div class="ic" aria-label="${dl}">${de}</div><div class="tp">${Math.round(x.hi)}°/${Math.round(x.lo)}°</div><div class="pp${p >= 60 ? ' hi' : ''}">${p == null ? '' : '☂ ' + p + '%'}</div></div>`;
   }).join('')}</div>
-    <p class="note" style="margin-top:6px">${any ? '노란 줄이 여행 날짜예요. ' : `예보는 16일 앞까지만 나와요. 여행 날짜는 ${md(first)}쯤부터 보여요. `}10~11월은 나트랑 우기라 낮 28~31°, 밤 23~24°에 소나기가 잦아요.</p>`;
+    <p class="note" style="margin-top:8px">Open-Meteo · ${esc(new Intl.DateTimeFormat('ko-KR',{timeZone:TZ_VN,month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(w.at)))} 현지 시각 갱신${ui.wxErr?' · 갱신 실패, 저장된 예보':stale?' · 이전 예보':''}</p><p class="note" style="margin-top:6px">${any ? '노란 줄이 여행 날짜예요. ' : `예보는 16일 앞까지만 나와요. 여행 날짜는 ${md(first)}쯤부터 보여요. `}10~11월은 나트랑 우기라 낮 28~31°, 밤 23~24°에 소나기가 잦아요.</p>`;
 }
 function renderHome() {
   const st = status(), t = S.trip, ck = checkProgress();
   const items = sorted(S.plan[st.focus] || []).filter(x => !x.done).slice(0, 4);
+  const allDone=(S.plan[st.focus]||[]).length>0 && (S.plan[st.focus]||[]).every(x=>x.done);
   const fw = wxOf(st.focus), di = tripDays().indexOf(st.focus);
   const paiOpen = addDays(t.start, -3);
   const paiNote = st.phase !== 'pre' || S.check.pai ? '' :
     st.today >= paiOpen
-      ? `<div class="callout" style="margin-top:14px"><b>사전입국신고를 지금 작성할 수 있어요.</b> 공식 사이트에서 무료로 작성하고 QR을 저장하세요. <a href="https://prearrival.immigration.gov.vn" target="_blank" rel="noopener">작성하러 가기</a></div>`
+      ? `<div class="callout" style="margin-top:14px"><b>출발 전 입국 절차를 확인해 주세요.</b> 사전입국신고 대상 공항과 도착 시각을 항공사 안내로 확인하세요. <a href="https://prearrival.immigration.gov.vn" target="_blank" rel="noopener">작성하러 가기</a></div>`
       : '';
   view.innerHTML = `
-  <section class="ticket" aria-label="여행 요약">
+  <h1 class="home-title" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">나트랑 가족여행 대시보드</h1><section class="ticket" aria-label="여행 요약">
     <div class="tk-top">
       <div class="tk-name"><b>나트랑 가족여행</b><button class="tk-gear" data-act="guide" data-v="set" aria-label="여행 정보 설정">${ICON.gear}</button></div>
       <div class="tk-route">
@@ -753,7 +850,7 @@ function renderHome() {
     <div class="sec-h"><h2>${st.phase === 'on' ? '오늘 일정' : st.phase === 'pre' ? '첫날 일정' : '마지막 날 일정'}</h2><button class="more" data-act="day" data-v="${st.focus}">일정 전체 보기</button></div>
     ${fw && fw.p >= 60 ? `<div class="callout" style="margin-bottom:10px"><b>${md(st.focus)} 비 올 확률 ${Math.round(fw.p)}%.</b> 실내 코스로 바꿔 보는 것도 좋아요. <a href="#map" data-act="picks" data-v="rain">비 오는 날 갈 곳 보기</a></div>` : ''}
     ${items.length ? `<div class="box" style="padding:6px 16px">${items.map(x => `<div style="display:grid;grid-template-columns:52px 1fr;gap:8px;padding:9px 0;border-top:1px solid var(--line)" class="hrow"><b style="font-variant-numeric:tabular-nums">${esc(x.t) || '<span class="note">미정</span>'}</b><span>${catOf(x.cat).e} ${esc(x.title)}</span></div>`).join('')}</div>`
-      : `<div class="empty">${di >= 0 ? di + 1 + '일차' : ''} 일정이 비어 있어요.<br><button class="btn sm pri" style="margin-top:10px" data-act="day" data-v="${st.focus}">일정 넣으러 가기</button></div>`}
+      : `<div class="empty">${allDone?'이 날 일정을 모두 마쳤어요.':(di >= 0 ? di + 1 + '일차 ' : '')+'일정이 비어 있어요.'}<br><button class="btn sm pri" style="margin-top:10px" data-act="day" data-v="${st.focus}">일정 넣으러 가기</button></div>`}
   </section>
 
   <section class="sec"><div class="sec-h"><h2>바로 쓰기</h2></div>
@@ -776,7 +873,7 @@ function renderHome() {
     <p class="note" style="margin-top:6px">여행 전체 ${nf(S.spend.reduce((a, x) => a + toKrw(x), 0))}원${S.budget ? `, 예산 ${nf(S.budget)}원` : ''}</p></div></section>` : ''}
   <section class="sec"${st.phase === 'on' && ck.done === ck.total ? ' hidden' : ''}><div class="sec-h"><h2>준비 현황</h2><button class="more" data-act="guide" data-v="check">준비물 보기</button></div>
     <div class="box"><div class="sum"><span>챙긴 것</span><b style="font-size:22px">${ck.done} / ${ck.total}</b></div><div class="bar"><i style="width:${ck.total ? ck.done / ck.total * 100 : 0}%"></i></div>
-    ${st.phase === 'pre' && !S.check.pai && st.today < paiOpen ? `<p class="note" style="margin-top:10px">사전입국신고는 ${md(paiOpen)}부터 작성할 수 있어요.</p>` : ''}</div>
+    ${st.phase === 'pre' && !S.check.pai && st.today < paiOpen ? `<p class="note" style="margin-top:10px">출발 전에 항공사에서 사전입국신고 대상과 작성 시점을 확인하세요.</p>` : ''}</div>
   </section>`;
   const first = view.querySelector('.hrow'); if (first) first.style.borderTop = '0';
 }
@@ -793,13 +890,13 @@ function renderPlan() {
     const xw = wxOf(x);
     return `<button class="dayc${st.phase === 'on' && x === st.today ? ' today' : ''}" role="tab" aria-selected="${x === d}" data-act="day" data-v="${x}" aria-label="${i + 1}일차 ${md(x)} ${dow(x)}요일"><span class="w">${dow(x)}</span><span class="n">${Number(x.slice(8))}</span><span class="x">${xw ? WX(xw.c)[0] : ''}</span></button>`;
   }).join('')}</div>
-  <div class="dayhead">
+  <div class="toolbar"><button class="btn sm" data-act="plan-overview">전체 일정 한눈에</button><button class="btn sm" data-act="print-plan">일정 인쇄 / PDF</button></div><div class="dayhead">
     <p class="k">${idx + 1}일차</p>
     <h2>${md(d)} ${dow(d)}요일</h2>
     <button class="theme" data-act="theme" aria-label="이 날의 제목 고치기">${esc(S.theme[d] || '이 날의 제목 붙이기')}</button>
   </div>
   ${w ? `<div class="daywx${w.p >= 60 ? ' rain' : ''}"><span aria-hidden="true">${we}</span><span>${wl}, ${Math.round(w.hi)}°/${Math.round(w.lo)}°${w.p == null ? '' : `, 비 올 확률 ${Math.round(w.p)}%`}${w.p >= 60 ? '. 실내 코스를 준비해 두세요' : ''}</span></div>` : ''}
-  ${list.length ? `<ol class="tl">${list.map(x => `
+  <div class="day-summary"><span>일정 ${list.length}개</span><span>완료 ${list.filter(x=>x.done).length}개 · 현지 시각 기준</span></div>${list.length ? `<ol class="tl">${list.map(x => `
     <li class="${x.done ? 'done' : ''}">
       <div class="t${x.t ? '' : ' none'}">${esc(x.t) || '미정'}</div>
       <div class="dot"><button data-act="plan-done" data-id="${esc(x.id)}" role="checkbox" aria-checked="${!!x.done}" aria-label="${esc(x.title)} 완료 표시">${x.done ? '✓' : ''}</button></div>
@@ -819,13 +916,13 @@ function renderPlan() {
   if (sel) { const box = sel.parentNode; box.scrollLeft = sel.offsetLeft - box.clientWidth / 2 + sel.clientWidth / 2; }
 }
 function planSheet(date, id, preset) {
-  const days = tripDays();
+  const days = tripDays(); if(!days.includes(date))date=days[0];
   const it = id ? (S.plan[date] || []).find(x => x.id === id) : Object.assign({ t: '', title: '', note: '', q: '', cat: 'etc' }, preset || {});
   if (!it) return;
   const [hh, mm] = it.t ? it.t.split(':') : ['', ''];
   const hours = '<option value="">미정</option>' + Array.from({ length: 24 }, (_, h) => `<option${pad(h) === hh ? ' selected' : ''}>${pad(h)}</option>`).join('');
-  const mins = Array.from({ length: 12 }, (_, i) => { const m = pad(i * 5); return `<option${m === mm ? ' selected' : ''}>${m}</option>`; }).join('');
-  openSheet(`<form id="f-plan" data-date="${date}" data-id="${id || ''}">
+  const mins = Array.from({ length: 60 }, (_, i) => { const m = pad(i); return `<option${m === mm ? ' selected' : ''}>${m}</option>`; }).join('');
+  openSheet(`<form id="f-plan" data-date="${esc(date)}" data-id="${esc(id || '')}">
     <h2>${id ? '일정 고치기' : '일정 추가'}</h2>
     <label class="field"><span>무엇을 하나요</span><input class="in" name="title" required maxlength="60" value="${esc(it.title)}" placeholder="예: 포나가르 사원"></label>
     <label class="field"><span>날짜</span><select class="in" name="date">${days.map((x, i) => `<option value="${x}"${x === date ? ' selected' : ''}>${i + 1}일차, ${md(x)} ${dow(x)}요일</option>`).join('')}</select></label>
@@ -979,14 +1076,14 @@ function renderMap() {
       ${key ? '' : `<div class="box" style="margin-top:20px"><b>이 화면 안에서 바로 찾으려면</b><p class="note" style="margin-top:4px">구글 API 키를 넣으면 지도와 평점순 목록이 여기에 바로 나와요.</p><button class="btn sm" style="margin-top:10px" data-act="gkey-help">켜는 방법 보기</button></div>`}`;
     }
   } else if (v === 'picks') {
-    const f = ui.pf, list = PLACES.filter(p => f === 'all' || p.c === f || p.t.includes(f));
-    h += `<div class="chips">${PFILTERS.map(([k, n]) => `<button class="chip" aria-pressed="${f === k}" data-act="pf" data-v="${k}">${n}</button>`).join('')}</div>
-    <p class="note">${list.length}곳. 평점은 구글 리뷰 기준으로 2026년에 모은 참고값이에요. 영업시간과 가격은 구글지도에서 확인하세요.</p>
-    ${list.map(placeHTML).join('')}`;
+    const f = ui.pf, term=ui.pq.trim().toLowerCase(), list = PLACES.filter(p => (f === 'all' || p.c === f || p.t.includes(f)) && (!term || [p.ko,p.lo,p.d].join(' ').toLowerCase().includes(term)));
+    h += `<form id="f-picks" class="search" role="search"><input type="search" name="q" aria-label="추천 장소 검색" placeholder="이름이나 특징으로 찾기" value="${esc(ui.pq)}"><button class="btn pri">찾기</button></form><div class="chips">${PFILTERS.map(([k, n]) => `<button class="chip" aria-pressed="${f === k}" data-act="pf" data-v="${k}">${n}</button>`).join('')}</div>
+    <p class="note">${list.length}곳 · 기존 목록의 평점·리뷰는 수집 날짜를 확인할 수 없는 참고값입니다. 최신 영업시간·가격·평점은 구글지도에서 확인하세요.</p>
+    <div class="places-grid">${list.map(placeHTML).join('') || '<div class="empty">조건에 맞는 곳이 없어요. 검색어나 분류를 바꿔 보세요.</div>'}</div>`;
   } else {
     const favs = PLACES.filter(p => S.fav.includes(p.id));
     h += `${favs.length || S.mine.length ? '' : '<div class="empty">찜한 곳이 없어요. 추천 장소에서 ♡를 누르거나 아래에 직접 추가하세요.</div>'}
-    ${favs.map(placeHTML).join('')}
+    <div class="places-grid">${favs.map(placeHTML).join('')}</div>
     ${S.mine.map(m => `<article class="place"><div class="pl-h"><h3>${esc(m.name)}<small>직접 추가한 곳</small></h3><button class="heart" aria-pressed="true" aria-label="${esc(m.name)} 지우기" data-act="mine-del" data-id="${esc(m.id)}">✕</button></div>${m.note ? `<p class="pl-d">${esc(m.note)}</p>` : ''}
       <div class="pl-a"><a class="btn sm pri" target="_blank" rel="noopener" href="${/^https:\/\//.test(m.u || '') ? esc(m.u) : G.search(m.name)}">구글지도</a><a class="btn sm" target="_blank" rel="noopener" href="${G.dir(m.name)}">길찾기</a><button class="btn sm" data-act="mine-plan" data-id="${esc(m.id)}">일정에 넣기</button></div></article>`).join('')}
     <form id="f-mine" class="box" style="margin-top:16px"><b>가고 싶은 곳 직접 추가</b>
@@ -1040,7 +1137,7 @@ function keyHelp() {
       <li>사용자 인증 정보에서 <b>API 키</b>를 만들고, 애플리케이션 제한을 “웹사이트”로 골라 이 앱의 주소를 등록해요.<br><span class="note">지금 주소: ${esc(location.origin + '/*')}</span></li>
       <li>가이드 탭의 설정에 키를 붙여 넣고 저장해요.</li>
     </ol>
-    <p class="note" style="margin-top:12px">구글은 매달 일정 횟수까지 무료로 쓰게 해 줘요(평점이 포함된 검색은 월 1,000회, 지도 표시는 월 10,000회). 가족 여행에서는 보통 그 안에서 끝나지만, 콘솔에서 하루 할당량 상한을 걸어 두면 안심돼요. 무료 범위와 요금은 구글 정책에 따라 바뀔 수 있어요.</p>
+    <p class="note" style="margin-top:12px">사용량과 요금은 활성화한 API 및 구글 정책에 따라 달라요. 구글 클라우드 콘솔에서 현재 가격, 웹사이트 제한, 사용량 할당량을 확인하세요.</p>
     <div class="row" style="margin-top:16px"><button class="btn ghost grow" data-act="sheet-close">닫기</button><button class="btn pri grow" data-act="guide" data-v="set">설정으로 가기</button></div>`);
 }
 
@@ -1055,7 +1152,7 @@ function renderWallet() {
   const defDay = days.includes(st.focus) ? st.focus : days[0];
   const pct = S.budget ? Math.min(100, total / S.budget * 100) : 0;
   view.innerHTML = `
-  <h1 class="vh">지갑</h1>
+  <h1 class="vh">지갑<small>금액을 입력하면 동과 원을 바로 계산해요.</small></h1>
   <section>
     <div class="conv">
       <label><input id="cv-vnd" inputmode="numeric" autocomplete="off" placeholder="0" aria-label="베트남 동"><span class="u">동</span></label>
@@ -1076,7 +1173,7 @@ function renderWallet() {
       <div class="sum"><span>지금까지</span><b>${nf(total)}원</b></div>
       ${S.budget ? `<div class="bar${total > S.budget ? ' over' : ''}"><i style="width:${pct}%"></i></div><p class="note" style="margin-top:6px">예산 ${nf(S.budget)}원 중 ${total > S.budget ? nf(total - S.budget) + '원 초과' : nf(S.budget - total) + '원 남음'}</p>` : ''}
       ${byCat.length ? `<div class="cats">${byCat.map(([c, v]) => `<div><span>${c.e} ${c.n}</span><span class="bar"><i style="width:${v / maxCat * 100}%"></i></span><em>${nf(v)}원</em></div>`).join('')}</div>` : ''}
-      <button class="btn sm" style="margin-top:12px" data-act="budget">${S.budget ? '예산 바꾸기' : '예산 정하기'}</button>
+      <button class="btn sm" style="margin-top:12px" data-act="budget">${S.budget ? '예산 바꾸기' : '예산 정하기'}</button><button class="btn sm" style="margin:12px 0 0 8px" data-act="spend-csv">엑셀용 CSV 저장</button><p class="note" style="margin-top:10px">동 지출은 기록 당시 환율로 원화 합계를 고정합니다. 실제 카드 청구액과는 다를 수 있어요.</p>
     </div>
     <form id="f-spend" class="box" style="margin-top:10px">
       <div class="f3"><label class="field" style="margin:0"><span>금액</span><input class="in" id="sp-amt" name="amt" inputmode="numeric" autocomplete="off" required placeholder="0"></label>
@@ -1127,9 +1224,9 @@ function tipsHTML() {
   const r = S.rate.v;
   const T = [
     ['입국과 공항', [
-      '한국 여권은 <b>45일 무비자</b>로 입국해요. 여권 유효기간은 6개월 이상 남아 있어야 해요.',
-      '<b>사전입국신고(PAI)</b>는 도착 72시간 전부터 공식 사이트 <a href="https://prearrival.immigration.gov.vn" target="_blank" rel="noopener">prearrival.immigration.gov.vn</a>에서 무료로 작성하고 QR을 캡처해 두세요. 2026년 4월 호치민 공항부터 도입돼 공항별로 넓혀 가는 중이라, 깜란공항 적용 여부는 항공사 안내로 확인하세요. 수수료를 받는 유사 사이트는 피하세요.',
-      '<b>전자담배</b>는 액상형·궐련형 모두 반입, 소지, 사용이 금지예요. 적발되면 벌금과 압수.',
+      '한국 여권의 <b>무사증 체류는 최대 45일</b>이며 여권 잔여 유효기간 6개월 이상이 필요해요. <a href="https://vn.mofa.go.kr/vn-ko/brd/m_2203/view.do?page=1&seq=1345931" target="_blank" rel="noopener">대사관 안내</a>에서 입국 조건을 확인하세요.',
+      '<b>사전입국신고(PAI)</b>는 적용 대상과 작성 시점을 항공사에 확인한 뒤 공식 사이트 <a href="https://prearrival.immigration.gov.vn" target="_blank" rel="noopener">prearrival.immigration.gov.vn</a>에서 안내에 따라 작성하고 QR을 캡처해 두세요. 깜란공항 적용 여부는 출발 전에 다시 확인하세요. 수수료를 받는 유사 사이트는 피하세요.',
+      '<b>전자담배</b>는 액상형·궐련형 모두 반입, 소지, 사용이 금지예요. <a href="https://vn.mofa.go.kr/vn-ko/brd/m_27022/view.do?seq=1339310" target="_blank" rel="noopener">공관 통관 안내</a>를 확인하세요.',
       '깜란 국제공항에서 나트랑 시내까지 약 35km, 차로 40~50분 걸려요.',
       '그랩은 약 25만~40만 동, 공항 택시는 약 40만~55만 동이에요. 밤늦게 도착하거나 짐과 아이가 있으면 픽업 차량을 예약하는 편이 편해요.'
     ]],
@@ -1151,7 +1248,7 @@ function tipsHTML() {
       '<b>그랩(Grab)</b> 앱으로 부르면 요금이 미리 정해지고 카드로 결제돼요.',
       '택시를 잡는다면 마이린(Mai Linh, 초록색)이나 비나선(Vinasun, 흰색) 같은 미터 택시를 타세요.',
       '시내 안은 어디든 차로 10~15분 안팎이에요.',
-      '길을 건널 때는 뛰지 말고 일정한 속도로 천천히. 오토바이가 알아서 피해 가요. 아이 손은 꼭 잡고요.',
+      '신호와 횡단보도를 이용하고 차량이 멈췄는지 확인한 뒤 건너세요. 아이 손을 잡고, 시야가 가려지거나 교통량이 많은 곳은 피하세요.',
       '홈 화면의 “기사님께 숙소 보여주기”에 숙소 주소를 넣어 두면 말이 안 통해도 돌아올 수 있어요.'
     ]],
     ['식당에서', [
@@ -1198,11 +1295,11 @@ function sosHTML() {
     <b style="display:block;margin-top:12px">카드를 잃어버렸을 때</b>
     <p style="margin-top:6px">카드사 앱이나 해외 분실신고 번호로 바로 정지하세요. 번호는 출발 전에 메모해 두는 게 좋아요.</p>
   </div>
-  <p class="note" style="margin-top:12px">나트랑을 맡는 공관과 연락처는 출발 전에 외교부 안내에서 한 번 더 확인하세요. 영사콜센터는 어디서나 통해요.</p>`;
+  <p class="note" style="margin-top:12px"><a href="https://vnm-hochiminh.mofa.go.kr/vn-hochiminh-ko/index.do" target="_blank" rel="noopener">공관 공식 연락처 확인</a> · 현지 단축번호는 베트남 전화망 기준이며 통신 환경에 따라 연결이 달라질 수 있어요.</p>`;
 }
 function setHTML() {
   const t = S.trip, f = (k, label, ph, type, extra) => `<label class="field"><span>${label}</span><input class="in" data-trip="${k}" type="${type || 'text'}" value="${esc(t[k])}" placeholder="${ph || ''}" ${extra || ''}></label>`;
-  return `<div class="cg" style="margin-top:0"><h3>여행 정보</h3>
+  return `<div class="cg" style="margin-top:0"><h3>화면 설정</h3><p class="note">상단 버튼으로 밝게·어둡게·자동 전환과 큰 글씨를 선택할 수 있어요.</p></div><div class="cg"><h3>여행 정보</h3>
     <div class="f2">${f('from', '출발 도시', '부산')}${f('code', '공항 코드', 'PUS', 'text', 'maxlength="4" style="text-transform:uppercase"')}</div>
     <div class="f2">${f('start', '출발하는 날', '', 'date')}${f('end', '한국 도착하는 날', '', 'date')}</div>
     ${f('out', '가는 비행기 (편명과 시간)', '예: BX781 19:30 출발')}
@@ -1216,20 +1313,20 @@ function setHTML() {
   </div>
   <div class="cg"><h3>미아 방지 카드</h3>
     ${f('guardian', '보호자 전화번호', '+82 10-0000-0000', 'tel')}
-    <p class="note" style="margin-top:6px">현지에서 걸 수 있게 +82로 시작하는 번호로 적으세요. 이 기기에만 저장되고 공유 링크에는 들어가지 않아요.</p>
+    <p class="note" style="margin-top:6px">현지에서 걸 수 있게 +82로 시작하는 번호로 적으세요. 이 기기에 저장되고 공유용 일정에는 들어가지 않아요. 전체 백업에는 포함돼요.</p>
     <button class="btn sm" style="margin-top:8px" data-act="lost">카드 미리 보기</button>
   </div>
   <div class="cg"><h3>지도 안 실시간 검색</h3>
     <p class="note">${gkey() ? (S.gkey ? '켜져 있어요. 이 휴대폰에 저장한 키를 써요.' : '켜져 있어요. 앱에 넣어 둔 키를 써요.') : '꺼져 있어요. 지금은 구글지도 앱으로 넘어가서 찾아요.'}</p>
-    <label class="field"><span>구글 Maps API 키</span><input class="in" id="gkey" value="${esc(S.gkey || '')}" placeholder="AIza로 시작하는 키" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+    <label class="field"><span>구글 Maps API 키</span><input class="in" id="gkey" type="password" value="${esc(S.gkey || '')}" placeholder="AIza로 시작하는 키" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
     <div class="row" style="margin-top:8px"><button class="btn pri" data-act="gkey-save">키 저장</button><button class="btn" data-act="gkey-help">키 만드는 방법</button></div>
   </div>
   <div class="cg"><h3>메모</h3><label class="field" style="margin-top:0"><span>예약 번호, 픽업 기사 연락처 등</span><textarea class="in" data-trip="memo" style="min-height:110px">${esc(t.memo)}</textarea></label></div>
   <div class="cg"><h3>가족과 나누기, 백업</h3>
-    <p class="note">기록은 이 휴대폰에만 저장돼요. 가족 휴대폰에서도 같은 일정을 보려면 링크를 보내 주세요. 일정, 찜한 곳, 숙소 정보${S.gkey ? ', 지도 검색 키' : ''}가 담겨요.</p>
+    <p class="note">기록은 이 브라우저에 저장돼요. 전체 백업에는 보호자 연락처와 API 키도 포함돼요. 가족 휴대폰에서도 같은 일정을 보려면 링크를 보내 주세요. 일정, 찜한 곳, 숙소 정보가 담겨요. 보호자 연락처·개인 메모·API 키는 공유에서 제외해요. 공유한 뒤에는 각 기기에서 따로 수정돼요.</p>
     <button class="btn pri full" style="margin-top:8px" data-act="share-link">일정을 링크로 보내기</button>
     <div class="row" style="margin-top:8px"><button class="btn grow" data-act="export">백업 파일 저장</button><button class="btn grow" data-act="import">백업 파일 불러오기</button></div>
-    <input type="file" id="imp" accept="application/json,.json" hidden>
+    <input type="file" id="imp" accept="application/json,.json" hidden>${recoveryText?'<button class="btn full" style="margin-top:8px" data-act="export-recovery">손상된 이전 저장내용 보관</button><p class="note">복구 검토를 위해 남긴 원본입니다. 일반 백업으로 바로 불러오기는 어려울 수 있어요.</p>':''}
     <button class="btn danger full" style="margin-top:20px" data-act="reset">모든 기록 지우고 처음으로</button>
   </div>`;
 }
@@ -1242,14 +1339,25 @@ function renderGuide() {
 
 /* ───────── 화면 전환 ───────── */
 const RENDER = { home: renderHome, plan: renderPlan, map: renderMap, wallet: renderWallet, guide: renderGuide };
-function render() { (RENDER[ui.tab] || renderHome)(); }
+function render() {view.dataset.tab=ui.tab;(RENDER[ui.tab] || renderHome)();}
+function refreshView(){
+  const scroll=window.scrollY, active=document.activeElement, id=active?.id, name=active?.name, formId=active?.closest('form')?.id;
+  const inputs=[...view.querySelectorAll('input:not([type=file]),select,textarea')].map(el=>({id:el.id,name:el.name,form:el.closest('form')?.id,value:el.value,checked:el.checked}));
+  const horizontal=[...view.querySelectorAll('.days,.chips,.wx-days,.seg')].map(el=>el.scrollLeft);
+  const start=active?.selectionStart,end=active?.selectionEnd;render();
+  for(const x of inputs){const el=x.id?document.getElementById(x.id):[...view.querySelectorAll('input,select,textarea')].find(el=>el.name===x.name&&el.closest('form')?.id===x.form);if(el){el.value=x.value;el.checked=x.checked;}}
+  [...view.querySelectorAll('.days,.chips,.wx-days,.seg')].forEach((el,i)=>el.scrollLeft=horizontal[i]||0);
+  if(id||name){const el=id?document.getElementById(id):[...view.querySelectorAll('input,select,textarea')].find(el=>el.name===name&&el.closest('form')?.id===formId);if(el){el.focus({preventScroll:true});try{el.setSelectionRange(start,end);}catch(e){}}}
+  if(ui.tab==='wallet'){spHint();if(id==='cv-krw')onConv('krw');else onConv('vnd');}
+  window.scrollTo(0,scroll);connection();
+}
 function go(tab, keepScroll) {
   if (!RENDER[tab]) tab = 'home';
   ui.tab = tab;
   document.querySelectorAll('.tabs button').forEach(b => b.toggleAttribute('aria-current', false));
   const cur = $(`.tabs button[data-v="${tab}"]`); if (cur) cur.setAttribute('aria-current', 'page');
-  render();
-  if (!keepScroll) window.scrollTo(0, 0);
+  render();view.dataset.tab=tab;
+  if (!keepScroll) {window.scrollTo(0, 0);if(sheet.hidden&&show.hidden)view.focus({preventScroll:true});}
   try { history.replaceState(null, '', '#' + tab); } catch (e) { }
 }
 
@@ -1264,25 +1372,25 @@ async function pack(obj) {
   return 'j' + b64(bytes);
 }
 async function unpack(s) {
-  const bytes = unb64(s.slice(1));
+  if(s.length>200000)throw new Error('too large');const bytes = unb64(s.slice(1));
   if (s[0] === 'z') { const st = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw')); return JSON.parse(await new Response(st).text()); }
-  return JSON.parse(new TextDecoder().decode(bytes));
+  if(s[0]!=='j')throw new Error('bad');return JSON.parse(new TextDecoder().decode(bytes));
 }
 let incoming = null;
 async function checkIncoming() {
   const m = location.hash.match(/^#d=(.+)$/); if (!m) return false;
   try {
     const j = await unpack(m[1]);
-    if (!j || typeof j.p !== 'object') throw new Error('bad');
+    if (!isObj(j) || !isObj(j.p)) throw new Error('bad');
+    const cleaned=normalize({trip:j.t,plan:j.p,theme:j.h,fav:j.f,mine:j.m,seeded:true},true);j.t=cleaned.trip;j.p=cleaned.plan;j.h=cleaned.theme;j.f=cleaned.fav;j.m=cleaned.mine;
     incoming = j;
     const n = Object.values(j.p).reduce((a, l) => a + (Array.isArray(l) ? l.length : 0), 0);
     ask('받은 일정이 있어요', `가족이 보낸 일정 ${n}개를 이 휴대폰에 불러올까요? 지금 이 휴대폰에 있는 일정과 찜한 곳은 받은 내용으로 바뀌어요. 지출과 준비물 체크는 그대로예요.`, '받은 일정 불러오기', () => {
-      const g = S.trip.guardian;
-      if (j.t) S.trip = Object.assign(DEF().trip, j.t, { guardian: g });
+      const g = S.trip.guardian, memo=S.trip.memo;
+      if (j.t) S.trip = {...j.t, guardian:g, memo};
       Object.values(j.p).forEach(l => Array.isArray(l) && l.forEach(x => { if (!/^\d\d:\d\d$/.test(x.t || '')) x.t = ''; }));
       S.plan = j.p; S.theme = j.h || {}; S.fav = Array.isArray(j.f) ? j.f : []; S.mine = Array.isArray(j.m) ? j.m : []; S.seeded = true;
-      const newKey = typeof j.k === 'string' && /^[A-Za-z0-9_-]{20,}$/.test(j.k) && !S.gkey;
-      if (newKey) S.gkey = j.k;
+      
       save(); ui.day = null; go('plan'); toast('받은 일정을 불러왔어요');
     });
   } catch (e) { toast('링크의 일정을 읽지 못했어요'); }
@@ -1291,7 +1399,35 @@ async function checkIncoming() {
 }
 
 /* ───────── 누르기 동작 ───────── */
+
+function downloadFile(name,text,type){const url=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);}
+function sharedData(){const t={...S.trip,guardian:'',memo:''};return{v:1,shareOnly:true,trip:t,plan:S.plan,theme:S.theme,fav:S.fav,mine:S.mine,seeded:true};}
+function checkSharedFile(j){ask('공유용 일정을 불러올까요?','일정·찜한 곳·숙소 정보가 바뀝니다. 지출·준비물·보호자 연락처·개인 메모는 유지됩니다.','일정 불러오기',()=>{const guardian=S.trip.guardian,memo=S.trip.memo;S.trip={...j.trip,guardian,memo};S.plan=j.plan;S.theme=j.theme;S.fav=j.fav;S.mine=j.mine;S.seeded=true;save();ui.day=null;go('plan');toast('공유 일정을 불러왔어요');});}
+function spendEdit(id){const x=S.spend.find(s=>s.id===id);if(!x)return;
+ openSheet(`<form id="f-spend-edit" data-id="${esc(id)}"><h2>지출 수정</h2><label class="field"><span>금액</span><input class="in" name="amt" inputmode="decimal" value="${nf(x.amt)}" required></label><div class="f2"><label class="field"><span>통화</span><select class="in" name="cur"><option value="VND"${x.cur==='VND'?' selected':''}>베트남 동</option><option value="KRW"${x.cur==='KRW'?' selected':''}>한국 원</option></select></label><label class="field"><span>날짜</span><input class="in" type="date" name="d" value="${esc(x.d)}" required></label></div><label class="field"><span>종류</span><select class="in" name="cat">${SPCATS.map(c=>`<option value="${c.k}"${c.k===x.cat?' selected':''}>${c.e} ${c.n}</option>`).join('')}</select></label><label class="field"><span>기록 환율 · 1원이 몇 동인지</span><input class="in" name="rate" inputmode="decimal" required value="${x.rate||S.rate.v}"></label><label class="field"><span>메모</span><input class="in" name="memo" maxlength="100" value="${esc(x.memo)}"></label><div class="row" style="margin-top:18px"><button type="button" class="btn ghost grow" data-act="sheet-close">취소</button><button class="btn pri grow">수정 저장</button></div></form>`);
+}
+function printPlan(){
+ document.getElementById('print-area').innerHTML=`<h1>나트랑 가족여행</h1><p>${esc(S.trip.start)} ~ ${esc(S.trip.end)} · 현지 시각 기준${S.trip.hotel?'<br>숙소: '+esc(S.trip.hotel):''}</p>`+tripDays().map((d,i)=>`<section class="print-day"><h2>${i+1}일차 · ${md(d)} ${dow(d)}요일 ${esc(S.theme[d]||'')}</h2><ol>${sorted(S.plan[d]||[]).map(x=>`<li><b>${esc(x.t||'미정')} · ${esc(x.title)}</b>${x.note?'<small>'+esc(x.note)+'</small>':''}${x.q?'<small>장소: '+esc(x.q)+'</small>':''}</li>`).join('')||'<li>일정 없음</li>'}</ol></section>`).join('');
+ window.print();
+}
+
 const ACT = {
+
+  appearance:()=>{const a=['auto','light','dark'];S.appearance=a[(a.indexOf(S.appearance)+1)%3];applyAppearance();save();},
+  'large-text':()=>{S.largeText=!S.largeText;applyAppearance();save();},
+  'print-plan':printPlan,
+  'plan-overview':()=>openSheet(`<h2>전체 일정 한눈에</h2><p class="note">날짜를 누르면 해당 일정으로 이동해요.</p>${tripDays().map((d,i)=>`<button class="sp" data-act="overview-day" data-v="${d}"><span>${i+1}</span><span class="n"><b>${md(d)} ${dow(d)} · ${esc(S.theme[d]||'제목 없음')}</b><span>${(S.plan[d]||[]).length}개 일정</span></span><span>→</span></button>`).join('')}`),
+  'overview-day':el=>{closeSheet();ui.day=el.dataset.v;go('plan');},
+  'spend-edit':el=>spendEdit(el.dataset.id),
+  'export-shared':()=>{downloadFile('nhatrang-shared.json',JSON.stringify(sharedData(),null,2),'application/json');toast('공유용 일정 파일을 저장했어요');},
+  'export-recovery':()=>downloadFile('nhatrang-recovery.json',recoveryText,'application/json'),
+  'spend-csv':()=>{
+    if(!S.spend.length){toast('기록한 지출이 없어요');return;}
+    const cell=v=>{let t=String(v??'');if(/^[=+@\-\t\r]/.test(t))t="'"+t;return '"'+t.replace(/"/g,'""')+'"';};
+    const rows=[['날짜','종류','메모','통화','금액','기록환율(동/원)','원화환산'],...S.spend.slice().sort((a,b)=>a.d.localeCompare(b.d)).map(x=>[x.d,SPCATS.find(c=>c.k===x.cat)?.n||'기타',x.memo,x.cur,x.amt,x.rate||S.rate.v,Math.round(toKrw(x))])];
+    downloadFile(`nhatrang-expenses-${ymd(TZ_KR)}.csv`,'\uFEFF'+rows.map(r=>r.map(cell).join(',')).join('\r\n'),'text/csv;charset=utf-8');toast('CSV 파일을 저장했어요');
+  },
+
   tab: el => go(el.dataset.v),
   guide: el => { if (!sheet.hidden) closeSheet(); ui.guide = el.dataset.v; go('guide', ui.tab === 'guide'); },
   day: el => { ui.day = el.dataset.v; go('plan', ui.tab === 'plan'); },
@@ -1371,9 +1507,9 @@ const ACT = {
     const c = SPCATS.find(k => k.k === x.cat) || SPCATS[SPCATS.length - 1];
     openSheet(`<h2>${c.e} ${esc(x.memo || c.n)}</h2><p style="font:800 28px/1.3 var(--fd);margin-top:6px">${nf(x.amt)}${x.cur === 'VND' ? '동' : '원'}</p>
       <p class="note">${md(x.d)} ${dow(x.d)}요일, ${c.n}${x.cur === 'VND' ? `, 약 ${nf(toKrw(x))}원` : ''}</p>
-      <div class="row" style="margin-top:18px"><button class="btn danger" data-act="spend-del" data-id="${esc(x.id)}">이 지출 지우기</button><button class="btn ghost grow" data-act="sheet-close">닫기</button></div>`);
+      <p class="note">기록 환율: 1원 = ${(x.rate||S.rate.v).toFixed(2)}동</p><div class="row" style="margin-top:18px"><button class="btn pri" data-act="spend-edit" data-id="${esc(x.id)}">수정</button><button class="btn danger" data-act="spend-del" data-id="${esc(x.id)}">이 지출 지우기</button><button class="btn ghost grow" data-act="sheet-close">닫기</button></div>`);
   },
-  'spend-del': el => { S.spend = S.spend.filter(x => x.id !== el.dataset.id); save(); closeSheet(); renderWallet(); toast('지출을 지웠어요'); },
+  'spend-del': el => ask('지출을 지울까요?','선택한 지출을 삭제합니다.','지출 삭제',()=>{ S.spend = S.spend.filter(x => x.id !== el.dataset.id); save(); renderWallet(); toast('지출을 지웠어요'); },true),
   'spend-share': () => S.spend.length ? shareText('나트랑 여행 지출', spendText()) : toast('아직 기록한 지출이 없어요'),
 
   /* 가이드 */
@@ -1409,8 +1545,9 @@ const ACT = {
 
   /* 백업 */
   'share-link': async () => {
-    const t = Object.assign({}, S.trip); delete t.guardian;
-    const url = location.href.split('#')[0] + '#d=' + await pack(Object.assign({ t, p: S.plan, h: S.theme, f: S.fav, m: S.mine }, S.gkey ? { k: S.gkey } : {}));
+    if(!/^https?:/.test(location.protocol)||['localhost','127.0.0.1','[::1]'].includes(location.hostname)||location.hostname.endsWith('.localhost')){openSheet('<h2>파일로 일정 공유</h2><p class="note">지금 주소는 이 컴퓨터에서만 열리는 주소라 가족 휴대폰에서 링크로 열 수 없어요. 아래 공유용 JSON과 HTML 파일을 함께 보내고, 가족이 설정에서 JSON을 불러오면 됩니다. 공유용 파일에는 지출·보호자 연락처·개인 메모·API 키를 제외합니다.</p><button class="btn pri full" style="margin-top:16px" data-act="export-shared">공유용 일정 파일 저장</button>');return;}
+    const t = Object.assign({}, S.trip); delete t.guardian;delete t.memo;
+    const url = location.href.split('#')[0] + '#d=' + await pack({ t, p: S.plan, h: S.theme, f: S.fav, m: S.mine });
     if (url.length > 9000) { toast('일정이 길어 링크로 보내기 어려워요. 백업 파일을 보내 주세요'); return; }
     if (navigator.share) { try { await navigator.share({ title: '나트랑 가족여행 일정', url }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
     copyText(url);
@@ -1422,7 +1559,7 @@ const ACT = {
     setTimeout(() => URL.revokeObjectURL(a.href), 3000); toast('백업 파일을 저장했어요');
   },
   import: () => { const i = $('#imp'); if (i) i.click(); },
-  reset: () => ask('모든 기록을 지울까요?', '일정, 지출, 준비물 체크, 숙소 정보가 모두 지워지고 처음 상태로 돌아가요. 되돌릴 수 없어요.', '모두 지우기', () => { try { localStorage.removeItem(KEY); } catch (e) { } S = DEF(); seedPlan(); ui.day = null; go('home'); loadWx(true); loadRate(true); toast('처음 상태로 돌아갔어요'); }, true)
+  reset: () => ask('모든 기록을 지울까요?', '일정, 지출, 준비물 체크, 숙소 정보가 모두 지워지고 처음 상태로 돌아가요. 되돌릴 수 없어요.', '모두 지우기', () => { try { localStorage.removeItem(KEY); } catch (e) { } S = DEF(); seedPlan();applyAppearance(); ui.day = null; go('home'); loadWx(true); loadRate(true); toast('처음 상태로 돌아갔어요'); }, true)
 };
 
 /* ───────── 입력 처리 ───────── */
@@ -1437,6 +1574,8 @@ function spHint() {
   h.textContent = !v ? '' : ui.spCur === 'VND' ? `약 ${nf(v / S.rate.v)}원` : `약 ${nf(v * S.rate.v)}동`;
 }
 const FORMS = {
+  'f-picks':(f,d)=>{ui.pq=d.get('q').trim();renderMap();},
+  'f-spend-edit':(f,d)=>{const x=S.spend.find(s=>s.id===f.dataset.id),amt=num(d.get('amt')),rate=num(d.get('rate'));if(!x)return;if(!(amt>0&&amt<=1e12&&rate>1&&rate<100&&validDate(d.get('d')))){toast('금액·환율·날짜를 확인해 주세요');return;}Object.assign(x,{amt,rate,d:d.get('d'),cur:d.get('cur'),cat:d.get('cat'),memo:d.get('memo').trim()});save();closeSheet();renderWallet();toast('지출을 수정했어요');},
   'f-plan': (f, d) => {
     const from = f.dataset.date, id = f.dataset.id, to = d.get('date'), hh = d.get('hh');
     const title = d.get('title').trim(); if (!title) return;
@@ -1451,11 +1590,11 @@ const FORMS = {
   'f-search': (f, d) => { ui.mq = d.get('q').trim(); ui.mterm = ''; renderMap(); },
   'f-mine': (f, d) => { const name = d.get('name').trim(); if (!name) return; S.mine.push({ id: uid(), name, note: d.get('note').trim() }); save(); renderMap(); toast('찜한 곳에 추가했어요'); },
   'f-spend': (f, d) => {
-    const amt = num(d.get('amt')); if (!amt) { toast('금액을 넣어 주세요'); return; }
-    S.spend.push({ id: uid(), d: d.get('d'), amt, cur: ui.spCur, cat: d.get('cat'), memo: d.get('memo').trim() });
+    const amt = num(d.get('amt')); if (!(amt>0&&amt<=1e12)) { toast('금액을 올바른 숫자로 넣어 주세요'); return; }
+    S.spend.push({ id: uid(), d: d.get('d'), amt, cur: ui.spCur, cat: d.get('cat'), memo: d.get('memo').trim(), rate:S.rate.v });
     save(); renderWallet(); toast('지출을 기록했어요');
   },
-  'f-rate': (f, d) => { const v = Number(String(d.get('v')).replace(/[^\d.]/g, '')); if (!(v > 1 && v < 100)) { toast('1원이 몇 동인지 숫자로 넣어 주세요 (예: 19.15)'); return; } S.rate = { v, at: '직접 입력', ts: Date.now(), manual: true }; save(); closeSheet(); render(); toast('환율을 저장했어요'); },
+  'f-rate': (f, d) => { const v = num(d.get('v')); if (!(v > 1 && v < 100)) { toast('1원이 몇 동인지 숫자로 넣어 주세요 (예: 19.15)'); return; } S.rate = { v, at: '직접 입력', ts: Date.now(), manual: true }; save(); closeSheet(); render(); toast('환율을 저장했어요'); },
   'f-budget': (f, d) => { S.budget = num(d.get('v')); save(); closeSheet(); renderWallet(); toast('예산을 저장했어요'); },
   'f-check': (f, d) => { const text = d.get('text').trim(); if (!text) return; S.custom.push({ id: 'c' + uid(), text }); save(); renderGuide(); toast('준비물에 추가했어요'); }
 };
@@ -1463,7 +1602,7 @@ const FORMS = {
 document.addEventListener('click', e => {
   if (e.target === sheet) { closeSheet(); return; }
   const el = e.target.closest('[data-act]'); if (!el) return;
-  const fn = ACT[el.dataset.act]; if (fn) fn(el, e);
+  const fn = ACT[el.dataset.act]; if (fn) { const result=fn(el,e);if(result?.catch)result.catch(()=>toast('요청을 완료하지 못했어요. 다시 시도해 주세요')); }
 });
 document.addEventListener('submit', e => { e.preventDefault(); const fn = FORMS[e.target.id]; if (fn) fn(e.target, new FormData(e.target)); });
 document.addEventListener('input', e => {
@@ -1486,24 +1625,33 @@ document.addEventListener('change', e => {
     const start = k === 'start' ? v : S.trip.start, end = k === 'end' ? v : S.trip.end;
     if (end < start) { toast('도착하는 날이 출발하는 날보다 빨라요'); t.value = S.trip[k]; return; }
     if (diffDays(end, start) > 30) { toast('여행 기간은 31일까지만 넣을 수 있어요'); t.value = S.trip[k]; return; }
-    S.trip[k] = v; save(); ui.day = null; toast('여행 날짜를 바꿨어요');
+    S.trip[k] = v; save(); ui.day = null; const outside=Object.keys(S.plan).filter(d=>!tripDays().includes(d)&&(S.plan[d]||[]).length);toast(outside.length?'날짜를 바꿨어요. 기간 밖 일정은 보관되고 날짜를 되돌리면 다시 보여요':'여행 날짜를 바꿨어요');
   } else if (t.id === 'imp' && t.files && t.files[0]) {
+    if(t.files[0].size>2*1024*1024){toast('백업 파일은 2MB 이하로 선택하세요');t.value='';return;}
     const fr = new FileReader();
     fr.onload = () => {
       try {
         const j = JSON.parse(fr.result);
-        if (!j || typeof j !== 'object' || !j.trip || typeof j.plan !== 'object') throw new Error('bad');
-        ask('백업을 불러올까요?', '이 휴대폰의 기록이 백업 파일의 내용으로 모두 바뀌어요.', '백업 불러오기', () => { localStorage.setItem(KEY, JSON.stringify(j)); S = load(); ui.day = null; go('home'); toast('백업을 불러왔어요'); });
+        const cleaned=normalize(j,true);if(j.shareOnly===true){checkSharedFile(cleaned);return;}
+        ask('백업을 불러올까요?', '이 휴대폰의 기록이 백업 파일의 내용으로 모두 바뀌어요.', '백업 불러오기', () => { S=cleaned;save();applyAppearance();ui.day=null;go('home');toast('백업을 불러왔어요'); });
       } catch (err) { toast('이 앱의 백업 파일이 아니에요'); }
     };
+    fr.onerror=()=>toast('파일을 읽지 못했어요');
     fr.readAsText(t.files[0]); t.value = '';
   }
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!show.hidden) closeShow(); else if (!sheet.hidden) closeSheet(); } });
+document.addEventListener('keydown', e => {
+  const modal=!show.hidden?show:!sheet.hidden?sheetIn:null;
+  if(e.key==='Escape'&&modal){e.preventDefault();if(!show.hidden)closeShow();else closeSheet();return;}
+  if(e.key==='Tab'&&modal){const els=[...modal.querySelectorAll('a[href],button,input:not([type=hidden]),select,textarea,[tabindex="0"]')].filter(x=>!x.disabled&&x.getClientRects().length);const first=els[0],last=els.at(-1);if(!first){e.preventDefault();modal.focus();}else if(e.shiftKey&&(document.activeElement===first||document.activeElement===modal)){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}return;}
+  if(!modal&&['ArrowRight','ArrowLeft','Home','End'].includes(e.key)&&e.target.matches('[role=tab]')){const tabs=[...e.target.parentNode.querySelectorAll('[role=tab]')];const i=tabs.indexOf(e.target),n=e.key==='Home'?0:e.key==='End'?tabs.length-1:(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;const action=tabs[n].dataset.act,value=tabs[n].dataset.v;e.preventDefault();tabs[n].click();document.querySelector(`[data-act="${action}"][data-v="${value}"]`)?.focus();}
+});
+window.addEventListener('online',()=>{connection();loadWx();loadRate();});window.addEventListener('offline',connection);
 window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (RENDER[h] && h !== ui.tab) go(h); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { loadWx(); loadRate(); tick(); } });
 
 /* ───────── 시작 ───────── */
+let lastDay=ymd(TZ_VN);
 function tick() { const a = $('#clk-vn'), b = $('#clk-kr'); if (a) a.textContent = hm(TZ_VN); if (b) b.textContent = hm(TZ_KR); }
 function installMeta() {
   try {
@@ -1522,12 +1670,13 @@ function installMeta() {
   } catch (e) { }
 }
 (async function boot() {
+  applyAppearance();connection();
   if (!S.seeded) seedPlan();
   installMeta();
   const shared = await checkIncoming();
   const h = location.hash.slice(1);
   go(!shared && RENDER[h] ? h : 'home');
-  setInterval(tick, 15000);
+  setInterval(()=>{tick();const current=status().today;if(current!==lastDay){lastDay=current;refreshView();}},15000);
   try { speechSynthesis.getVoices(); } catch (e) { }
   loadWx(); loadRate();
 })();
