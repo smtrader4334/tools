@@ -1,0 +1,1538 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>나트랑 가족여행</title>
+<meta name="description" content="2026년 10월 23일부터 11월 2일까지, 나트랑 가족여행 도우미">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0A5A66">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="나트랑">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&family=Do+Hyeon&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F0F6F4; --paper:#FFFFFF; --ink:#0F3237; --ink2:#55737A; --line:#D3E3E0;
+  --sea:#0A5A66; --sea2:#0F7F8A; --on-sea:#FFFFFF; --foam:#E2F1EE;
+  --mango:#FFB81C; --mango-ink:#4A3000; --pitaya:#D42A63; --leaf:#1B8A5A; --warn:#A8500A; --warn-bg:#FFF3D6;
+  --hero:#0A5A66; --hero-ink:#F3FBFA; --hero-dim:#A9D6D6;
+  --r:18px; --rs:12px;
+  --ff:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  --fd:"Be Vietnam Pro","Do Hyeon","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  --tabh:62px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#06181B; --paper:#0C262A; --ink:#E6F2F0; --ink2:#9AB6B7; --line:#1C3E43;
+    --sea:#45C7C1; --sea2:#2FA9A8; --on-sea:#04262A; --foam:#11353A;
+    --mango:#FFC53D; --pitaya:#FF6F9B; --leaf:#55CE98; --warn:#FFC978; --warn-bg:#3A2A08;
+    --hero:#0D434B;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.55 var(--ff);-webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+a{color:var(--sea);text-underline-offset:3px}
+h1,h2,h3,p{margin:0}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--mango);outline-offset:2px;border-radius:6px}
+
+#app{max-width:600px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 10px) 16px calc(var(--tabh) + env(safe-area-inset-bottom) + 28px)}
+#view{outline:none}
+.vh{font:400 26px/1.2 var(--fd);font-synthesis:none;letter-spacing:-.01em;margin:10px 2px 14px}
+.vh small{display:block;font:400 13px/1.5 var(--ff);color:var(--ink2);margin-top:4px;letter-spacing:0}
+.sec{margin-top:26px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 2px 10px}
+.sec-h h2{font:400 19px/1.25 var(--fd);font-synthesis:none}
+.sec-h .more{background:none;border:0;padding:6px 0;color:var(--sea);font-weight:700;font-size:13px}
+.note{color:var(--ink2);font-size:13px}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.callout{background:var(--warn-bg);color:var(--warn);border-radius:var(--rs);padding:10px 12px;font-size:13px;line-height:1.5}
+.callout b{font-weight:700}
+
+/* ticket hero */
+.ticket{position:relative;background:var(--hero);color:var(--hero-ink);border-radius:22px;overflow:hidden;
+  background-image:radial-gradient(circle at 50% 110%,transparent 0 13px,rgba(255,255,255,.07) 13px 14.5px,transparent 14.5px);background-size:34px 18px}
+.tk-top{padding:18px 20px 16px}
+.tk-name{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--hero-dim)}
+.tk-name b{color:var(--hero-ink);font-weight:700}
+.tk-gear{background:rgba(255,255,255,.12);border:0;color:var(--hero-ink);width:36px;height:36px;border-radius:50%;display:grid;place-items:center}
+.tk-route{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;margin-top:8px}
+.tk-port b{display:block;font:800 34px/1 var(--fd);letter-spacing:.01em}
+.tk-port span{font-size:13px;color:var(--hero-dim)}
+.tk-port.r{text-align:right}
+.tk-path{display:flex;align-items:center;gap:8px;padding-bottom:16px}
+.tk-path::before,.tk-path::after{content:"";flex:1;border-top:2px dotted rgba(255,255,255,.45)}
+.tk-path svg{width:24px;height:24px;flex:none;fill:var(--mango)}
+.tk-status{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:14px}
+.tk-big{font:800 46px/.95 var(--fd);font-synthesis:none;color:var(--mango);letter-spacing:-.01em}
+.tk-sub{text-align:right;font-size:13px;color:var(--hero-dim);line-height:1.45}
+.tk-sub b{display:block;color:var(--hero-ink);font-size:15px;font-weight:700}
+.tk-tear{position:relative;height:0;border-top:2px dashed rgba(255,255,255,.35);margin:0 14px}
+.tk-tear::before,.tk-tear::after{content:"";position:absolute;top:-11px;width:22px;height:22px;border-radius:50%;background:var(--bg)}
+.tk-tear::before{left:-25px}.tk-tear::after{right:-25px}
+.tk-bot{display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:8px;padding:14px 20px 16px}
+.tk-bot span{display:block;font-size:12px;color:var(--hero-dim)}
+.tk-bot b{font:700 19px/1.2 var(--fd);font-variant-numeric:tabular-nums}
+.tk-bot button{all:unset;cursor:pointer;display:block}
+
+/* weather */
+.wx-now{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.wx-now .ic{font-size:34px;line-height:1}
+.wx-now b{font:800 28px/1 var(--fd)}
+.wx-now span{color:var(--ink2);font-size:13px}
+.wx-days{display:flex;gap:6px;overflow-x:auto;margin:0 -16px;padding:2px 16px 6px;scrollbar-width:none}
+.wx-days::-webkit-scrollbar{display:none}
+.wx-d{flex:0 0 58px;text-align:center;padding:8px 2px;border-radius:var(--rs);border:1px solid var(--line);font-size:12px;background:var(--paper)}
+.wx-d.trip{border-color:var(--mango);box-shadow:inset 0 -3px 0 var(--mango)}
+.wx-d .dt{color:var(--ink2)}
+.wx-d .ic{font-size:20px;line-height:1.5}
+.wx-d .tp{font-weight:700;font-variant-numeric:tabular-nums}
+.wx-d .pp{color:var(--sea2);font-variant-numeric:tabular-nums}
+.wx-d .pp.hi{color:var(--pitaya);font-weight:700}
+
+/* quick grid */
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 8px 11px;text-align:center;font-size:13px;line-height:1.3;font-weight:500}
+.q .e{display:block;font-size:24px;line-height:1.3;margin-bottom:2px}
+.q:active{background:var(--foam)}
+
+/* chips & seg */
+.chips{display:flex;gap:6px;overflow-x:auto;margin:0 -16px;padding:2px 16px 8px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips.wrap{flex-wrap:wrap;overflow:visible;margin:0;padding:0}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:7px 13px;font-size:13px;white-space:nowrap;text-decoration:none;color:var(--ink)}
+.chip[aria-pressed=true],.chip.on{background:var(--sea);border-color:var(--sea);color:var(--on-sea);font-weight:700}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--foam);border-radius:14px;padding:4px;gap:2px;margin-bottom:14px}
+.seg button{border:0;background:none;border-radius:11px;padding:8px 4px;font-size:13px;font-weight:500;color:var(--ink2)}
+.seg button[aria-selected=true]{background:var(--paper);color:var(--ink);font-weight:700;box-shadow:0 1px 0 var(--line)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:10px 14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--ink);min-height:44px}
+.btn.pri{background:var(--sea);border-color:var(--sea);color:var(--on-sea)}
+.btn.mango{background:var(--mango);border-color:var(--mango);color:var(--mango-ink)}
+.btn.ghost{background:none}
+.btn.danger{color:var(--pitaya);border-color:var(--pitaya);background:none}
+.btn.sm{min-height:36px;padding:6px 11px;font-size:13px;border-radius:10px}
+.btn.full{display:flex;width:100%}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row.end{justify-content:flex-end}
+.grow{flex:1 1 0;min-width:0}
+
+/* plan */
+.days{display:flex;gap:6px;overflow-x:auto;margin:0 -16px 4px;padding:6px 16px 10px;scrollbar-width:none;position:sticky;top:0;z-index:5;background:var(--bg)}
+.days::-webkit-scrollbar{display:none}
+.dayc{flex:0 0 52px;border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:7px 0 6px;text-align:center;line-height:1.2}
+.dayc .w{display:block;font-size:11px;color:var(--ink2)}
+.dayc .n{display:block;font:800 18px/1.25 var(--fd)}
+.dayc .x{display:block;font-size:12px;min-height:16px}
+.dayc.today{border-color:var(--mango);border-width:2px;padding:6px 0 5px}
+.dayc[aria-selected=true]{background:var(--sea);border-color:var(--sea);color:var(--on-sea)}
+.dayc[aria-selected=true] .w{color:inherit;opacity:.8}
+.dayhead{margin:8px 2px 4px}
+.dayhead .k{font-size:13px;color:var(--ink2)}
+.dayhead h2{font:400 24px/1.25 var(--fd);font-synthesis:none}
+.dayhead .theme{all:unset;cursor:pointer;display:inline-block;margin-top:2px;font-size:14px;color:var(--sea);font-weight:700;border-bottom:1px dashed currentColor}
+.daywx{display:flex;gap:8px;align-items:center;font-size:13px;margin:10px 0 0;padding:9px 12px;border-radius:var(--rs);background:var(--foam)}
+.daywx.rain{background:var(--warn-bg);color:var(--warn)}
+.tl{list-style:none;margin:14px 0 0;padding:0;position:relative}
+.tl::before{content:"";position:absolute;left:62px;top:14px;bottom:14px;width:2px;background:var(--line)}
+.tl li{display:grid;grid-template-columns:50px 26px 1fr;align-items:start;position:relative}
+.tl .t{font:700 14px/1.3 var(--fd);font-variant-numeric:tabular-nums;padding-top:13px;text-align:right;color:var(--ink)}
+.tl .t.none{font-size:11px;font-weight:400;color:var(--ink2);padding-top:15px}
+.tl .dot{width:26px;display:grid;place-items:center;padding-top:12px;position:relative;z-index:1}
+.tl .dot button{all:unset;cursor:pointer;width:22px;height:22px;border-radius:50%;background:var(--paper);border:2px solid var(--sea);display:grid;place-items:center;font-size:12px;color:var(--on-sea);box-sizing:border-box}
+.tl .done .dot button{background:var(--sea)}
+.tl .body{padding:9px 0 9px 8px;min-width:0}
+.tl .it{display:block;width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.tl .it b{display:block;font-weight:700;font-size:15px;line-height:1.35}
+.tl .it .m{display:block;color:var(--ink2);font-size:13px;margin-top:2px;white-space:pre-line}
+.tl .done .it{opacity:.55}
+.tl .done .it b{text-decoration:line-through}
+.tl .lnk{display:flex;gap:12px;margin:5px 2px 0;font-size:13px}
+.tl .lnk a,.tl .lnk button{background:none;border:0;padding:3px 0;color:var(--sea);font-weight:700;text-decoration:none;font-size:13px}
+.empty{text-align:center;color:var(--ink2);padding:28px 12px;border:1px dashed var(--line);border-radius:var(--r);margin-top:14px}
+.addbar{margin-top:14px}
+
+/* map */
+.search{display:flex;gap:8px;margin-bottom:10px}
+.search input{flex:1;min-width:0;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:11px 14px;font-size:16px}
+.lbl{font-size:12px;color:var(--ink2);margin:10px 2px 6px}
+.mapwrap{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--foam);height:min(56vh,480px);margin-top:8px}
+.mapwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.mapwrap .ph{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--ink2);font-size:13px;padding:20px}
+.mapq{font-size:13px;color:var(--ink2);margin:10px 2px}
+.mapq b{color:var(--ink)}
+.place{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin-top:10px}
+.pl-h{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.pl-h h3{font-size:16px;font-weight:700;line-height:1.35}
+.pl-h h3 small{display:block;font-weight:400;font-size:13px;color:var(--ink2)}
+.heart{background:none;border:0;font-size:22px;line-height:1;padding:4px;color:var(--line)}
+.heart[aria-pressed=true]{color:var(--pitaya)}
+.pl-d{font-size:14px;margin-top:6px}
+.pl-m{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:12px;color:var(--ink2)}
+.pl-m .star{color:var(--ink);font-weight:700}
+.tag{background:var(--foam);border-radius:6px;padding:2px 7px}
+.pl-a{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+
+/* wallet */
+.conv{display:grid;gap:8px}
+.conv label{display:grid;grid-template-columns:1fr auto;align-items:center;border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:4px 14px}
+.conv input{border:0;background:none;width:100%;min-width:0;font:800 26px/1.4 var(--fd);padding:6px 0;outline:none;font-variant-numeric:tabular-nums}
+.conv label:focus-within{border-color:var(--sea);box-shadow:0 0 0 2px var(--sea) inset}
+.conv .u{font-weight:700;color:var(--ink2);padding-left:10px}
+.rate{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:2px 12px;font-size:13px;color:var(--ink2);margin-top:8px}
+.rate .rb{display:flex;gap:14px;white-space:nowrap}
+.rate button{background:none;border:0;color:var(--sea);font-weight:700;font-size:13px;padding:6px 0}
+.tk-fl{display:flex;flex-wrap:wrap;gap:2px 14px;margin-top:10px;font-size:13px;color:var(--hero-dim)}
+.tk-fl b{color:var(--hero-ink);font-weight:700}
+.notes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.bn{border:1px solid var(--line);border-left-width:6px;border-radius:10px;padding:7px 9px;background:var(--paper);text-align:left;line-height:1.3}
+.bn b{display:block;font:700 14px/1.3 var(--fd);font-variant-numeric:tabular-nums}
+.bn span{font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.sum{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.sum b{font:800 30px/1.1 var(--fd);font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:99px;background:var(--foam);overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--sea);border-radius:99px}
+.bar.over i{background:var(--pitaya)}
+.cats{display:grid;gap:6px;margin-top:12px;font-size:13px}
+.cats div{display:grid;grid-template-columns:84px 1fr auto;gap:8px;align-items:center}
+.cats .bar{margin:0}
+.cats em{font-style:normal;font-variant-numeric:tabular-nums;font-weight:700}
+.field{display:block;margin-top:10px}
+.field>span{display:block;font-size:12px;color:var(--ink2);margin:0 2px 4px}
+.in{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:10px 12px;font-size:16px;min-height:44px}
+textarea.in{min-height:76px;resize:vertical}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.f3{display:grid;grid-template-columns:1.4fr auto;gap:8px;align-items:end}
+.cur{display:inline-grid;grid-auto-flow:column;border:1px solid var(--line);border-radius:12px;overflow:hidden;min-height:44px}
+.cur button{border:0;background:var(--paper);padding:0 14px;font-weight:700;color:var(--ink2)}
+.cur button[aria-pressed=true]{background:var(--sea);color:var(--on-sea)}
+.sp-day{display:flex;justify-content:space-between;font-size:13px;color:var(--ink2);margin:16px 2px 6px}
+.sp-day b{color:var(--ink);font-variant-numeric:tabular-nums}
+.sp{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:9px 12px;margin-top:6px}
+.sp .n{min-width:0}
+.sp .n b{display:block;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp .n span{font-size:12px;color:var(--ink2)}
+.sp .a{text-align:right;font-variant-numeric:tabular-nums;line-height:1.3}
+.sp .a b{display:block;font-size:14px}
+.sp .a span{font-size:12px;color:var(--ink2)}
+
+/* guide */
+.cg{margin-top:18px}
+.cg h3{font:400 17px/1.3 var(--fd);font-synthesis:none;margin:0 2px 6px;display:flex;justify-content:space-between;align-items:baseline}
+.cg h3 small{font:400 12px var(--ff);color:var(--ink2)}
+.ck{display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:start;padding:10px 12px;background:var(--paper);border:1px solid var(--line);border-radius:12px;margin-top:6px}
+.ck input{width:22px;height:22px;margin:1px 0 0;accent-color:var(--sea)}
+.ck .tx{font-size:14px;line-height:1.45}
+.ck .tx small{display:block;color:var(--ink2);font-size:12px;margin-top:2px}
+.ck.on .tx>span{text-decoration:line-through;color:var(--ink2)}
+.ck .x{background:none;border:0;color:var(--ink2);font-size:18px;line-height:1;padding:2px 4px}
+.ph-item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-top:6px}
+.ph-item .ko{font-size:13px;color:var(--ink2)}
+.ph-item .vi{display:block;font-weight:700;font-size:16px;line-height:1.35}
+.ph-item .pr{display:block;font-size:13px;color:var(--sea);font-weight:500}
+.ph-item .go{color:var(--ink2);font-size:12px}
+.nums{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}
+.nums div{background:var(--paper);border:1px solid var(--line);border-radius:10px;text-align:center;padding:6px 2px;line-height:1.3}
+.nums b{display:block;font:800 16px var(--fd)}
+.nums span{font-size:12px}.nums small{display:block;font-size:11px;color:var(--ink2)}
+details.tip{background:var(--paper);border:1px solid var(--line);border-radius:14px;margin-top:8px;overflow:hidden}
+details.tip summary{list-style:none;cursor:pointer;padding:13px 16px;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:8px}
+details.tip summary::-webkit-details-marker{display:none}
+details.tip summary::after{content:"+";font:400 22px/1 var(--ff);color:var(--ink2)}
+details.tip[open] summary::after{content:"−"}
+details.tip ul{margin:0;padding:0 16px 14px 34px;font-size:14px}
+details.tip li{margin-top:6px}
+details.tip li b{font-weight:700}
+.tel{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:8px;text-decoration:none;color:var(--ink)}
+.tel b{display:block;font-size:15px}
+.tel span{font-size:13px;color:var(--ink2)}
+.tel em{font:800 17px var(--fd);font-style:normal;color:var(--sea);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tel.red em{color:var(--pitaya)}
+
+/* tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--paper);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs div{max-width:600px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);height:var(--tabh)}
+.tabs button{position:relative;border:0;background:none;display:grid;place-content:center;justify-items:center;gap:2px;font-size:11px;color:var(--ink2);font-weight:500}
+.tabs svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabs button[aria-current=page]{color:var(--sea);font-weight:700}
+.tabs button[aria-current=page]::before{content:"";position:absolute;top:0;left:50%;width:28px;height:3px;margin-left:-14px;border-radius:0 0 3px 3px;background:var(--mango)}
+
+/* sheet */
+.sheet{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(4,28,32,.55)}
+.sheet-in{background:var(--paper);width:100%;max-width:600px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:8px 18px calc(18px + env(safe-area-inset-bottom));animation:up .22s ease-out}
+.sheet-in::before{content:"";display:block;width:40px;height:4px;border-radius:4px;background:var(--line);margin:4px auto 12px}
+.sheet h2{font:400 21px/1.3 var(--fd);font-synthesis:none;margin-bottom:4px}
+.sheet .mapwrap{height:min(42vh,340px)}
+@keyframes up{from{transform:translateY(24px);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.sheet-in{animation:none}}
+
+/* show card (full screen) */
+.show{position:fixed;inset:0;z-index:50;background:var(--hero);color:var(--hero-ink);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + 16px) 22px calc(env(safe-area-inset-bottom) + 22px);overflow:auto}
+.show .x{align-self:flex-end;background:rgba(255,255,255,.14);border:0;color:inherit;border-radius:999px;padding:8px 16px;font-weight:700}
+.show .c{margin:auto 0;padding:20px 0}
+.show .k{font-size:14px;color:var(--hero-dim)}
+.show .big{font:800 clamp(30px,9vw,52px)/1.2 var(--fd);margin:10px 0 14px;word-break:keep-all;overflow-wrap:anywhere}
+.show .mid{font:700 clamp(20px,5.6vw,28px)/1.35 var(--ff);margin-top:10px;word-break:keep-all;overflow-wrap:anywhere}
+.show .pr{font-size:18px;color:var(--mango);font-weight:700}
+.show .sm{font-size:15px;color:var(--hero-dim);margin-top:14px;white-space:pre-line}
+.show .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.show .acts .btn{background:var(--mango);border-color:var(--mango);color:var(--mango-ink)}
+
+.toast{position:fixed;left:50%;bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 14px);transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:.2s;z-index:60;max-width:88vw;text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%)}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+@media (min-width:700px){#app{padding-top:28px}}
+
+/* 실시간 검색 결과 */
+.res-h{all:unset;cursor:pointer;display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;width:100%}
+.res-h .no{width:28px;height:28px;border-radius:50%;background:var(--pitaya);color:#fff;display:grid;place-items:center;font:700 13px var(--fd)}
+.res-h .nm b{display:block;font-size:16px;line-height:1.35}
+.res-h .nm small{display:block;font-size:13px;color:var(--ink2);margin-top:1px}
+.toast{width:max-content;border-radius:18px}
+#gm-slot{height:min(44vh,380px)}
+
+</style>
+</head>
+<body>
+<div id="app"><main id="view" tabindex="-1"><noscript>이 앱은 자바스크립트가 켜져 있어야 동작해요.</noscript></main></div>
+<nav class="tabs" aria-label="메뉴"><div>
+  <button data-act="tab" data-v="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</button>
+  <button data-act="tab" data-v="plan"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>일정</button>
+  <button data-act="tab" data-v="map"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>지도</button>
+  <button data-act="tab" data-v="wallet"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="16.5" cy="14.5" r="1"/></svg>지갑</button>
+  <button data-act="tab" data-v="guide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M9 7h6"/></svg>가이드</button>
+</div></nav>
+<div id="sheet" class="sheet" hidden><div class="sheet-in" id="sheet-in" role="dialog" aria-modal="true"></div></div>
+<div id="show" class="show" role="dialog" aria-modal="true" hidden></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+(() => {
+'use strict';
+/* ───────── 데이터: 추천 장소 · 회화 · 준비물 · 추천 일정 ───────── */
+const NT = { lat: 12.2451, lng: 109.1943 };          // 나트랑 시내(쩐푸 거리) 중심
+const CAM = { lat: 12.07, lng: 109.195 };            // 깜란 바이다이 리조트 지역
+
+const CATS = [
+  { k: 'food', e: '🍜', n: '식사' }, { k: 'sight', e: '🎡', n: '관광' }, { k: 'move', e: '🚕', n: '이동' },
+  { k: 'rest', e: '🏊', n: '휴식' }, { k: 'spa', e: '💆', n: '마사지' }, { k: 'shop', e: '🛍️', n: '쇼핑' }, { k: 'etc', e: '📌', n: '기타' }
+];
+const SPCATS = [
+  { k: 'food', e: '🍜', n: '식비' }, { k: 'move', e: '🚕', n: '교통' }, { k: 'spa', e: '💆', n: '마사지' },
+  { k: 'sight', e: '🎡', n: '관광·티켓' }, { k: 'shop', e: '🛍️', n: '쇼핑' }, { k: 'stay', e: '🏨', n: '숙소' }, { k: 'etc', e: '📌', n: '기타' }
+];
+
+// [이모지, 표시 이름, 구글지도 검색어, 맞는 추천 장소(분류 이름 또는 id 목록)]
+const MAPCATS = [
+  ['🍽️', '맛집', 'restaurants', 'food'], ['🍜', '쌀국수', 'phở', ['anhoi', 'phothin', 'hanhphuc', 'haica']],
+  ['🦞', '해산물', 'seafood restaurant', ['moc', 'tom79', 'thapba', 'ngon']], ['🥖', '반미', 'bánh mì', ['banhmi']],
+  ['☕', '카페', 'cafe', 'cafe'], ['🍚', '한식', 'Korean restaurant', ['veteran', 'gukbap']], ['💆', '마사지', 'massage spa', 'spa'],
+  ['🎡', '관광지', 'tourist attractions', 'sight'], ['🧒', '아이 놀거리', 'kids indoor playground', ['vinwonders', 'iresort', 'ocean', 'rainforest', 'center']],
+  ['🛒', '마트', 'supermarket', ['lotte', 'lottegc']], ['🏪', '편의점', 'convenience store'],
+  ['💊', '약국', 'pharmacy'], ['🏥', '병원', 'hospital'], ['💱', '환전', 'currency exchange'], ['🏧', 'ATM', 'ATM'],
+  ['🧺', '세탁', 'laundry service'], ['🌙', '야시장', 'night market', ['night']]
+];
+
+const PFILTERS = [
+  ['all', '전체'], ['food', '맛집'], ['cafe', '카페·간식'], ['spa', '마사지'], ['mud', '머드온천'],
+  ['sight', '관광'], ['shop', '쇼핑'], ['kid', '아이와'], ['rain', '비 오는 날']
+];
+
+/* 평점(r)·리뷰 수(n)는 구글 리뷰 기준으로 2026년에 수집된 참고값 */
+const PLACES = [
+  // 맛집
+  { id: '4ps', c: 'food', ko: '피자 포피스', lo: "Pizza 4P's Nha Trang", q: "Pizza 4P's Nha Trang", d: '바다가 보이는 화덕 피자집. 아이 입맛 걱정 없는 한 끼로 좋아요. 저녁은 예약을 권해요.', r: 4.9, n: 15712, t: ['kid', 'rain', 'ac', 'book'] },
+  { id: 'xommoi', c: 'food', ko: '씀모이 가든', lo: 'Xóm Mới Garden', q: 'Xóm Mới Garden Nha Trang', d: '열대 정원풍의 대형 패밀리 레스토랑. 에어컨이 있고 베트남 가정식을 골고루 맛볼 수 있어요.', r: 4.8, n: 16256, t: ['kid', 'rain', 'ac'] },
+  { id: 'moc', c: 'food', ko: '목 해산물 식당', lo: 'Hải Sản Mộc Quán', q: 'Hải Sản Mộc Quán Nha Trang', d: '왁자지껄한 대형 해산물 레스토랑. 서비스가 체계적이라 처음 가도 주문이 쉬워요.', r: 4.9, n: 13578, t: [] },
+  { id: 'tom79', c: 'food', ko: 'TOM79', lo: 'TOM79 Seafood', q: 'TOM79 Nha Trang', d: '친절한 해산물 가족식당. 주문 전에 무게와 가격을 먼저 확인하세요.', r: 4.8, n: 3109, t: ['kid'] },
+  { id: 'chaomao', c: 'food', ko: '짜오마오', lo: 'Nhà hàng Chào Mào', q: 'Nhà hàng Chào Mào Nha Trang', d: '현지 분위기가 살아 있는 베트남 가정식 식당.', r: 4.8, n: 7186, t: [] },
+  { id: 'nhabep', c: 'food', ko: '냐벱', lo: 'Nhà Bếp Nha Trang', q: 'Nhà Bếp Nha Trang', d: '에어컨이 있는 깔끔한 베트남 가정식당.', r: 4.8, n: 3432, t: ['ac', 'rain'] },
+  { id: 'madam', c: 'food', ko: '마담프엉', lo: 'Madam Phương', q: 'Madam Phương Nha Trang', d: '시내 중심의 깔끔한 현대식 베트남 레스토랑. 한국인 입맛에 잘 맞는다는 평.', r: 4.5, n: 5841, t: ['ac'] },
+  { id: 'chuon', c: 'food', ko: '촌촌킴', lo: 'Chuồn Chuồn Kim', q: 'Chuồn Chuồn Kim Nha Trang', d: '미슐랭 가이드에 소개된 가정식집. 식물과 목제 가구로 꾸민 가정집 분위기.', r: 4.3, n: 4396, t: [] },
+  { id: 'langngon', c: 'food', ko: '랑응온', lo: 'Làng Ngon', q: 'Làng Ngon Nha Trang', d: '정원과 연못, 등불이 어우러진 전통 마을 분위기의 식당.', r: 4.5, n: 3407, t: [] },
+  { id: 'anhoi', c: 'food', ko: '안어이 퍼', lo: 'Anh Ơi Phở', q: 'Anh Ơi Phở Nha Trang', d: '깔끔하고 조용한 쌀국수집. 아침 식사로 좋아요.', r: 4.8, n: 2418, t: ['kid'] },
+  { id: 'phothin', c: 'food', ko: '퍼틴 쌀국수', lo: 'Phở Thìn 13 Lò Đúc', q: 'Phở Thìn 13 Lò Đúc Nha Trang', d: '에어컨이 있는 쾌적한 하노이식 소고기 쌀국수. 롯데마트 1층에도 지점이 있어요.', r: 4.8, n: 530, t: ['ac', 'kid', 'rain'] },
+  { id: 'hanhphuc', c: 'food', ko: '포한푹', lo: 'Phở Hạnh Phúc', q: 'Phở Hạnh Phúc Nha Trang', d: '현지 노포 쌀국수. 에어컨 없이 선풍기가 도는 로컬 분위기.', r: 4.7, n: 11641, t: [] },
+  { id: 'haica', c: 'food', ko: '하이까 생선국수', lo: 'Bún Cá Hai Cá', q: 'Quán Bánh Canh Bún Cá Hai Cá Nha Trang', d: '나트랑 명물 어묵·생선 국수(분짜까). 작고 북적이는 로컬 노포예요.', r: 4.4, n: 3061, t: [] },
+  { id: 'nemnuong', c: 'food', ko: '넴느엉 당반꾸엔', lo: 'Nem Nướng Đặng Văn Quyên', q: 'Nem Nướng Đặng Văn Quyên Nha Trang', d: '숯불 돼지고기를 라이스페이퍼에 싸 먹는 나트랑 명물 넴느엉. 맛은 좋지만 위생은 로컬 수준이라는 후기가 있어요.', t: [] },
+  { id: 'banhmi', c: 'food', ko: '반미판', lo: 'Bánh Mì Phan', q: 'Bánh Mì Phan Nha Trang', d: '한국 여행자에게 가장 유명한 반미집. 소고기 치즈 반미가 인기예요.', r: 4.5, n: 3953, t: ['kid'] },
+  { id: 'ngon', c: 'food', ko: '응온 갤러리', lo: 'Ngon Gallery', q: 'Ngon Gallery Nha Trang', d: '랍스터·해산물 뷔페. 사전 예약 후 방문을 권해요.', t: ['ac', 'rain', 'book'] },
+  { id: 'thapba', c: 'food', ko: '탑바 해산물 거리', lo: 'Tháp Bà', q: 'hải sản Tháp Bà Nha Trang', d: '포나가르 사원 근처의 해산물 노점 거리. 가리비구이·조개볶음을 값싸게 즐기는 야식 코스.', t: [] },
+  { id: 'veteran', c: 'food', ko: '베테랑 (한식)', lo: 'Veteran Korean BBQ', q: '베테랑 나트랑', d: '삼겹살집. 아이가 한식을 찾을 때 들르기 좋아요.', r: 4.9, n: 4917, t: ['kid', 'ac'] },
+  { id: 'gukbap', c: 'food', ko: '장터국밥 (한식)', lo: '', q: '장터국밥 나트랑', d: '국밥집. 속이 불편하거나 따뜻한 국물이 생각날 때.', r: 4.8, n: 2262, t: ['kid'] },
+  // 카페·간식
+  { id: 'cong', c: 'cafe', ko: '콩카페', lo: 'Cộng Cà Phê', q: 'Cộng Cà Phê Nha Trang', d: '코코넛 스무디 커피로 유명한 베트남 카페 체인.', t: ['rain', 'ac'] },
+  { id: 'cccp', c: 'cafe', ko: 'CCCP 커피', lo: 'CCCP Coffee', q: 'CCCP Coffee Nha Trang', d: '코코넛 커피로 한국 여행자에게 인기 있는 카페.', t: ['rain'] },
+  { id: 'rainforest', c: 'cafe', ko: '레인포레스트', lo: 'Rainforest Nha Trang', q: 'Rainforest Nha Trang', d: '나무 집처럼 꾸민 정글 콘셉트 카페. 아이가 구경하기 좋아요.', t: ['kid'] },
+  { id: 'mymy', c: 'cafe', ko: '미미프루츠', lo: 'MyMy Fruit', q: 'MyMy Fruit Nha Trang', d: '손질 과일과 망고 디저트를 파는 테이크아웃 가게. 숙소 간식용.', r: 4.8, n: 2494, t: ['kid'] },
+  // 마사지
+  { id: 'jspa', c: 'spa', ko: '제이 스파', lo: 'J Spa', q: 'J Spa Nha Trang', d: '한국 여행자에게 가장 인기 있는 스파. 아이 동반 가족 배려가 좋고 해피아워 할인이 있어요.', r: 4.9, n: 15679, t: ['kid', 'rain'] },
+  { id: 'well', c: 'spa', ko: '웰 스파', lo: 'Well Spa', q: 'Well Spa Nha Trang', d: '키즈 마사지 평이 좋고 팁이 포함된 정찰제로 운영돼요.', r: 4.9, n: 13542, t: ['kid', 'rain'] },
+  { id: 'aman', c: 'spa', ko: '아만 스파', lo: 'Aman Heritage Spa', q: 'Aman Spa Nha Trang', d: '시설이 가장 고급스럽고 깨끗하다는 평. 가격대는 높은 편이에요.', r: 4.9, n: 11994, t: ['kid', 'rain'] },
+  { id: 'sen', c: 'spa', ko: '센 스파', lo: 'Sen Spa', q: 'Sen Spa Nha Trang', d: '마사지 실력으로 이름난 곳. 셔틀 픽업을 운영해요.', r: 4.9, n: 4637, t: ['rain'] },
+  { id: 'lounge', c: 'spa', ko: '라운지 스파', lo: 'Lounge Spa & Massage', q: 'Lounge Spa Massage Nha Trang', d: '쾌적하고 차분한 분위기의 시내 스파.', r: 4.9, n: 7808, t: ['rain'] },
+  { id: 'casa', c: 'spa', ko: '카사 스파', lo: 'Casa Spa', q: 'Casa Spa Nha Trang', d: '네일과 마사지를 함께 받기 좋은 곳. 야시장 근처.', r: 4.8, n: 5023, t: ['rain'] },
+  // 머드온천
+  { id: 'iresort', c: 'mud', ko: '아이리조트', lo: 'I-Resort', q: 'I-Resort Nha Trang', d: '머드온천에 워터파크가 붙어 있어 가족에게 가장 무난해요. 비가 와도 즐길 수 있어요.', t: ['kid', 'rain'] },
+  { id: 'thapbamud', c: 'mud', ko: '탑바 머드온천', lo: 'Tháp Bà Hot Spring', q: 'Suối Khoáng Nóng Tháp Bà Nha Trang', d: '나트랑 머드온천의 원조. 포나가르 사원과 묶어 가기 좋아요.', t: ['kid', 'rain'] },
+  { id: 'egg', c: 'mud', ko: '100에그 머드온천', lo: '100 Egg Mud Bath', q: '100 Egg Mud Bath Nha Trang', d: '달걀 모양 욕조가 있는 테마파크형 머드온천. 사진 찍기 좋아요.', t: ['kid'] },
+  { id: 'hontam', c: 'mud', ko: '혼땀 머드스파', lo: 'Hòn Tằm', q: 'Hòn Tằm Mud Bath Nha Trang', d: '배를 타고 들어가는 섬의 머드스파. 조용하지만 파도가 높은 날은 피하세요.', t: [] },
+  // 관광
+  { id: 'vinwonders', c: 'sight', ko: '빈원더스', lo: 'VinWonders Nha Trang', q: 'VinWonders Nha Trang', d: '섬 전체가 테마파크·워터파크·아쿠아리움. 하루를 통째로 잡으세요. 섬으로 들어가는 방법과 운영 시간은 방문 전 확인.', t: ['kid'] },
+  { id: 'ponagar', c: 'sight', ko: '포나가르 사원', lo: 'Tháp Bà Ponagar', q: 'Tháp Bà Ponagar Nha Trang', d: '붉은 벽돌 탑이 인상적인 참파 왕국 유적. 한 시간이면 충분해요. 어깨·무릎을 가리는 옷.', t: [] },
+  { id: 'longson', c: 'sight', ko: '롱선사', lo: 'Chùa Long Sơn', q: 'Chùa Long Sơn Nha Trang', d: '거대한 좌불상과 와불상이 있는 나트랑에서 가장 오래된 절.', t: [] },
+  { id: 'cathedral', c: 'sight', ko: '나트랑 대성당', lo: 'Nhà thờ Núi', q: 'Nhà thờ Núi Nha Trang', d: '언덕 위 고딕 양식 석조 성당. 미사와 점심 휴게 시간을 피해 오전에 가세요.', t: [] },
+  { id: 'honchong', c: 'sight', ko: '혼총곶', lo: 'Hòn Chồng', q: 'Hòn Chồng Nha Trang', d: '바위가 겹겹이 쌓인 곶. 포나가르 사원에서 가까워 함께 묶기 좋아요.', t: ['kid'] },
+  { id: 'ocean', c: 'sight', ko: '해양학 박물관', lo: 'Viện Hải Dương Học', q: 'Viện Hải Dương Học Nha Trang', d: '거대한 고래 뼈와 수족관을 볼 수 있는 곳. 비 오는 날 아이와 가기 좋아요.', t: ['kid', 'rain'] },
+  { id: 'beach', c: 'sight', ko: '나트랑 비치·침향탑', lo: 'Tháp Trầm Hương', q: 'Tháp Trầm Hương Nha Trang', d: '쩐푸 거리를 따라 길게 뻗은 시내 해변과 광장 랜드마크. 저녁 산책 코스.', t: ['kid'] },
+  { id: 'honmun', c: 'sight', ko: '혼문섬 호핑투어', lo: 'Hòn Mun', q: 'Hòn Mun Nha Trang', d: '물이 가장 맑은 섬에서 스노클링. 우기에는 파도로 취소될 수 있어 날씨를 보고 전날 예약하세요.', t: [] },
+  { id: 'baidai', c: 'sight', ko: '바이다이 해변', lo: 'Bãi Dài, Cam Ranh', q: 'Bãi Dài Cam Ranh', d: '깜란 리조트 지역의 넓고 조용한 해변.', t: ['kid'] },
+  // 쇼핑
+  { id: 'lotte', c: 'shop', ko: '롯데마트 나트랑', lo: 'Lotte Mart Nha Trang', q: 'Lotte Mart Nha Trang', d: '장보기와 기념품(커피·견과·과자)을 한 번에. 비 오는 날 시간 보내기에도 좋아요.', t: ['rain', 'ac', 'kid'] },
+  { id: 'lottegc', c: 'shop', ko: '롯데마트 골드코스트', lo: 'Lotte Mart Gold Coast', q: 'Lotte Mart Gold Coast Nha Trang', d: '시내 해변 쪽 쇼핑몰 안에 있는 지점.', t: ['rain', 'ac'] },
+  { id: 'center', c: 'shop', ko: '나트랑 센터', lo: 'Nha Trang Center', q: 'Nha Trang Center', d: '해변 앞 쇼핑몰. 푸드코트와 기념품 가게, 극장이 있어요.', t: ['rain', 'ac', 'kid'] },
+  { id: 'dam', c: 'shop', ko: '담시장', lo: 'Chợ Đầm', q: 'Chợ Đầm Nha Trang', d: '나트랑 최대 재래시장. 가격은 흥정이 기본이에요.', t: [] },
+  { id: 'night', c: 'shop', ko: '나트랑 야시장', lo: 'Chợ đêm Nha Trang', q: 'Chợ đêm Nha Trang', d: '저녁 산책하며 기념품과 길거리 간식을 구경하는 곳.', t: ['kid'] },
+  { id: 'chouchou', c: 'shop', ko: '슈슈땅콩', lo: '', q: '슈슈땅콩 나트랑', d: '매장에서 바로 볶는 땅콩·견과 선물 가게. 시식하고 고를 수 있어요.', r: 5.0, n: 2695, t: ['rain'] }
+];
+const TAGS = { kid: '아이와', rain: '비 와도', ac: '에어컨', book: '예약 권장' };
+
+/* 회화: [한국어, 베트남어, 한글 발음] */
+const PHRASES = [
+  { k: 'basic', n: '기본', l: [
+    ['안녕하세요', 'Xin chào', '씬 짜오'], ['감사합니다', 'Cảm ơn', '깜 언'], ['죄송합니다 / 저기요', 'Xin lỗi', '씬 로이'],
+    ['네 / 아니요', 'Dạ / Không', '야 / 콩'], ['괜찮아요', 'Không sao', '콩 사오'],
+    ['한국 사람이에요', 'Tôi là người Hàn Quốc', '또이 라 응어이 한 꾸옥'], ['화장실 어디예요?', 'Nhà vệ sinh ở đâu?', '냐 베 신 어 더우?'] ] },
+  { k: 'food', n: '식당', l: [
+    ['메뉴판 주세요', 'Cho tôi xem thực đơn', '쪼 또이 쌤 특 던'], ['이거 주세요', 'Cho tôi cái này', '쪼 또이 까이 나이'],
+    ['고수 빼주세요', 'Không cho ngò (rau mùi)', '콩 쪼 응오'], ['안 맵게 해주세요', 'Không cay', '콩 까이'],
+    ['얼음 빼주세요', 'Không đá', '콩 다'], ['물 주세요', 'Cho tôi nước', '쪼 또이 느억'],
+    ['아이용 의자 있어요?', 'Có ghế trẻ em không?', '꼬 게 째 앰 콩?'], ['포장해 주세요', 'Cho tôi mang về', '쪼 또이 망 베'],
+    ['맛있어요!', 'Ngon quá!', '응온 꽈'], ['계산해 주세요', 'Tính tiền', '띤 띠엔'],
+    ['카드 돼요?', 'Trả bằng thẻ được không?', '짜 방 테 드억 콩?'] ] },
+  { k: 'taxi', n: '택시', l: [
+    ['이 주소로 가주세요', 'Cho tôi đến địa chỉ này', '쪼 또이 덴 디아 찌 나이'], ['여기서 세워주세요', 'Dừng ở đây', '증 어 더이'],
+    ['얼마예요?', 'Bao nhiêu tiền?', '바오 니에우 띠엔?'], ['미터기 켜주세요', 'Bật đồng hồ giúp tôi', '벗 동 호 줍 또이'],
+    ['공항으로 가주세요', 'Cho tôi đến sân bay', '쪼 또이 덴 선 바이'], ['잠깐 기다려 주세요', 'Chờ một chút', '쩌 못 쭛'] ] },
+  { k: 'shop', n: '쇼핑', l: [
+    ['너무 비싸요', 'Mắc quá', '막 꽈'], ['깎아주세요', 'Giảm giá được không?', '잠 자 드억 콩?'],
+    ['이거 살게요', 'Tôi lấy cái này', '또이 러이 까이 나이'], ['다른 색 있어요?', 'Có màu khác không?', '꼬 마우 칵 콩?'],
+    ['봉투 주세요', 'Cho tôi cái túi', '쪼 또이 까이 뚜이'] ] },
+  { k: 'spa', n: '마사지', l: [
+    ['더 세게 해주세요', 'Mạnh hơn', '마인 헌'], ['더 약하게 해주세요', 'Nhẹ hơn', '녜 헌'],
+    ['아파요', 'Đau', '다우'], ['추워요', 'Lạnh quá', '라인 꽈'], ['좋아요, 괜찮아요', 'Được rồi', '드억 조이'] ] },
+  { k: 'sos', n: '급할 때', l: [
+    ['도와주세요', 'Giúp tôi với', '줍 또이 버이'], ['병원에 가야 해요', 'Tôi cần đi bệnh viện', '또이 껀 디 벤 비엔'],
+    ['아이가 아파요', 'Con tôi bị bệnh', '꼰 또이 비 벤'], ['길을 잃었어요', 'Tôi bị lạc', '또이 비 락'],
+    ['약국이 어디예요?', 'Nhà thuốc ở đâu?', '냐 투옥 어 더우?'], ['경찰을 불러주세요', 'Gọi công an giúp tôi', '고이 꽁 안 줍 또이'] ] }
+];
+const NUMS = [['1', 'một', '못'], ['2', 'hai', '하이'], ['3', 'ba', '바'], ['4', 'bốn', '본'], ['5', 'năm', '남'], ['6', 'sáu', '사우'], ['7', 'bảy', '바이'], ['8', 'tám', '땀'], ['9', 'chín', '찐'], ['10', 'mười', '므어이']];
+
+/* 준비물: 그룹 → [id, 할 일, 보충 설명] */
+const CHECK = [
+  { g: '서류·입국', l: [
+    ['passport', '가족 모두 여권 유효기간 6개월 이상 남았는지 확인', ''],
+    ['pai', '사전입국신고(PAI) 작성하고 QR 저장', '도착 72시간 전부터 무료로 작성. 깜란공항 적용 여부는 항공사 안내 확인', 'https://prearrival.immigration.gov.vn'],
+    ['health', '건강신고서 제출 대상인지 확인', '2026년 7월 시행으로 보도됨. 실제 적용은 항공사·공항 안내 확인'],
+    ['eticket', 'e티켓·숙소 바우처 캡처해 두기', '데이터가 안 터질 때를 대비'],
+    ['insure', '여행자보험 가입', '우기라 항공 지연·결항 보장도 확인'],
+    ['copy', '여권 사본과 여권 사진 따로 챙기기', ''],
+    ['ecig', '전자담배는 집에 두고 가기', '베트남은 반입·소지·사용 모두 금지'] ] },
+  { g: '예약·앱·돈', l: [
+    ['pickup', '공항 픽업 예약', '밤 도착이나 아이 동반은 픽업이 편해요'],
+    ['esim', 'eSIM·유심 또는 로밍 신청', ''],
+    ['grab', '그랩(Grab) 앱 설치하고 카드 등록', ''],
+    ['offmap', '구글지도 나트랑 오프라인 지도 내려받기', ''],
+    ['trans', '구글 번역 베트남어 오프라인 팩 받기', ''],
+    ['cash', '환전 준비: 달러(100달러권) 또는 트래블카드', ''],
+    ['cards', '해외 결제 카드 2장 이상', '분실 대비'],
+    ['tickets', '빈원더스·머드온천·투어 예매 여부 정하기', '우기에는 날씨 보고 전날 예매가 안전'] ] },
+  { g: '짐: 기본', l: [
+    ['clothes', '얇은 여름옷과 얇은 긴팔 한 벌', '에어컨·사원 방문용'],
+    ['shoes', '샌들·슬리퍼와 운동화', ''],
+    ['charger', '충전기와 보조배터리', '보조배터리는 기내 반입'],
+    ['adapter', '멀티어댑터', '220V. 한국 플러그가 그대로 맞는 곳이 대부분'],
+    ['wash', '세면도구·선크림·모기 기피제', ''],
+    ['zip', '지퍼백·비닐봉지', '젖은 옷 담기'] ] },
+  { g: '짐: 물놀이·우기', l: [
+    ['swim', '수영복·래시가드·수모', ''],
+    ['aqua', '아쿠아슈즈', ''],
+    ['dry', '방수팩·방수 가방', ''],
+    ['rain', '우비와 접이식 우산', '10~11월은 연중 비가 가장 많은 시기'],
+    ['snorkel', '아이용 스노클 마스크·튜브', '필요하면'] ] },
+  { g: '짐: 아이·상비약', l: [
+    ['meds', '해열제·지사제·소화제·멀미약', ''],
+    ['band', '밴드·소독약·벌레 물린 데 바르는 약', ''],
+    ['snack', '아이 간식, 김·컵라면', '육류 건더기가 든 식품은 반입 제한 대상'],
+    ['play', '태블릿·이어폰·책', '비행과 이동 시간용'],
+    ['lost', '미아 방지 카드에 보호자 연락처 입력', '가이드 탭의 설정에서 입력'] ] },
+  { g: '돌아오기 전', l: [
+    ['souvenir', '기념품 쇼핑', ''],
+    ['dong', '남은 동 쓰거나 다시 환전', ''],
+    ['sending', '공항 샌딩 예약', '출발 3시간 전 도착 목표'],
+    ['checkin', '온라인 체크인', ''] ] }
+];
+
+/* 추천 일정 초안: 날짜 순서별 [시간, 제목, 메모, 구글지도 검색어, 분류] */
+const SEED = [
+  { th: '출발하는 날', l: [
+    ['', '공항으로 출발', '여권, e티켓, 사전입국신고 QR 확인', '', 'move'],
+    ['', '부산 → 나트랑(깜란) 비행', '약 5시간. 나트랑은 한국보다 2시간 느려요', '', 'move'],
+    ['', '깜란 공항 도착, 픽업 차량 탑승', '시내까지 40~50분', 'Cam Ranh International Airport', 'move'],
+    ['', '숙소 체크인하고 쉬기', '', '', 'rest'] ] },
+  { th: '천천히 적응하는 날', l: [
+    ['09:30', '늦은 아침, 쌀국수 한 그릇', '에어컨 있는 퍼틴이나 안어이 퍼', 'Phở Thìn 13 Lò Đúc Nha Trang', 'food'],
+    ['11:00', '환전하고 숙소 주변 둘러보기', '유심·그랩 작동 확인', '', 'etc'],
+    ['13:00', '점심 먹고 숙소 수영장', '한낮은 쉬어 가기', '', 'rest'],
+    ['16:30', '롯데마트 장보기', '물·간식·과일. 기념품은 미리 구경만', 'Lotte Mart Nha Trang', 'shop'],
+    ['18:30', '저녁: 씀모이 가든', '에어컨 있는 대형 가정식당', 'Xóm Mới Garden Nha Trang', 'food'],
+    ['20:00', '가족 마사지', '키즈 마사지 되는 곳으로 미리 예약', 'Well Spa Nha Trang', 'spa'] ] },
+  { th: '빈원더스 종일', l: [
+    ['08:30', '빈원더스로 출발', '비 예보가 크면 다른 날과 맞바꾸기', 'VinWonders Nha Trang', 'move'],
+    ['09:30', '놀이기구와 아쿠아리움', '인기 어트랙션은 오전에 먼저', 'VinWonders Nha Trang', 'sight'],
+    ['11:30', '이른 점심', '남들 식사할 때 줄이 짧아져요', '', 'food'],
+    ['13:00', '워터파크', '', '', 'sight'],
+    ['18:30', '저녁 먹고 복귀', '저녁 공연은 운영 여부를 현장에서 확인', '', 'food'] ] },
+  { th: '쉬어 가는 날, 머드온천', l: [
+    ['10:00', '늦잠 자고 수영장', '', '', 'rest'],
+    ['12:30', '점심: 생선국수 또는 반미', '', 'Bánh Mì Phan Nha Trang', 'food'],
+    ['14:30', '아이리조트 머드온천·워터파크', '비가 와도 괜찮은 코스. 여벌 옷 챙기기', 'I-Resort Nha Trang', 'sight'],
+    ['18:30', '저녁: 피자 포피스', '예약 권장', "Pizza 4P's Nha Trang", 'food'] ] },
+  { th: '시내 한 바퀴', l: [
+    ['08:30', '포나가르 사원', '어깨·무릎 가리는 옷. 더워지기 전에', 'Tháp Bà Ponagar Nha Trang', 'sight'],
+    ['09:45', '혼총곶', '', 'Hòn Chồng Nha Trang', 'sight'],
+    ['11:30', '점심: 넴느엉', '', 'Nem Nướng Đặng Văn Quyên Nha Trang', 'food'],
+    ['13:00', '숙소에서 휴식', '', '', 'rest'],
+    ['15:30', '롱선사와 나트랑 대성당', '', 'Chùa Long Sơn Nha Trang', 'sight'],
+    ['17:00', '콩카페에서 코코넛 커피', '', 'Cộng Cà Phê Nha Trang', 'food'],
+    ['18:30', '야시장 산책과 저녁', '', 'Chợ đêm Nha Trang', 'shop'] ] },
+  { th: '바다로 나가는 날', l: [
+    ['08:00', '호핑투어: 혼문섬 스노클링', '날씨와 파도를 보고 전날 예약. 취소되면 해양학 박물관과 마사지로', 'Hòn Mun Nha Trang', 'sight'],
+    ['14:00', '숙소 복귀, 낮잠', '', '', 'rest'],
+    ['17:30', '저녁: 목 해산물', '주문 전에 무게와 가격 확인', 'Hải Sản Mộc Quán Nha Trang', 'food'] ] },
+  { th: '수영장과 카페', l: [
+    ['10:00', '수영장이나 해변에서 놀기', '수영 금지 깃발 확인', '', 'rest'],
+    ['12:30', '점심: 짜오마오', '', 'Nhà hàng Chào Mào Nha Trang', 'food'],
+    ['15:00', '레인포레스트 카페', '', 'Rainforest Nha Trang', 'food'],
+    ['17:00', '마사지', '', 'J Spa Nha Trang', 'spa'],
+    ['19:00', '저녁', '', '', 'food'] ] },
+  { th: '예비일', l: [
+    ['', '비로 미룬 일정을 넣는 날', '빈원더스·호핑투어가 밀렸다면 오늘로', '', 'etc'],
+    ['', '여유가 있다면 근교 나들이', '달랏 당일치기(편도 3시간 이상), 100에그 머드온천, 깜란 바이다이 해변 중에서', '', 'sight'] ] },
+  { th: '쇼핑과 기념품', l: [
+    ['10:00', '담시장 구경', '가격은 흥정이 기본', 'Chợ Đầm Nha Trang', 'shop'],
+    ['12:00', '점심', '', '', 'food'],
+    ['15:00', '롯데마트에서 기념품', '커피, 견과류, 과자, 망고 젤리', 'Lotte Mart Nha Trang', 'shop'],
+    ['18:00', '저녁: TOM79 해산물', '', 'TOM79 Nha Trang', 'food'],
+    ['20:00', '침향탑 광장과 해변 야경', '', 'Tháp Trầm Hương Nha Trang', 'sight'] ] },
+  { th: '마지막 날', l: [
+    ['10:00', '느긋한 아침, 짐 싸기', '', '', 'rest'],
+    ['12:00', '체크아웃하고 짐 맡기기', '레이트 체크아웃이 되는지 미리 문의', '', 'etc'],
+    ['13:00', '점심과 카페', '', '', 'food'],
+    ['16:00', '마사지', '샤워와 짐 보관이 되는 곳이면 밤 비행기 전에 편해요', '', 'spa'],
+    ['18:30', '마지막 저녁', '', '', 'food'],
+    ['', '공항으로 이동', '출발 3시간 전 도착 목표. 샌딩 차량 예약', 'Cam Ranh International Airport', 'move'] ] },
+  { th: '집으로', l: [
+    ['', '나트랑(깜란) → 부산 비행', '', '', 'move'],
+    ['', '아침에 한국 도착', '', '', 'move'] ] }
+];
+
+/* ───────── 도우미 ───────── */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => Math.random().toString(36).slice(2, 10);
+const nf = n => Math.round(n).toLocaleString('ko-KR');
+const pad = n => String(n).padStart(2, '0');
+const num = s => Number(String(s).replace(/[^\d.]/g, '')) || 0;
+const TZ_VN = 'Asia/Ho_Chi_Minh', TZ_KR = 'Asia/Seoul';
+const ymd = tz => new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+const hm = tz => new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date());
+const toUTC = s => { const [y, m, d] = s.split('-').map(Number); return Date.UTC(y, m - 1, d); };
+const addDays = (s, n) => new Date(toUTC(s) + n * 864e5).toISOString().slice(0, 10);
+const diffDays = (a, b) => Math.round((toUTC(a) - toUTC(b)) / 864e5);
+const DOW = ['일', '월', '화', '수', '목', '금', '토'];
+const dow = s => DOW[new Date(toUTC(s)).getUTCDay()];
+const md = s => { const p = s.split('-').map(Number); return `${p[1]}월 ${p[2]}일`; };
+const mdDot = s => { const p = s.split('-'); return `${p[1]}.${p[2]}`; };
+const enc = encodeURIComponent;
+
+/* 구글지도 주소 만들기 */
+/* 구글 Maps API 키. 배포할 때 여기에 넣어 두면 모든 기기에서 지도 안 실시간 검색이 켜져요.
+   비워 두면 가이드 > 설정에서 기기마다 넣을 수 있고, 키가 없으면 구글지도 앱으로 넘겨서 찾아요. */
+const GOOGLE_MAPS_KEY = 'AIzaSyBkTyUEUzrjdLTMbySIijS4O3ulK3ND7MM';
+const G = {
+  search(q, c, z) { return c ? `https://www.google.com/maps/search/${enc(q)}/@${c.lat},${c.lng},${z || 15}z?hl=ko` : `https://www.google.com/maps/search/?api=1&query=${enc(q)}&hl=ko`; },
+  dir(q) { return `https://www.google.com/maps/dir/?api=1&destination=${enc(q)}&travelmode=driving&hl=ko`; }
+};
+
+/* ───────── 상태 (이 기기에만 저장) ───────── */
+const KEY = 'nhatrang-trip-2026';
+const DEF = () => ({
+  v: 1,
+  trip: { from: '부산', code: 'PUS', start: '2026-10-23', end: '2026-11-02', out: '', back: '', hotel: '', addr: '', tel: '', guardian: '', memo: '' },
+  plan: {}, theme: {}, seeded: false, fav: [], mine: [], spend: [], budget: 0,
+  rate: { v: 19.15, at: '', ts: 0, manual: false }, check: {}, custom: [], wx: null, gkey: ''
+});
+function load() {
+  const d = DEF();
+  try {
+    const j = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (j && typeof j === 'object') {
+      Object.assign(d, j);
+      d.trip = Object.assign(DEF().trip, j.trip || {});
+      d.rate = Object.assign(DEF().rate, j.rate || {});
+    }
+  } catch (e) { /* 저장소를 못 쓰는 환경이면 기본값으로 */ }
+  return d;
+}
+let S = load();
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
+
+const ui = { tab: 'home', day: null, mapView: 'search', mq: '', mterm: '', mbase: 'center', coords: null, pf: 'all', guide: 'check', phr: 0, spCur: 'VND', wxErr: false };
+const view = $('#view'), sheet = $('#sheet'), sheetIn = $('#sheet-in'), show = $('#show'), toastEl = $('#toast');
+
+function tripDays() {
+  const n = Math.max(0, Math.min(diffDays(S.trip.end, S.trip.start), 30));
+  return Array.from({ length: n + 1 }, (_, i) => addDays(S.trip.start, i));
+}
+function seedPlan() {
+  const days = tripDays();
+  S.plan = {}; S.theme = {};
+  SEED.forEach((d, i) => {
+    const date = days[i]; if (!date) return;
+    S.theme[date] = d.th;
+    S.plan[date] = d.l.map(([t, title, note, q, cat]) => ({ id: uid(), t, title, note, q, cat, done: false }));
+  });
+  S.seeded = true; save();
+}
+function status() {
+  const kr = ymd(TZ_KR), vn = ymd(TZ_VN), t = S.trip;
+  if (kr < t.start) { const d = diffDays(t.start, kr); return { phase: 'pre', big: `D-${d}`, sub: `출발까지 ${d}일 남았어요`, focus: t.start, today: kr }; }
+  if (vn > t.end) return { phase: 'post', big: '다녀왔어요', sub: '즐거운 여행이었길 바라요', focus: t.end, today: vn };
+  const day = vn < t.start ? t.start : vn;
+  const n = diffDays(day, t.start) + 1, left = diffDays(t.end, day);
+  return { phase: 'on', big: `${n}일차`, sub: left > 0 ? `돌아가는 날까지 ${left}일` : '집으로 돌아가는 날', focus: day, today: day };
+}
+const sorted = list => list.map((x, i) => [x, i]).sort((a, b) => {
+  const ta = a[0].t, tb = b[0].t;
+  if (ta && tb) return ta < tb ? -1 : ta > tb ? 1 : a[1] - b[1];
+  if (ta) return -1; if (tb) return 1; return a[1] - b[1];
+}).map(x => x[0]);
+const catOf = k => CATS.find(c => c.k === k) || CATS[CATS.length - 1];
+const toKrw = x => x.cur === 'KRW' ? x.amt : x.amt / S.rate.v;
+
+/* ───────── 날씨 · 환율 ───────── */
+function WX(c) {
+  if (c === 0) return ['☀️', '맑음']; if (c === 1) return ['🌤️', '대체로 맑음']; if (c === 2) return ['⛅', '구름 조금']; if (c === 3) return ['☁️', '흐림'];
+  if (c === 45 || c === 48) return ['🌫️', '안개']; if (c >= 51 && c <= 57) return ['🌦️', '이슬비']; if (c >= 61 && c <= 67) return ['🌧️', '비'];
+  if (c >= 80 && c <= 82) return ['🌦️', '소나기']; if (c >= 95) return ['⛈️', '뇌우']; return ['🌥️', '흐림'];
+}
+const wxOf = date => S.wx && S.wx.d ? S.wx.d.find(x => x.d === date) : null;
+async function loadWx(force) {
+  if (!force && S.wx && Date.now() - S.wx.at < 3600e3) return;
+  try {
+    const u = 'https://api.open-meteo.com/v1/forecast?latitude=12.2388&longitude=109.1967&current=temperature_2m,weather_code,relative_humidity_2m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum&timezone=Asia%2FHo_Chi_Minh&forecast_days=16';
+    const r = await fetch(u); if (!r.ok) throw new Error('wx');
+    const j = await r.json(), D = j.daily;
+    S.wx = {
+      at: Date.now(),
+      cur: { t: j.current.temperature_2m, c: j.current.weather_code, h: j.current.relative_humidity_2m },
+      d: D.time.map((d, i) => ({ d, c: D.weather_code[i], hi: D.temperature_2m_max[i], lo: D.temperature_2m_min[i], p: D.precipitation_probability_max[i], mm: D.precipitation_sum[i] }))
+    };
+    ui.wxErr = false; save();
+  } catch (e) { ui.wxErr = true; }
+  if (ui.tab === 'home' || ui.tab === 'plan') render();
+}
+async function loadRate(force) {
+  if (!force && (S.rate.manual || Date.now() - (S.rate.ts || 0) < 6 * 3600e3)) return true;
+  const set = (v, at) => { S.rate = { v, at, ts: Date.now(), manual: false }; save(); };
+  try {
+    const j = await (await fetch('https://open.er-api.com/v6/latest/KRW')).json();
+    if (!(j && j.rates && j.rates.VND > 0)) throw new Error('rate');
+    set(j.rates.VND, ymd(TZ_KR));
+  } catch (e) {
+    try {
+      const j = await (await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/krw.min.json')).json();
+      if (!(j && j.krw && j.krw.vnd > 0)) throw new Error('rate');
+      set(j.krw.vnd, j.date || ymd(TZ_KR));
+    } catch (e2) { return false; }
+  }
+  if (ui.tab === 'home' || ui.tab === 'wallet') render();
+  return true;
+}
+
+/* ───────── 공통 UI ───────── */
+let toastT;
+function toast(msg) { toastEl.textContent = msg; toastEl.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('on'), 2600); }
+function openSheet(html) { sheetIn.innerHTML = html; sheet.hidden = false; sheetIn.scrollTop = 0; document.body.style.overflow = 'hidden'; }
+function closeSheet() { sheet.hidden = true; sheetIn.innerHTML = ''; if (show.hidden) document.body.style.overflow = ''; }
+function showCard(html) { show.innerHTML = `<button class="x" data-act="show-close">닫기</button><div class="c">${html}</div>`; show.hidden = false; document.body.style.overflow = 'hidden'; }
+function closeShow() { show.hidden = true; show.innerHTML = ''; try { speechSynthesis.cancel(); } catch (e) { } if (sheet.hidden) document.body.style.overflow = ''; }
+let pendingOk = null;
+function ask(title, body, okLabel, fn, danger) {
+  pendingOk = fn;
+  openSheet(`<h2>${esc(title)}</h2><p class="note" style="font-size:14px">${esc(body)}</p>
+    <div class="row" style="margin-top:18px"><button class="btn ghost grow" data-act="sheet-close">취소</button><button class="btn ${danger ? 'danger' : 'pri'} grow" data-act="ask-ok">${esc(okLabel)}</button></div>`);
+}
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); }
+  catch (e) {
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e2) { } ta.remove();
+  }
+  toast('복사했어요. 카카오톡에 붙여넣으세요');
+}
+async function shareText(title, text) {
+  if (navigator.share) { try { await navigator.share({ title, text }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+  copyText(text);
+}
+
+const ICON = {
+  gear: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+  plane: '<svg viewBox="0 0 24 24" aria-hidden="true"><path transform="rotate(90 12 12)" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>'
+};
+
+/* ───────── 홈 ───────── */
+function checkProgress() {
+  const ids = CHECK.flatMap(g => g.l.map(x => x[0])).concat(S.custom.map(x => x.id));
+  return { done: ids.filter(id => S.check[id]).length, total: ids.length };
+}
+function wxHTML() {
+  const w = S.wx, days = tripDays();
+  if (!w) return `<div class="box note">${ui.wxErr ? '날씨를 불러오지 못했어요. 인터넷 연결을 확인한 뒤 다시 시도해 주세요. <button class="btn sm" style="margin-top:8px" data-act="wx-reload">날씨 다시 불러오기</button>' : '날씨를 불러오는 중이에요…'}</div>`;
+  const [e, l] = WX(w.cur.c);
+  const any = w.d.some(x => days.includes(x.d));
+  const first = addDays(S.trip.start, -15);
+  return `<div class="wx-now"><span class="ic" aria-hidden="true">${e}</span><div><b>${Math.round(w.cur.t)}°</b> <span>지금 나트랑은 ${l}, 습도 ${Math.round(w.cur.h)}%</span></div></div>
+    <div class="wx-days">${w.d.map(x => {
+    const [de, dl] = WX(x.c), tr = days.includes(x.d), p = x.p == null ? null : Math.round(x.p);
+    return `<div class="wx-d${tr ? ' trip' : ''}" title="${dl}"><div class="dt">${mdDot(x.d)} ${dow(x.d)}</div><div class="ic" aria-label="${dl}">${de}</div><div class="tp">${Math.round(x.hi)}°/${Math.round(x.lo)}°</div><div class="pp${p >= 60 ? ' hi' : ''}">${p == null ? '' : '☂ ' + p + '%'}</div></div>`;
+  }).join('')}</div>
+    <p class="note" style="margin-top:6px">${any ? '노란 줄이 여행 날짜예요. ' : `예보는 16일 앞까지만 나와요. 여행 날짜는 ${md(first)}쯤부터 보여요. `}10~11월은 나트랑 우기라 낮 28~31°, 밤 23~24°에 소나기가 잦아요.</p>`;
+}
+function renderHome() {
+  const st = status(), t = S.trip, ck = checkProgress();
+  const items = sorted(S.plan[st.focus] || []).filter(x => !x.done).slice(0, 4);
+  const fw = wxOf(st.focus), di = tripDays().indexOf(st.focus);
+  const paiOpen = addDays(t.start, -3);
+  const paiNote = st.phase !== 'pre' || S.check.pai ? '' :
+    st.today >= paiOpen
+      ? `<div class="callout" style="margin-top:14px"><b>사전입국신고를 지금 작성할 수 있어요.</b> 공식 사이트에서 무료로 작성하고 QR을 저장하세요. <a href="https://prearrival.immigration.gov.vn" target="_blank" rel="noopener">작성하러 가기</a></div>`
+      : '';
+  view.innerHTML = `
+  <section class="ticket" aria-label="여행 요약">
+    <div class="tk-top">
+      <div class="tk-name"><b>나트랑 가족여행</b><button class="tk-gear" data-act="guide" data-v="set" aria-label="여행 정보 설정">${ICON.gear}</button></div>
+      <div class="tk-route">
+        <div class="tk-port"><b>${esc(t.code || 'PUS')}</b><span>${esc(t.from || '출발')}</span></div>
+        <div class="tk-path">${ICON.plane}</div>
+        <div class="tk-port r"><b>CXR</b><span>나트랑 깜란</span></div>
+      </div>
+      ${t.out.trim() || t.back.trim() ? `<div class="tk-fl">${t.out.trim() ? `<span>가는 편 <b>${esc(t.out)}</b></span>` : ''}${t.back.trim() ? `<span>오는 편 <b>${esc(t.back)}</b></span>` : ''}</div>` : ''}
+      <div class="tk-status"><div class="tk-big">${st.big}</div><div class="tk-sub"><b>${mdDot(t.start)} ${dow(t.start)} ~ ${mdDot(t.end)} ${dow(t.end)}</b>${st.sub}</div></div>
+    </div>
+    <div class="tk-tear"></div>
+    <div class="tk-bot">
+      <div><span>나트랑 시각</span><b id="clk-vn">${hm(TZ_VN)}</b></div>
+      <div><span>한국 시각</span><b id="clk-kr">${hm(TZ_KR)}</b></div>
+      <div><button data-act="tab" data-v="wallet" aria-label="환율 계산기 열기"><span>10만 동은</span><b>${nf(100000 / S.rate.v)}원</b></button></div>
+    </div>
+  </section>
+  ${paiNote}
+  <section class="sec"><div class="sec-h"><h2>나트랑 날씨</h2><button class="more" data-act="wx-reload">새로 고침</button></div>${wxHTML()}</section>
+
+  <section class="sec">
+    <div class="sec-h"><h2>${st.phase === 'on' ? '오늘 일정' : st.phase === 'pre' ? '첫날 일정' : '마지막 날 일정'}</h2><button class="more" data-act="day" data-v="${st.focus}">일정 전체 보기</button></div>
+    ${fw && fw.p >= 60 ? `<div class="callout" style="margin-bottom:10px"><b>${md(st.focus)} 비 올 확률 ${Math.round(fw.p)}%.</b> 실내 코스로 바꿔 보는 것도 좋아요. <a href="#map" data-act="picks" data-v="rain">비 오는 날 갈 곳 보기</a></div>` : ''}
+    ${items.length ? `<div class="box" style="padding:6px 16px">${items.map(x => `<div style="display:grid;grid-template-columns:52px 1fr;gap:8px;padding:9px 0;border-top:1px solid var(--line)" class="hrow"><b style="font-variant-numeric:tabular-nums">${esc(x.t) || '<span class="note">미정</span>'}</b><span>${catOf(x.cat).e} ${esc(x.title)}</span></div>`).join('')}</div>`
+      : `<div class="empty">${di >= 0 ? di + 1 + '일차' : ''} 일정이 비어 있어요.<br><button class="btn sm pri" style="margin-top:10px" data-act="day" data-v="${st.focus}">일정 넣으러 가기</button></div>`}
+  </section>
+
+  <section class="sec"><div class="sec-h"><h2>바로 쓰기</h2></div>
+    <div class="quick">
+      <button class="q" data-act="taxi"><span class="e">🚕</span>기사님께<br>숙소 보여주기</button>
+      <button class="q" data-act="near" data-v="맛집"><span class="e">📍</span>내 주변<br>맛집 찾기</button>
+      <button class="q" data-act="tab" data-v="wallet"><span class="e">💱</span>동·원<br>환율 계산</button>
+      <button class="q" data-act="guide" data-v="talk"><span class="e">🗣️</span>베트남어<br>보여주기</button>
+      <button class="q" data-act="lost"><span class="e">🧒</span>미아 방지<br>카드</button>
+      <button class="q" data-act="guide" data-v="sos"><span class="e">🆘</span>긴급<br>연락처</button>
+    </div>
+  </section>
+
+  <section class="sec"><div class="sec-h"><h2>비 오는 날 갈 곳</h2><button class="more" data-act="picks" data-v="rain">모두 보기</button></div>
+    <div class="chips">${PLACES.filter(p => p.t.includes('rain') && p.t.includes('kid')).slice(0, 8).map(p => `<button class="chip" data-act="place" data-id="${p.id}">${esc(p.ko)}</button>`).join('')}</div>
+  </section>
+
+  ${st.phase === 'on' ? `<section class="sec"><div class="sec-h"><h2>오늘 쓴 돈</h2><button class="more" data-act="tab" data-v="wallet">지출 기록하기</button></div>
+    <div class="box"><div class="sum"><span>${md(st.focus)}</span><b style="font-size:22px">${nf(S.spend.filter(x => x.d === st.focus).reduce((a, x) => a + toKrw(x), 0))}원</b></div>
+    <p class="note" style="margin-top:6px">여행 전체 ${nf(S.spend.reduce((a, x) => a + toKrw(x), 0))}원${S.budget ? `, 예산 ${nf(S.budget)}원` : ''}</p></div></section>` : ''}
+  <section class="sec"${st.phase === 'on' && ck.done === ck.total ? ' hidden' : ''}><div class="sec-h"><h2>준비 현황</h2><button class="more" data-act="guide" data-v="check">준비물 보기</button></div>
+    <div class="box"><div class="sum"><span>챙긴 것</span><b style="font-size:22px">${ck.done} / ${ck.total}</b></div><div class="bar"><i style="width:${ck.total ? ck.done / ck.total * 100 : 0}%"></i></div>
+    ${st.phase === 'pre' && !S.check.pai && st.today < paiOpen ? `<p class="note" style="margin-top:10px">사전입국신고는 ${md(paiOpen)}부터 작성할 수 있어요.</p>` : ''}</div>
+  </section>`;
+  const first = view.querySelector('.hrow'); if (first) first.style.borderTop = '0';
+}
+
+/* ───────── 일정 ───────── */
+function renderPlan() {
+  const days = tripDays(), st = status();
+  if (!ui.day || !days.includes(ui.day)) ui.day = days.includes(st.focus) ? st.focus : days[0];
+  const d = ui.day, idx = days.indexOf(d), list = sorted(S.plan[d] || []), w = wxOf(d);
+  const [we, wl] = w ? WX(w.c) : ['', ''];
+  view.innerHTML = `
+  <h1 class="vh">일정</h1>
+  <div class="days" role="tablist" aria-label="날짜 고르기">${days.map((x, i) => {
+    const xw = wxOf(x);
+    return `<button class="dayc${st.phase === 'on' && x === st.today ? ' today' : ''}" role="tab" aria-selected="${x === d}" data-act="day" data-v="${x}" aria-label="${i + 1}일차 ${md(x)} ${dow(x)}요일"><span class="w">${dow(x)}</span><span class="n">${Number(x.slice(8))}</span><span class="x">${xw ? WX(xw.c)[0] : ''}</span></button>`;
+  }).join('')}</div>
+  <div class="dayhead">
+    <p class="k">${idx + 1}일차</p>
+    <h2>${md(d)} ${dow(d)}요일</h2>
+    <button class="theme" data-act="theme" aria-label="이 날의 제목 고치기">${esc(S.theme[d] || '이 날의 제목 붙이기')}</button>
+  </div>
+  ${w ? `<div class="daywx${w.p >= 60 ? ' rain' : ''}"><span aria-hidden="true">${we}</span><span>${wl}, ${Math.round(w.hi)}°/${Math.round(w.lo)}°${w.p == null ? '' : `, 비 올 확률 ${Math.round(w.p)}%`}${w.p >= 60 ? '. 실내 코스를 준비해 두세요' : ''}</span></div>` : ''}
+  ${list.length ? `<ol class="tl">${list.map(x => `
+    <li class="${x.done ? 'done' : ''}">
+      <div class="t${x.t ? '' : ' none'}">${esc(x.t) || '미정'}</div>
+      <div class="dot"><button data-act="plan-done" data-id="${esc(x.id)}" role="checkbox" aria-checked="${!!x.done}" aria-label="${esc(x.title)} 완료 표시">${x.done ? '✓' : ''}</button></div>
+      <div class="body">
+        <button class="it" data-act="plan-edit" data-id="${esc(x.id)}"><b>${catOf(x.cat).e} ${esc(x.title)}</b>${x.note ? `<span class="m">${esc(x.note)}</span>` : ''}</button>
+        ${x.q ? `<div class="lnk">${gkey() ? `<button data-act="plan-map" data-id="${esc(x.id)}">지도 보기</button>` : `<a href="${G.search(x.q)}" target="_blank" rel="noopener">구글지도</a>`}<a href="${G.dir(x.q)}" target="_blank" rel="noopener">길찾기</a></div>` : ''}
+      </div>
+    </li>`).join('')}</ol>` : `<div class="empty">아직 일정이 없어요. 아래 버튼으로 첫 일정을 넣어 보세요.</div>`}
+  <div class="addbar"><button class="btn pri full" data-act="plan-add">이 날에 일정 추가</button></div>
+  <div class="row" style="margin-top:10px">
+    <button class="btn sm grow" data-act="day-share">이 날 일정 공유</button>
+    <button class="btn sm grow" data-act="day-clear">이 날 비우기</button>
+  </div>
+  <p class="note" style="margin-top:18px">처음 들어 있는 일정은 우기와 아이 동반을 고려한 추천 초안이에요. 눌러서 고치거나 지우세요. 시간순으로 자동 정렬돼요.</p>
+  <div class="row" style="margin-top:8px"><button class="btn sm ghost" data-act="seed-reset">추천 초안으로 되돌리기</button><button class="btn sm ghost" data-act="plan-wipe">전체 일정 비우기</button></div>`;
+  const sel = view.querySelector('.dayc[aria-selected=true]');
+  if (sel) { const box = sel.parentNode; box.scrollLeft = sel.offsetLeft - box.clientWidth / 2 + sel.clientWidth / 2; }
+}
+function planSheet(date, id, preset) {
+  const days = tripDays();
+  const it = id ? (S.plan[date] || []).find(x => x.id === id) : Object.assign({ t: '', title: '', note: '', q: '', cat: 'etc' }, preset || {});
+  if (!it) return;
+  const [hh, mm] = it.t ? it.t.split(':') : ['', ''];
+  const hours = '<option value="">미정</option>' + Array.from({ length: 24 }, (_, h) => `<option${pad(h) === hh ? ' selected' : ''}>${pad(h)}</option>`).join('');
+  const mins = Array.from({ length: 12 }, (_, i) => { const m = pad(i * 5); return `<option${m === mm ? ' selected' : ''}>${m}</option>`; }).join('');
+  openSheet(`<form id="f-plan" data-date="${date}" data-id="${id || ''}">
+    <h2>${id ? '일정 고치기' : '일정 추가'}</h2>
+    <label class="field"><span>무엇을 하나요</span><input class="in" name="title" required maxlength="60" value="${esc(it.title)}" placeholder="예: 포나가르 사원"></label>
+    <label class="field"><span>날짜</span><select class="in" name="date">${days.map((x, i) => `<option value="${x}"${x === date ? ' selected' : ''}>${i + 1}일차, ${md(x)} ${dow(x)}요일</option>`).join('')}</select></label>
+    <div class="field"><span>시간 (정하지 않았으면 미정)</span><div class="f2"><select class="in" name="hh" aria-label="시">${hours}</select><select class="in" name="mm" aria-label="분">${mins}</select></div></div>
+    <div class="field"><span>종류</span><div class="chips wrap">${CATS.map(c => `<button type="button" class="chip" data-act="pick-cat" data-v="${c.k}" aria-pressed="${c.k === it.cat}">${c.e} ${c.n}</button>`).join('')}</div><input type="hidden" name="cat" value="${esc(it.cat)}"></div>
+    <label class="field"><span>장소 (구글지도에서 찾을 이름, 선택)</span><input class="in" name="q" maxlength="80" value="${esc(it.q)}" placeholder="예: Pizza 4P's Nha Trang"></label>
+    <label class="field"><span>메모 (선택)</span><textarea class="in" name="note" maxlength="300">${esc(it.note)}</textarea></label>
+    <div class="row" style="margin-top:16px">${id ? '<button type="button" class="btn danger" data-act="plan-del">삭제</button>' : ''}<button type="button" class="btn ghost grow" data-act="sheet-close">취소</button><button class="btn pri grow">${id ? '고친 내용 저장' : '일정 추가'}</button></div>
+  </form>`);
+}
+function dayText(d) {
+  const days = tripDays(), list = sorted(S.plan[d] || []);
+  return `[나트랑 ${days.indexOf(d) + 1}일차] ${md(d)} ${dow(d)}요일${S.theme[d] ? ' / ' + S.theme[d] : ''}\n` +
+    (list.length ? list.map(x => `${x.t || '미정 '} ${x.title}${x.note ? ` (${x.note})` : ''}`).join('\n') : '일정 없음');
+}
+
+/* ───────── 지도 ───────── */
+const gkey = () => String(S.gkey || GOOGLE_MAPS_KEY || '').trim();
+const GM = { p: null, el: null, map: null, info: null, marks: [], res: [], view: [], sort: 'rel', open: false, seq: 0, failed: false, err: '', last: '' };
+function baseInfo() {
+  const h = S.trip.hotel.trim();
+  if (ui.mbase === 'me' && ui.coords) return { label: '내 위치', suffix: '', c: ui.coords, z: 16, name: `${ui.coords.lat},${ui.coords.lng}` };
+  if (ui.mbase === 'hotel' && h) return { label: h, suffix: ` near ${h} Nha Trang`, c: null, z: 16, name: `${h} Nha Trang` };
+  if (ui.mbase === 'cam') return { label: '깜란 리조트 지역', suffix: ' Cam Ranh', c: CAM, z: 13, name: 'Bãi Dài Cam Ranh' };
+  return { label: '나트랑 시내', suffix: ' Nha Trang', c: NT, z: 14, name: 'Nha Trang' };
+}
+/* 검색어에 맞는 추천 장소 (키 없이도 앱 안에서 보여줄 수 있는 결과) */
+function curated(term, label) {
+  const c = MAPCATS.find(x => x[2] === term);
+  if (c) { const m = c[3]; if (!m) return []; return Array.isArray(m) ? m.map(id => PLACES.find(p => p.id === id)).filter(Boolean) : PLACES.filter(p => p.c === m); }
+  const t = String(label || term || '').trim().toLowerCase(); if (!t) return [];
+  return PLACES.filter(p => `${p.ko} ${p.lo} ${p.d}`.toLowerCase().includes(t));
+}
+const meters = (a, b) => { const r = Math.PI / 180, x = Math.sin((b.lat - a.lat) * r / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin((b.lng - a.lng) * r / 2) ** 2; return 12742000 * Math.asin(Math.sqrt(x)); };
+const distText = d => d < 1000 ? Math.max(10, Math.round(d / 10) * 10) + 'm' : (d / 1000).toFixed(1) + 'km';
+
+/* 구글 Maps JavaScript API (키가 있을 때만) */
+function gmLoad() {
+  if (GM.p) return GM.p;
+  GM.p = new Promise((res, rej) => {
+    window.__gmReady = () => res();
+    window.gm_authFailure = () => { GM.failed = true; GM.err = 'auth'; if (ui.tab === 'map' && ui.mapView === 'search') renderMap(); };
+    const sc = document.createElement('script');
+    sc.src = `https://maps.googleapis.com/maps/api/js?key=${enc(gkey())}&v=weekly&libraries=places,marker&language=ko&region=VN&loading=async&callback=__gmReady`;
+    sc.async = true; sc.onerror = () => rej(new Error('load'));
+    document.head.appendChild(sc);
+    setTimeout(() => rej(new Error('timeout')), 15000);
+  });
+  return GM.p;
+}
+function gmClear() { GM.marks.forEach(m => { try { m.setMap(null); } catch (e) { } }); GM.marks = []; try { GM.info.close(); } catch (e) { } }
+async function gmRun() {
+  const slot = $('#gm-slot'), list = $('#gm-list'); if (!slot || !list) return;
+  const term = ui.mterm || ui.mq.trim(), b = baseInfo(), center = b.c || NT, seq = ++GM.seq;
+  try {
+    await gmLoad();
+    if (GM.failed) throw new Error(GM.err || 'auth');
+    const { Map, InfoWindow } = await google.maps.importLibrary('maps');
+    if (!GM.el) { GM.el = document.createElement('div'); GM.el.style.cssText = 'position:absolute;inset:0'; }
+    const here = $('#gm-slot'); if (!here) return;
+    if (GM.el.parentNode !== here) here.appendChild(GM.el);
+    if (!GM.map) { GM.map = new Map(GM.el, { center, zoom: b.z, mapTypeControl: false, streetViewControl: false, gestureHandling: 'greedy' }); GM.info = new InfoWindow(); }
+    if (!term) { gmClear(); GM.res = []; GM.view = []; GM.last = ''; GM.map.setCenter(center); GM.map.setZoom(b.z); return; }
+    const sig = [term, b.suffix, center.lat, center.lng, GM.open].join('|');
+    if (sig !== GM.last) {                 // 같은 검색은 다시 부르지 않아요 (호출 수 절약)
+      list.innerHTML = '<p class="note" style="margin-top:12px">구글지도에서 찾는 중이에요…</p>';
+      const { Place } = await google.maps.importLibrary('places');
+      const req = { textQuery: term + b.suffix, fields: ['displayName', 'location', 'rating', 'userRatingCount', 'formattedAddress', 'googleMapsURI', 'priceLevel', 'primaryTypeDisplayName'], locationBias: center, language: 'ko', region: 'vn', maxResultCount: 20 };
+      if (GM.open) req.isOpenNow = true;
+      const { places } = await Place.searchByText(req);
+      if (seq !== GM.seq) return;
+      const xy = L => L ? { lat: typeof L.lat === 'function' ? L.lat() : L.lat, lng: typeof L.lng === 'function' ? L.lng() : L.lng } : null;
+      GM.res = (places || []).map(p => ({ name: p.displayName || '', loc: xy(p.location), r: p.rating || 0, n: p.userRatingCount || 0, addr: p.formattedAddress || '', uri: p.googleMapsURI || '', price: p.priceLevel || '', type: p.primaryTypeDisplayName || '' }));
+      GM.last = sig;
+    }
+    await gmDraw();
+  } catch (e) {
+    if (seq !== GM.seq) return;
+    GM.failed = true; GM.err = GM.err || String((e && e.message) || e).slice(0, 200); GM.p = GM.err === 'load' || GM.err === 'timeout' ? null : GM.p;
+    if (ui.tab === 'map' && ui.mapView === 'search') renderMap();
+  }
+}
+const PRICE = { INEXPENSIVE: '₫', MODERATE: '₫₫', EXPENSIVE: '₫₫₫', VERY_EXPENSIVE: '₫₫₫₫' };
+async function gmDraw() {
+  const list = $('#gm-list'); if (!list || !GM.map) return;
+  const origin = ui.mbase === 'hotel' ? null : (baseInfo().c || NT);
+  const arr = GM.res.map(x => Object.assign({}, x, { dist: origin && x.loc ? meters(origin, x.loc) : null }));
+  if (GM.sort === 'rate') arr.sort((a, b) => b.r - a.r || b.n - a.n);
+  else if (GM.sort === 'pop') arr.sort((a, b) => b.n - a.n);
+  else if (GM.sort === 'near') arr.sort((a, b) => (a.dist == null ? 1e12 : a.dist) - (b.dist == null ? 1e12 : b.dist));
+  GM.view = arr;
+  list.innerHTML = arr.length ? arr.map((x, i) => `<article class="place res" data-i="${i}">
+      <button class="res-h" data-act="gm-focus" data-i="${i}"><span class="no">${i + 1}</span><span class="nm"><b>${esc(x.name)}</b><small>${esc([x.type, x.addr].filter(Boolean).join(', '))}</small></span></button>
+      <div class="pl-m">${x.r ? `<span class="star">★ ${x.r.toFixed(1)}</span><span>리뷰 ${nf(x.n)}</span>` : '<span>평점 없음</span>'}${PRICE[x.price] ? `<span>${PRICE[x.price]}</span>` : ''}${x.dist != null ? `<span>${distText(x.dist)}</span>` : ''}</div>
+      <div class="pl-a"><a class="btn sm pri" target="_blank" rel="noopener" href="${/^https:\/\//.test(x.uri) ? esc(x.uri) : G.search(x.name + ' Nha Trang')}">구글지도</a><a class="btn sm" target="_blank" rel="noopener" href="${G.dir(x.name + (x.addr ? ', ' + x.addr : ''))}">길찾기</a><button class="btn sm" data-act="gm-fav" data-i="${i}">찜</button><button class="btn sm" data-act="gm-plan" data-i="${i}">일정에 넣기</button></div>
+    </article>`).join('') : `<div class="empty">${GM.open ? '지금 영업 중인 곳을 찾지 못했어요.' : '찾은 곳이 없어요. 검색어나 기준 위치를 바꿔 보세요.'}</div>`;
+  gmClear();
+  const pts = arr.filter(x => x.loc);
+  if (!pts.length) return;
+  const { Marker } = await google.maps.importLibrary('marker');
+  const bounds = new google.maps.LatLngBounds();
+  arr.forEach((x, i) => { if (!x.loc) return; const m = new Marker({ map: GM.map, position: x.loc, label: String(i + 1), title: x.name }); m.addListener('click', () => gmFocus(i, true)); GM.marks[i] = m; bounds.extend(x.loc); });
+  if (pts.length === 1) { GM.map.setCenter(pts[0].loc); GM.map.setZoom(16); } else GM.map.fitBounds(bounds, 40);
+}
+function gmFocus(i, fromMarker) {
+  const x = GM.view[i]; if (!x || !x.loc || !GM.map) return;
+  GM.map.panTo(x.loc); if (GM.map.getZoom() < 16) GM.map.setZoom(16);
+  GM.info.setContent(`<div style="font:14px/1.45 sans-serif;color:#10343A"><b>${i + 1}. ${esc(x.name)}</b>${x.r ? `<br>★ ${x.r.toFixed(1)} (리뷰 ${nf(x.n)})` : ''}</div>`);
+  GM.info.open({ map: GM.map, anchor: GM.marks[i] });
+  const el = fromMarker ? document.querySelector(`.res[data-i="${i}"]`) : $('#gm-slot');
+  if (el) el.scrollIntoView({ block: fromMarker ? 'center' : 'start', behavior: 'smooth' });
+}
+function gmErrText() {
+  const e = GM.err;
+  if (e === 'auth') return 'API 키가 맞는지, 키의 허용 웹사이트에 이 주소가 들어 있는지 확인해 주세요.';
+  if (e === 'load' || e === 'timeout') return '인터넷 연결을 확인해 주세요.';
+  return `구글 콘솔에서 Maps JavaScript API와 Places API (New)가 켜져 있는지 확인해 주세요. (${esc(e)})`;
+}
+function placeHTML(p) {
+  const fav = S.fav.includes(p.id);
+  return `<article class="place">
+    <div class="pl-h"><h3>${esc(p.ko)}${p.lo ? `<small lang="vi">${esc(p.lo)}</small>` : ''}</h3><button class="heart" aria-pressed="${fav}" aria-label="${esc(p.ko)} 찜" data-act="fav" data-id="${p.id}">${fav ? '♥' : '♡'}</button></div>
+    <p class="pl-d">${esc(p.d)}</p>
+    <div class="pl-m">${p.r ? `<span class="star">★ ${p.r.toFixed(1)}</span><span>리뷰 ${nf(p.n)}</span>` : ''}${p.t.map(t => `<span class="tag">${TAGS[t]}</span>`).join('')}</div>
+    <div class="pl-a">${gkey() ? `<button class="btn sm pri" data-act="place" data-id="${p.id}">지도 보기</button>` : `<a class="btn sm pri" target="_blank" rel="noopener" href="${G.search(p.q)}">구글지도</a>`}<a class="btn sm" target="_blank" rel="noopener" href="${G.dir(p.q)}">길찾기</a><button class="btn sm" data-act="place-plan" data-id="${p.id}">일정에 넣기</button></div>
+  </article>`;
+}
+function renderMap() {
+  const v = ui.mapView;
+  let h = `<h1 class="vh">지도</h1>
+  <div class="seg" role="tablist">${[['search', '주변 검색'], ['picks', '추천 장소'], ['fav', '찜한 곳']].map(([k, n]) => `<button role="tab" aria-selected="${v === k}" data-act="map-view" data-v="${k}">${n}</button>`).join('')}</div>`;
+  if (v === 'search') {
+    const key = gkey(), term = ui.mterm || ui.mq.trim(), b = baseInfo(), shown = ui.mq || term;
+    h += `<form id="f-search" class="search" role="search"><input id="mq" name="q" type="search" enterkeyhint="search" autocomplete="off" placeholder="쌀국수, 키즈카페, 약국…" value="${esc(ui.mq)}" aria-label="구글지도에서 찾을 곳"><button class="btn pri">찾기</button></form>
+    <div class="chips">${MAPCATS.map(([e, n, q]) => `<button class="chip" aria-pressed="${ui.mterm === q}" data-act="map-cat" data-n="${n}" data-q="${esc(q)}">${e} ${n}</button>`).join('')}</div>
+    <p class="lbl">어디 주변에서 찾을까요</p>
+    <div class="chips wrap">${[['center', '나트랑 시내'], ['hotel', '숙소 주변'], ['me', '내 위치'], ['cam', '깜란 리조트']].map(([k, n]) => `<button class="chip" aria-pressed="${ui.mbase === k}" data-act="map-base" data-v="${k}">${n}</button>`).join('')}</div>`;
+    if (key && !GM.failed) {
+      h += `<div class="mapwrap" id="gm-slot"><div class="ph">구글지도를 불러오는 중이에요.</div></div>
+      <div class="chips" style="margin-top:10px">${[['rel', '추천순'], ['rate', '평점순'], ['pop', '리뷰 많은 순'], ['near', '가까운 순']].map(([k, n]) => `<button class="chip" aria-pressed="${GM.sort === k}" data-act="gm-sort" data-v="${k}">${n}</button>`).join('')}<button class="chip" aria-pressed="${GM.open}" data-act="gm-open">지금 영업 중만</button></div>
+      <div id="gm-list">${term ? '' : '<p class="note" style="margin-top:8px">위에서 찾을 곳을 고르거나 검색어를 넣으세요.</p>'}</div>`;
+    } else if (key) {
+      h += `<div class="callout" style="margin-top:12px"><b>지도 안 검색을 불러오지 못했어요.</b> 아래 버튼으로 구글지도 앱에서 찾을 수 있어요. ${gmErrText()}<br><button class="btn sm" style="margin-top:8px" data-act="gm-retry">다시 시도</button></div>`;
+    }
+    h += `<p class="mapq">${term ? `<b>${esc(shown)}</b>, ${esc(b.label)} 기준` : `${esc(b.label)} 주변에서 찾을 곳을 고르세요.`}</p>
+    <a class="btn ${key ? '' : 'pri'} full" id="gopen" target="_blank" rel="noopener" href="${term ? G.search(term + b.suffix, b.c, b.z) : G.search(b.name)}">${term ? `구글지도 앱에서 ‘${esc(shown)}’ 찾기` : '구글지도 앱 열기'}</a>`;
+    if (!key || GM.failed) {
+      const cur = term ? curated(ui.mterm, ui.mq) : [];
+      h += `<p class="note" style="margin-top:10px">구글지도 앱으로 넘어가 평점순 결과와 리뷰, 영업시간을 볼 수 있어요.</p>
+      ${cur.length ? `<div class="sec"><div class="sec-h"><h2>추천 장소 중에서</h2></div>${cur.map(placeHTML).join('')}</div>` : ''}
+      ${key ? '' : `<div class="box" style="margin-top:20px"><b>이 화면 안에서 바로 찾으려면</b><p class="note" style="margin-top:4px">구글 API 키를 넣으면 지도와 평점순 목록이 여기에 바로 나와요.</p><button class="btn sm" style="margin-top:10px" data-act="gkey-help">켜는 방법 보기</button></div>`}`;
+    }
+  } else if (v === 'picks') {
+    const f = ui.pf, list = PLACES.filter(p => f === 'all' || p.c === f || p.t.includes(f));
+    h += `<div class="chips">${PFILTERS.map(([k, n]) => `<button class="chip" aria-pressed="${f === k}" data-act="pf" data-v="${k}">${n}</button>`).join('')}</div>
+    <p class="note">${list.length}곳. 평점은 구글 리뷰 기준으로 2026년에 모은 참고값이에요. 영업시간과 가격은 구글지도에서 확인하세요.</p>
+    ${list.map(placeHTML).join('')}`;
+  } else {
+    const favs = PLACES.filter(p => S.fav.includes(p.id));
+    h += `${favs.length || S.mine.length ? '' : '<div class="empty">찜한 곳이 없어요. 추천 장소에서 ♡를 누르거나 아래에 직접 추가하세요.</div>'}
+    ${favs.map(placeHTML).join('')}
+    ${S.mine.map(m => `<article class="place"><div class="pl-h"><h3>${esc(m.name)}<small>직접 추가한 곳</small></h3><button class="heart" aria-pressed="true" aria-label="${esc(m.name)} 지우기" data-act="mine-del" data-id="${esc(m.id)}">✕</button></div>${m.note ? `<p class="pl-d">${esc(m.note)}</p>` : ''}
+      <div class="pl-a"><a class="btn sm pri" target="_blank" rel="noopener" href="${/^https:\/\//.test(m.u || '') ? esc(m.u) : G.search(m.name)}">구글지도</a><a class="btn sm" target="_blank" rel="noopener" href="${G.dir(m.name)}">길찾기</a><button class="btn sm" data-act="mine-plan" data-id="${esc(m.id)}">일정에 넣기</button></div></article>`).join('')}
+    <form id="f-mine" class="box" style="margin-top:16px"><b>가고 싶은 곳 직접 추가</b>
+      <label class="field"><span>이름 (구글지도에서 찾을 이름)</span><input class="in" name="name" required maxlength="60" placeholder="예: Quán Ốc Ngon Nha Trang"></label>
+      <label class="field"><span>메모 (선택)</span><input class="in" name="note" maxlength="80" placeholder="예: 지인 추천, 저녁에"></label>
+      <button class="btn pri full" style="margin-top:12px">찜한 곳에 추가</button></form>`;
+  }
+  view.innerHTML = h;
+  if (v === 'search' && gkey() && !GM.failed) gmRun();
+}
+function placeSheet(q, title, sub, desc) {
+  openSheet(`<h2>${esc(title)}</h2>${sub ? `<p class="note" lang="vi">${esc(sub)}</p>` : ''}${desc ? `<p style="margin-top:8px;font-size:14px">${esc(desc)}</p>` : ''}
+    ${gkey() && !GM.failed ? `<p class="pl-m" id="ps-info" style="min-height:20px"></p><div class="mapwrap" style="margin-top:8px"><div class="ph">지도를 불러오는 중이에요.</div><div id="ps-map" style="position:absolute;inset:0"></div></div>` : ''}
+    <div class="row" style="margin-top:14px"><a class="btn pri grow" id="ps-open" target="_blank" rel="noopener" href="${G.search(q)}">구글지도에서 열기</a><a class="btn grow" target="_blank" rel="noopener" href="${G.dir(q)}">길찾기</a></div>
+    <button class="btn ghost full" style="margin-top:8px" data-act="sheet-close">닫기</button>`);
+  if (gkey() && !GM.failed) psMap(q);
+}
+const PS = {};   // 같은 장소는 다시 조회하지 않아요
+async function psMap(q) {
+  const box = $('#ps-map'), info = $('#ps-info'); if (!box) return;
+  try {
+    await gmLoad(); if (GM.failed) throw new Error(GM.err || 'auth');
+    const [{ Map }, { Place }, { Marker }] = await Promise.all(['maps', 'places', 'marker'].map(n => google.maps.importLibrary(n)));
+    if (!PS[q]) {
+      const { places } = await Place.searchByText({ textQuery: q, fields: ['displayName', 'location', 'rating', 'userRatingCount', 'googleMapsURI', 'regularOpeningHours'], locationBias: NT, language: 'ko', region: 'vn', maxResultCount: 1 });
+      const p = places && places[0]; if (!p) throw new Error('none');
+      let open = null; try { open = p.regularOpeningHours ? await p.isOpen() : null; } catch (e) { }
+      PS[q] = { loc: { lat: p.location.lat(), lng: p.location.lng() }, r: p.rating || 0, n: p.userRatingCount || 0, uri: p.googleMapsURI || '', open, name: p.displayName || '' };
+    }
+    const x = PS[q]; if (!$('#ps-map')) return;
+    const m = new Map(box, { center: x.loc, zoom: 16, mapTypeControl: false, streetViewControl: false, gestureHandling: 'greedy' });
+    new Marker({ map: m, position: x.loc, title: x.name });
+    if (info) info.innerHTML = `${x.r ? `<span class="star">★ ${x.r.toFixed(1)}</span><span>리뷰 ${nf(x.n)}</span>` : ''}${x.open === true ? '<span class="tag">지금 영업 중</span>' : x.open === false ? '<span class="tag">지금은 영업 종료</span>' : ''}`;
+    const a = $('#ps-open'); if (a && /^https:\/\//.test(x.uri)) a.href = x.uri;
+  } catch (e) {
+    const w = box.parentNode; if (w) w.remove(); if (info) info.remove();
+  }
+}
+function locate() {
+  return new Promise((res, rej) => {
+    if (!navigator.geolocation) return rej();
+    navigator.geolocation.getCurrentPosition(p => { ui.coords = { lat: +p.coords.latitude.toFixed(5), lng: +p.coords.longitude.toFixed(5) }; res(); }, rej, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
+  });
+}
+function keyHelp() {
+  openSheet(`<h2>지도 안 실시간 검색 켜기</h2>
+    <p class="note" style="font-size:14px">구글 API 키를 한 번 만들어 넣으면 지도 탭에서 맛집·마사지를 바로 찾고 평점순으로 볼 수 있어요.</p>
+    <ol style="padding-left:20px;font-size:14px;margin:12px 0 0;display:grid;gap:8px">
+      <li><a href="https://console.cloud.google.com/google/maps-apis" target="_blank" rel="noopener">구글 클라우드 콘솔</a>에서 프로젝트를 고르고 결제 계정을 연결해요.</li>
+      <li>API 라이브러리에서 <b>Maps JavaScript API</b>, <b>Places API (New)</b>, <b>Maps Embed API</b> 세 가지를 사용 설정해요.</li>
+      <li>사용자 인증 정보에서 <b>API 키</b>를 만들고, 애플리케이션 제한을 “웹사이트”로 골라 이 앱의 주소를 등록해요.<br><span class="note">지금 주소: ${esc(location.origin + '/*')}</span></li>
+      <li>가이드 탭의 설정에 키를 붙여 넣고 저장해요.</li>
+    </ol>
+    <p class="note" style="margin-top:12px">구글은 매달 일정 횟수까지 무료로 쓰게 해 줘요(평점이 포함된 검색은 월 1,000회, 지도 표시는 월 10,000회). 가족 여행에서는 보통 그 안에서 끝나지만, 콘솔에서 하루 할당량 상한을 걸어 두면 안심돼요. 무료 범위와 요금은 구글 정책에 따라 바뀔 수 있어요.</p>
+    <div class="row" style="margin-top:16px"><button class="btn ghost grow" data-act="sheet-close">닫기</button><button class="btn pri grow" data-act="guide" data-v="set">설정으로 가기</button></div>`);
+}
+
+/* ───────── 지갑 ───────── */
+const NOTES = [[10000, '#B58A3C'], [20000, '#3B6FB5'], [50000, '#B85A86'], [100000, '#4E9B5B'], [200000, '#B5533C'], [500000, '#2E93A8']];
+function renderWallet() {
+  const r = S.rate.v, days = tripDays(), st = status();
+  const total = S.spend.reduce((a, x) => a + toKrw(x), 0);
+  const byCat = SPCATS.map(c => [c, S.spend.filter(x => x.cat === c.k).reduce((a, x) => a + toKrw(x), 0)]).filter(x => x[1] > 0);
+  const maxCat = Math.max(1, ...byCat.map(x => x[1]));
+  const dates = [...new Set(S.spend.map(x => x.d))].sort().reverse();
+  const defDay = days.includes(st.focus) ? st.focus : days[0];
+  const pct = S.budget ? Math.min(100, total / S.budget * 100) : 0;
+  view.innerHTML = `
+  <h1 class="vh">지갑</h1>
+  <section>
+    <div class="conv">
+      <label><input id="cv-vnd" inputmode="numeric" autocomplete="off" placeholder="0" aria-label="베트남 동"><span class="u">동</span></label>
+      <label><input id="cv-krw" inputmode="numeric" autocomplete="off" placeholder="0" aria-label="한국 원"><span class="u">원</span></label>
+    </div>
+    <div class="chips" style="margin-top:10px">${[20000, 50000, 100000, 200000, 500000, 1000000].map(v => `<button class="chip" data-act="cv-set" data-v="${v}">${v >= 10000 ? v / 10000 + '만' : nf(v)} 동</button>`).join('')}<button class="chip" data-act="cv-k">+000</button></div>
+    <div class="rate"><span>1,000동은 약 ${(1000 / r).toFixed(1)}원${S.rate.at ? ` (${S.rate.manual ? '직접 입력한 환율' : S.rate.at + ' 기준'})` : ' (기본값)'}</span><span class="rb"><button data-act="rate-reload">새로 받기</button><button data-act="rate-edit">직접 입력</button></span></div>
+    ${r > 17 && r < 23 ? '<p class="note" style="margin-top:4px">암산 요령: 동 금액에서 0 하나를 떼고 반으로 나누면 대략 원화예요.</p>' : ''}
+  </section>
+
+  <section class="sec"><div class="sec-h"><h2>지폐 한눈에</h2></div>
+    <div class="notes">${NOTES.map(([v, c]) => `<button class="bn" style="border-left-color:${c}" data-act="cv-set" data-v="${v}"><b>${nf(v)}</b><span>약 ${nf(v / r)}원</span></button>`).join('')}</div>
+    <p class="note" style="margin-top:8px">2만 동과 50만 동은 둘 다 파란색이고, 1만 동과 20만 동은 둘 다 갈색 계열이에요. 낼 때 0의 개수를 꼭 확인하세요.</p>
+  </section>
+
+  <section class="sec"><div class="sec-h"><h2>쓴 돈</h2><button class="more" data-act="spend-share">내역 공유</button></div>
+    <div class="box">
+      <div class="sum"><span>지금까지</span><b>${nf(total)}원</b></div>
+      ${S.budget ? `<div class="bar${total > S.budget ? ' over' : ''}"><i style="width:${pct}%"></i></div><p class="note" style="margin-top:6px">예산 ${nf(S.budget)}원 중 ${total > S.budget ? nf(total - S.budget) + '원 초과' : nf(S.budget - total) + '원 남음'}</p>` : ''}
+      ${byCat.length ? `<div class="cats">${byCat.map(([c, v]) => `<div><span>${c.e} ${c.n}</span><span class="bar"><i style="width:${v / maxCat * 100}%"></i></span><em>${nf(v)}원</em></div>`).join('')}</div>` : ''}
+      <button class="btn sm" style="margin-top:12px" data-act="budget">${S.budget ? '예산 바꾸기' : '예산 정하기'}</button>
+    </div>
+    <form id="f-spend" class="box" style="margin-top:10px">
+      <div class="f3"><label class="field" style="margin:0"><span>금액</span><input class="in" id="sp-amt" name="amt" inputmode="numeric" autocomplete="off" required placeholder="0"></label>
+        <div class="cur" role="group" aria-label="통화"><button type="button" data-act="sp-cur" data-v="VND" aria-pressed="${ui.spCur === 'VND'}">동</button><button type="button" data-act="sp-cur" data-v="KRW" aria-pressed="${ui.spCur === 'KRW'}">원</button></div></div>
+      <p class="note" id="sp-hint" style="min-height:20px;margin-top:4px"></p>
+      <div class="f2"><label class="field" style="margin:0"><span>종류</span><select class="in" name="cat">${SPCATS.map(c => `<option value="${c.k}">${c.e} ${c.n}</option>`).join('')}</select></label>
+        <label class="field" style="margin:0"><span>날짜</span><select class="in" name="d">${days.map(x => `<option value="${x}"${x === defDay ? ' selected' : ''}>${mdDot(x)} ${dow(x)}</option>`).join('')}</select></label></div>
+      <label class="field"><span>메모 (선택)</span><input class="in" name="memo" maxlength="40" placeholder="예: 저녁 해산물"></label>
+      <button class="btn pri full" style="margin-top:12px">지출 기록</button>
+    </form>
+    ${dates.length ? dates.map(d => {
+    const l = S.spend.filter(x => x.d === d);
+    return `<div class="sp-day"><span>${md(d)} ${dow(d)}요일</span><b>${nf(l.reduce((a, x) => a + toKrw(x), 0))}원</b></div>` + l.slice().reverse().map(x => {
+      const c = SPCATS.find(k => k.k === x.cat) || SPCATS[SPCATS.length - 1];
+      return `<button class="sp" data-act="spend-open" data-id="${esc(x.id)}"><span aria-hidden="true">${c.e}</span><span class="n"><b>${esc(x.memo || c.n)}</b><span>${c.n}</span></span><span class="a"><b>${nf(x.amt)}${x.cur === 'VND' ? '동' : '원'}</b>${x.cur === 'VND' ? `<span>약 ${nf(toKrw(x))}원</span>` : ''}</span></button>`;
+    }).join('');
+  }).join('') : '<div class="empty">기록한 지출이 없어요. 위에 금액을 넣고 기록해 보세요.</div>'}
+  </section>`;
+}
+function spendText() {
+  const total = S.spend.reduce((a, x) => a + toKrw(x), 0);
+  const dates = [...new Set(S.spend.map(x => x.d))].sort();
+  return `[나트랑 여행 지출] 합계 약 ${nf(total)}원\n` + dates.map(d => `\n${md(d)} ${dow(d)}요일\n` + S.spend.filter(x => x.d === d).map(x => {
+    const c = SPCATS.find(k => k.k === x.cat) || SPCATS[SPCATS.length - 1];
+    return `- ${x.memo || c.n}: ${nf(x.amt)}${x.cur === 'VND' ? `동 (약 ${nf(toKrw(x))}원)` : '원'}`;
+  }).join('\n')).join('\n');
+}
+
+/* ───────── 가이드 ───────── */
+function checkHTML() {
+  const ck = checkProgress();
+  const row = (id, text, hint, custom, url) => `<label class="ck${S.check[id] ? ' on' : ''}"><input type="checkbox" data-ck="${esc(id)}"${S.check[id] ? ' checked' : ''}><span class="tx"><span>${esc(text)}</span>${hint ? `<small>${esc(hint)}</small>` : ''}${url ? `<small><a href="${url}" target="_blank" rel="noopener">공식 사이트 열기</a></small>` : ''}</span>${custom ? `<button type="button" class="x" data-act="ck-del" data-id="${esc(id)}" aria-label="${esc(text)} 지우기">✕</button>` : '<span></span>'}</label>`;
+  return `<div class="box"><div class="sum"><span>챙긴 것</span><b id="ck-n" style="font-size:22px">${ck.done} / ${ck.total}</b></div><div class="bar"><i id="ck-bar" style="width:${ck.total ? ck.done / ck.total * 100 : 0}%"></i></div></div>
+  ${CHECK.map(g => `<div class="cg"><h3>${g.g}</h3>${g.l.map(([id, t, h, u]) => row(id, t, h, false, u)).join('')}</div>`).join('')}
+  <div class="cg"><h3>내가 추가한 것</h3>${S.custom.map(x => row(x.id, x.text, '', true)).join('')}
+    <form id="f-check" class="search" style="margin-top:8px"><input class="in" name="text" required maxlength="50" placeholder="예: 아이 구명조끼" aria-label="추가할 준비물"><button class="btn pri">추가</button></form></div>`;
+}
+function talkHTML() {
+  const g = PHRASES[ui.phr] || PHRASES[0];
+  return `<p class="note" style="margin-bottom:10px">문장을 누르면 큰 글씨로 떠요. 그대로 보여주거나 소리로 들려주세요.</p>
+  <div class="chips">${PHRASES.map((p, i) => `<button class="chip" aria-pressed="${i === ui.phr}" data-act="phr" data-v="${i}">${p.n}</button>`).join('')}</div>
+  ${g.l.map(([ko, vi, pr], i) => `<button class="ph-item" data-act="phrase" data-i="${i}"><span><span class="ko">${esc(ko)}</span><span class="vi" lang="vi">${esc(vi)}</span><span class="pr">${esc(pr)}</span></span><span class="go">크게 보기</span></button>`).join('')}
+  <div class="cg"><h3>숫자</h3><div class="nums">${NUMS.map(([n, vi, pr]) => `<div><b>${n}</b><span lang="vi">${vi}</span><small>${pr}</small></div>`).join('')}</div>
+    <p class="note" style="margin-top:8px">가격은 보통 천 단위로 말해요. 50,000동은 “남 므어이 응안(năm mươi nghìn)”, 줄여서 “50k”.</p></div>
+  <a class="btn full" style="margin-top:16px" target="_blank" rel="noopener" href="https://translate.google.com/?sl=ko&tl=vi&op=translate">구글 번역으로 다른 문장 만들기</a>`;
+}
+function tipsHTML() {
+  const r = S.rate.v;
+  const T = [
+    ['입국과 공항', [
+      '한국 여권은 <b>45일 무비자</b>로 입국해요. 여권 유효기간은 6개월 이상 남아 있어야 해요.',
+      '<b>사전입국신고(PAI)</b>는 도착 72시간 전부터 공식 사이트 <a href="https://prearrival.immigration.gov.vn" target="_blank" rel="noopener">prearrival.immigration.gov.vn</a>에서 무료로 작성하고 QR을 캡처해 두세요. 2026년 4월 호치민 공항부터 도입돼 공항별로 넓혀 가는 중이라, 깜란공항 적용 여부는 항공사 안내로 확인하세요. 수수료를 받는 유사 사이트는 피하세요.',
+      '<b>전자담배</b>는 액상형·궐련형 모두 반입, 소지, 사용이 금지예요. 적발되면 벌금과 압수.',
+      '깜란 국제공항에서 나트랑 시내까지 약 35km, 차로 40~50분 걸려요.',
+      '그랩은 약 25만~40만 동, 공항 택시는 약 40만~55만 동이에요. 밤늦게 도착하거나 짐과 아이가 있으면 픽업 차량을 예약하는 편이 편해요.'
+    ]],
+    ['우기 날씨 대처', [
+      '10~11월은 나트랑에서 <b>연중 비가 가장 많은 시기</b>예요. 낮 28~31°, 밤 23~24° 정도.',
+      '소나기처럼 왔다가 개는 날이 많지만, 며칠 이어지거나 태풍 영향을 받을 수도 있어요.',
+      '호핑투어, 섬으로 들어가는 머드스파, 빈원더스처럼 <b>날씨를 타는 일정은 여행 앞쪽에</b> 넣고 예비일을 남겨 두세요.',
+      '비 오는 날에는 머드온천, 마사지, 롯데마트, 카페, 해양학 박물관이 좋아요.',
+      '파도가 높은 날에는 해변의 수영 금지 깃발을 확인하세요.'
+    ]],
+    ['돈과 결제', [
+      `지금 환율로 <b>1,000동은 약 ${(1000 / r).toFixed(1)}원</b>, 10만 동은 약 ${nf(100000 / r)}원이에요.`,
+      '로컬 식당과 노점은 현금(동) 위주고, 대형 식당·마트·쇼핑몰은 카드가 돼요.',
+      '한국에서 달러(100달러권)로 바꿔 가서 현지 금은방·환전소에서 동으로 바꾸는 방법을 많이 써요. 트래블카드로 ATM에서 뽑는 방법도 있어요.',
+      '2만 동과 50만 동 지폐는 둘 다 파란색이라 헷갈리기 쉬워요.',
+      '팁은 의무가 아니에요. 마사지는 팁이 포함된 가격인지 예약할 때 확인하세요.'
+    ]],
+    ['시내 이동', [
+      '<b>그랩(Grab)</b> 앱으로 부르면 요금이 미리 정해지고 카드로 결제돼요.',
+      '택시를 잡는다면 마이린(Mai Linh, 초록색)이나 비나선(Vinasun, 흰색) 같은 미터 택시를 타세요.',
+      '시내 안은 어디든 차로 10~15분 안팎이에요.',
+      '길을 건널 때는 뛰지 말고 일정한 속도로 천천히. 오토바이가 알아서 피해 가요. 아이 손은 꼭 잡고요.',
+      '홈 화면의 “기사님께 숙소 보여주기”에 숙소 주소를 넣어 두면 말이 안 통해도 돌아올 수 있어요.'
+    ]],
+    ['식당에서', [
+      '테이블 위 물티슈는 대부분 유료(소액)예요. 안 쓰면 계산에서 빠져요.',
+      '고수를 못 먹으면 “콩 쪼 응오”. 회화 탭에서 크게 띄워 보여주세요.',
+      '해산물은 무게로 값을 매기니 주문 전에 무게와 가격을 확인하세요.',
+      '장이 예민하면 얼음과 생채소는 조심하고, 물은 생수를 드세요.',
+      '인기 식당의 저녁 시간은 예약해 두면 기다리지 않아요.'
+    ]],
+    ['마사지와 스파', [
+      '인기 스파는 카카오톡으로 예약을 받는 곳이 많아요. 저녁 시간대는 미리 예약하세요.',
+      '키즈 마사지가 되는 곳이 있어 온 가족이 함께 받을 수 있어요. 추천 장소의 “아이와” 표시를 보세요.',
+      '세기는 “마인 헌(더 세게)”, “녜 헌(더 약하게)”.',
+      '마지막 날에는 샤워와 짐 보관이 되는 스파를 체크아웃 뒤에 잡아 두면 밤 비행기 타기 전에 개운해요.'
+    ]],
+    ['안전과 건강', [
+      '휴대폰은 차도 쪽 손에 들지 마세요. 오토바이 날치기가 있어요.',
+      '사원(포나가르, 롱선사)에 갈 때는 어깨와 무릎을 가리는 옷을 입어요.',
+      '베트남은 한국보다 <b>2시간 느리고</b> 전압은 220V예요.',
+      '아프면 국제병원(Vinmec Nha Trang 등)으로. 보험 청구용으로 진단서와 영수증을 챙기세요.',
+      '모기 기피제를 뿌리고, 한낮에는 자외선 차단과 물을 자주.'
+    ]]
+  ];
+  return T.map(([h, l], i) => `<details class="tip"${i === 0 ? ' open' : ''}><summary>${h}</summary><ul>${l.map(x => `<li>${x}</li>`).join('')}</ul></details>`).join('') +
+    '<p class="note" style="margin-top:14px">입국 절차와 요금은 바뀔 수 있어요. 출발 전에 항공사와 외교부 해외안전여행 안내를 한 번 더 확인하세요.</p>';
+}
+function sosHTML() {
+  const tel = (name, sub, numTxt, href, red) => `<a class="tel${red ? ' red' : ''}" href="tel:${href}"><span><b>${name}</b><span>${sub}</span></span><em>${numTxt}</em></a>`;
+  return `<p class="note" style="margin-bottom:6px">번호를 누르면 바로 전화가 걸려요.</p>
+  ${tel('영사콜센터', '24시간, 사건·사고와 통역 지원', '+82-2-3210-0404', '+82232100404', 1)}
+  ${tel('주호치민 총영사관 긴급전화', '사건·사고 긴급 연락', '+84-93-850-0238', '+84938500238', 1)}
+  ${tel('주호치민 총영사관 대표전화', '근무시간 중', '+84-28-3822-5757', '+842838225757')}
+  ${tel('베트남 구급차', '응급 환자', '115', '115', 1)}
+  ${tel('베트남 경찰', '도난·사고 신고', '113', '113')}
+  ${tel('베트남 소방', '화재', '114', '114')}
+  <div class="row" style="margin-top:14px">
+    <button class="btn grow" data-act="near" data-v="병원">가까운 병원 찾기</button>
+    <button class="btn grow" data-act="near" data-v="약국">가까운 약국 찾기</button>
+  </div>
+  <button class="btn full" style="margin-top:8px" data-act="place-q" data-q="Vinmec Nha Trang International Hospital" data-t="빈멕 국제병원">빈멕 국제병원 위치 보기</button>
+  <div class="box" style="margin-top:16px;font-size:14px">
+    <b>여권을 잃어버렸을 때</b>
+    <p style="margin-top:6px">가까운 경찰서(공안)에서 분실 신고서를 받고 영사콜센터에 연락해 안내를 받으세요. 여권 사본과 사진이 있으면 빨라요.</p>
+    <b style="display:block;margin-top:12px">카드를 잃어버렸을 때</b>
+    <p style="margin-top:6px">카드사 앱이나 해외 분실신고 번호로 바로 정지하세요. 번호는 출발 전에 메모해 두는 게 좋아요.</p>
+  </div>
+  <p class="note" style="margin-top:12px">나트랑을 맡는 공관과 연락처는 출발 전에 외교부 안내에서 한 번 더 확인하세요. 영사콜센터는 어디서나 통해요.</p>`;
+}
+function setHTML() {
+  const t = S.trip, f = (k, label, ph, type, extra) => `<label class="field"><span>${label}</span><input class="in" data-trip="${k}" type="${type || 'text'}" value="${esc(t[k])}" placeholder="${ph || ''}" ${extra || ''}></label>`;
+  return `<div class="cg" style="margin-top:0"><h3>여행 정보</h3>
+    <div class="f2">${f('from', '출발 도시', '부산')}${f('code', '공항 코드', 'PUS', 'text', 'maxlength="4" style="text-transform:uppercase"')}</div>
+    <div class="f2">${f('start', '출발하는 날', '', 'date')}${f('end', '한국 도착하는 날', '', 'date')}</div>
+    ${f('out', '가는 비행기 (편명과 시간)', '예: BX781 19:30 출발')}
+    ${f('back', '오는 비행기 (편명과 시간)', '예: BX782 01:10 출발')}
+  </div>
+  <div class="cg"><h3>숙소</h3>
+    ${f('hotel', '숙소 이름 (영어·베트남어 이름)', '예: Vinpearl Beachfront Nha Trang')}
+    ${f('addr', '주소 (베트남어 주소 그대로)', '예: 78-80 Trần Phú, Nha Trang')}
+    ${f('tel', '숙소 전화', '예: +84 258 …', 'tel')}
+    <p class="note" style="margin-top:6px">입력해 두면 택시 기사에게 보여줄 카드와 “숙소 주변” 검색에 쓰여요.</p>
+  </div>
+  <div class="cg"><h3>미아 방지 카드</h3>
+    ${f('guardian', '보호자 전화번호', '+82 10-0000-0000', 'tel')}
+    <p class="note" style="margin-top:6px">현지에서 걸 수 있게 +82로 시작하는 번호로 적으세요. 이 기기에만 저장되고 공유 링크에는 들어가지 않아요.</p>
+    <button class="btn sm" style="margin-top:8px" data-act="lost">카드 미리 보기</button>
+  </div>
+  <div class="cg"><h3>지도 안 실시간 검색</h3>
+    <p class="note">${gkey() ? (S.gkey ? '켜져 있어요. 이 휴대폰에 저장한 키를 써요.' : '켜져 있어요. 앱에 넣어 둔 키를 써요.') : '꺼져 있어요. 지금은 구글지도 앱으로 넘어가서 찾아요.'}</p>
+    <label class="field"><span>구글 Maps API 키</span><input class="in" id="gkey" value="${esc(S.gkey || '')}" placeholder="AIza로 시작하는 키" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+    <div class="row" style="margin-top:8px"><button class="btn pri" data-act="gkey-save">키 저장</button><button class="btn" data-act="gkey-help">키 만드는 방법</button></div>
+  </div>
+  <div class="cg"><h3>메모</h3><label class="field" style="margin-top:0"><span>예약 번호, 픽업 기사 연락처 등</span><textarea class="in" data-trip="memo" style="min-height:110px">${esc(t.memo)}</textarea></label></div>
+  <div class="cg"><h3>가족과 나누기, 백업</h3>
+    <p class="note">기록은 이 휴대폰에만 저장돼요. 가족 휴대폰에서도 같은 일정을 보려면 링크를 보내 주세요. 일정, 찜한 곳, 숙소 정보${S.gkey ? ', 지도 검색 키' : ''}가 담겨요.</p>
+    <button class="btn pri full" style="margin-top:8px" data-act="share-link">일정을 링크로 보내기</button>
+    <div class="row" style="margin-top:8px"><button class="btn grow" data-act="export">백업 파일 저장</button><button class="btn grow" data-act="import">백업 파일 불러오기</button></div>
+    <input type="file" id="imp" accept="application/json,.json" hidden>
+    <button class="btn danger full" style="margin-top:20px" data-act="reset">모든 기록 지우고 처음으로</button>
+  </div>`;
+}
+function renderGuide() {
+  const g = ui.guide;
+  view.innerHTML = `<h1 class="vh">가이드</h1>
+  <div class="seg" role="tablist">${[['check', '준비물'], ['talk', '회화'], ['tips', '꿀팁'], ['sos', '긴급'], ['set', '설정']].map(([k, n]) => `<button role="tab" aria-selected="${g === k}" data-act="guide" data-v="${k}">${n}</button>`).join('')}</div>` +
+    ({ check: checkHTML, talk: talkHTML, tips: tipsHTML, sos: sosHTML, set: setHTML }[g] || checkHTML)();
+}
+
+/* ───────── 화면 전환 ───────── */
+const RENDER = { home: renderHome, plan: renderPlan, map: renderMap, wallet: renderWallet, guide: renderGuide };
+function render() { (RENDER[ui.tab] || renderHome)(); }
+function go(tab, keepScroll) {
+  if (!RENDER[tab]) tab = 'home';
+  ui.tab = tab;
+  document.querySelectorAll('.tabs button').forEach(b => b.toggleAttribute('aria-current', false));
+  const cur = $(`.tabs button[data-v="${tab}"]`); if (cur) cur.setAttribute('aria-current', 'page');
+  render();
+  if (!keepScroll) window.scrollTo(0, 0);
+  try { history.replaceState(null, '', '#' + tab); } catch (e) { }
+}
+
+/* ───────── 가족에게 일정 보내기 (링크) ───────── */
+const b64 = u8 => { let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
+const unb64 = s => { const bin = atob(s.replace(/-/g, '+').replace(/_/g, '/')); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; };
+async function pack(obj) {
+  const bytes = new TextEncoder().encode(JSON.stringify(obj));
+  if ('CompressionStream' in window) {
+    try { const st = new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw')); return 'z' + b64(new Uint8Array(await new Response(st).arrayBuffer())); } catch (e) { }
+  }
+  return 'j' + b64(bytes);
+}
+async function unpack(s) {
+  const bytes = unb64(s.slice(1));
+  if (s[0] === 'z') { const st = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw')); return JSON.parse(await new Response(st).text()); }
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+let incoming = null;
+async function checkIncoming() {
+  const m = location.hash.match(/^#d=(.+)$/); if (!m) return false;
+  try {
+    const j = await unpack(m[1]);
+    if (!j || typeof j.p !== 'object') throw new Error('bad');
+    incoming = j;
+    const n = Object.values(j.p).reduce((a, l) => a + (Array.isArray(l) ? l.length : 0), 0);
+    ask('받은 일정이 있어요', `가족이 보낸 일정 ${n}개를 이 휴대폰에 불러올까요? 지금 이 휴대폰에 있는 일정과 찜한 곳은 받은 내용으로 바뀌어요. 지출과 준비물 체크는 그대로예요.`, '받은 일정 불러오기', () => {
+      const g = S.trip.guardian;
+      if (j.t) S.trip = Object.assign(DEF().trip, j.t, { guardian: g });
+      Object.values(j.p).forEach(l => Array.isArray(l) && l.forEach(x => { if (!/^\d\d:\d\d$/.test(x.t || '')) x.t = ''; }));
+      S.plan = j.p; S.theme = j.h || {}; S.fav = Array.isArray(j.f) ? j.f : []; S.mine = Array.isArray(j.m) ? j.m : []; S.seeded = true;
+      const newKey = typeof j.k === 'string' && /^[A-Za-z0-9_-]{20,}$/.test(j.k) && !S.gkey;
+      if (newKey) S.gkey = j.k;
+      save(); ui.day = null; go('plan'); toast('받은 일정을 불러왔어요');
+    });
+  } catch (e) { toast('링크의 일정을 읽지 못했어요'); }
+  try { history.replaceState(null, '', location.pathname + location.search + '#home'); } catch (e) { }
+  return true;
+}
+
+/* ───────── 누르기 동작 ───────── */
+const ACT = {
+  tab: el => go(el.dataset.v),
+  guide: el => { if (!sheet.hidden) closeSheet(); ui.guide = el.dataset.v; go('guide', ui.tab === 'guide'); },
+  day: el => { ui.day = el.dataset.v; go('plan', ui.tab === 'plan'); },
+  picks: (el, e) => { e.preventDefault(); ui.mapView = 'picks'; ui.pf = el.dataset.v || 'all'; go('map'); },
+  'wx-reload': () => { toast('날씨를 새로 불러와요'); loadWx(true); },
+  'sheet-close': closeSheet,
+  'show-close': closeShow,
+  'ask-ok': () => { const fn = pendingOk; pendingOk = null; closeSheet(); if (fn) fn(); },
+
+  /* 일정 */
+  'plan-add': () => planSheet(ui.day),
+  'plan-edit': el => planSheet(ui.day, el.dataset.id),
+  'plan-done': el => { const it = (S.plan[ui.day] || []).find(x => x.id === el.dataset.id); if (it) { it.done = !it.done; save(); renderPlan(); } },
+  'plan-map': el => { const it = (S.plan[ui.day] || []).find(x => x.id === el.dataset.id); if (it) placeSheet(it.q, it.title, it.q); },
+  'plan-del': el => { const f = el.closest('form'), d = f.dataset.date; S.plan[d] = (S.plan[d] || []).filter(x => x.id !== f.dataset.id); save(); closeSheet(); render(); toast('일정을 지웠어요'); },
+  'pick-cat': el => { const box = el.parentNode; box.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', c === el)); box.parentNode.querySelector('[name=cat]').value = el.dataset.v; },
+  'day-share': () => shareText('나트랑 일정', dayText(ui.day)),
+  'day-clear': () => ask('이 날 일정을 비울까요?', `${md(ui.day)} 일정을 모두 지워요. 되돌릴 수 없어요.`, '이 날 비우기', () => { S.plan[ui.day] = []; save(); render(); toast('이 날 일정을 비웠어요'); }, true),
+  'plan-wipe': () => ask('전체 일정을 비울까요?', '모든 날짜의 일정을 지워요. 되돌릴 수 없어요.', '전체 일정 비우기', () => { S.plan = {}; S.theme = {}; save(); render(); toast('전체 일정을 비웠어요'); }, true),
+  'seed-reset': () => ask('추천 초안으로 되돌릴까요?', '지금 일정을 모두 지우고 처음의 추천 일정으로 바꿔요.', '추천 초안으로 되돌리기', () => { seedPlan(); render(); toast('추천 초안으로 되돌렸어요'); }, true),
+  theme: () => openSheet(`<form id="f-theme"><h2>이 날의 제목</h2><label class="field"><span>${md(ui.day)}을 한 줄로</span><input class="in" name="th" maxlength="30" value="${esc(S.theme[ui.day] || '')}" placeholder="예: 빈원더스 종일"></label>
+    <div class="row" style="margin-top:16px"><button type="button" class="btn ghost grow" data-act="sheet-close">취소</button><button class="btn pri grow">제목 저장</button></div></form>`),
+
+  /* 지도 */
+  'map-view': el => { ui.mapView = el.dataset.v; renderMap(); },
+  'map-cat': el => { ui.mterm = el.dataset.q; ui.mq = el.dataset.n; renderMap(); },
+  'map-base': el => {
+    const v = el.dataset.v;
+    if (v === 'hotel' && !S.trip.hotel.trim()) { toast('가이드의 설정에서 숙소 이름을 먼저 넣어 주세요'); return; }
+    if (v === 'me') { toast('내 위치를 찾는 중이에요'); locate().then(() => { ui.mbase = 'me'; if (ui.tab === 'map') renderMap(); }).catch(() => toast('위치를 가져오지 못했어요. 위치 권한을 확인해 주세요')); return; }
+    ui.mbase = v; renderMap();
+  },
+  near: el => {
+    const c = MAPCATS.find(x => x[1] === el.dataset.v) || MAPCATS[0];
+    ui.mapView = 'search'; ui.mterm = c[2]; ui.mq = c[1]; go('map');
+    locate().then(() => { ui.mbase = 'me'; if (ui.tab === 'map' && ui.mapView === 'search') renderMap(); }).catch(() => toast('위치를 못 찾아 나트랑 시내 기준으로 보여드려요'));
+  },
+  pf: el => { ui.pf = el.dataset.v; renderMap(); },
+  fav: el => {
+    const id = el.dataset.id, i = S.fav.indexOf(id);
+    if (i >= 0) S.fav.splice(i, 1); else S.fav.push(id);
+    save();
+    if (ui.tab === 'map' && ui.mapView === 'fav') renderMap();
+    else { el.setAttribute('aria-pressed', i < 0); el.textContent = i < 0 ? '♥' : '♡'; }
+    toast(i < 0 ? '찜한 곳에 담았어요' : '찜한 곳에서 뺐어요');
+  },
+  place: el => { const p = PLACES.find(x => x.id === el.dataset.id); if (p) placeSheet(p.q, p.ko, p.lo, p.d); },
+  'place-q': el => placeSheet(el.dataset.q, el.dataset.t, el.dataset.q),
+  'place-plan': el => { const p = PLACES.find(x => x.id === el.dataset.id); if (p) planSheet(ui.day || status().focus, null, { title: p.ko, q: p.q, cat: { food: 'food', cafe: 'food', spa: 'spa', mud: 'sight', sight: 'sight', shop: 'shop' }[p.c] || 'etc' }); },
+  'gm-sort': el => { GM.sort = el.dataset.v; el.parentNode.querySelectorAll('[data-act="gm-sort"]').forEach(c => c.setAttribute('aria-pressed', c === el)); gmDraw(); },
+  'gm-open': el => { GM.open = !GM.open; el.setAttribute('aria-pressed', GM.open); gmRun(); },
+  'gm-focus': el => gmFocus(+el.dataset.i),
+  'gm-fav': el => { const x = GM.view[+el.dataset.i]; if (!x) return; if (S.mine.some(m => m.name === x.name)) { toast('이미 찜한 곳이에요'); return; } S.mine.push({ id: uid(), name: x.name, note: x.addr, u: x.uri }); save(); toast('찜한 곳에 담았어요'); },
+  'gm-plan': el => { const x = GM.view[+el.dataset.i]; if (x) planSheet(ui.day || status().focus, null, { title: x.name, q: /nha trang|cam ranh/i.test(x.name) ? x.name : x.name + ' Nha Trang' }); },
+  'gm-retry': () => { location.hash = '#map'; location.reload(); },
+  'gkey-help': keyHelp,
+  'gkey-save': () => {
+    const i = $('#gkey'); if (!i) return; const v = i.value.trim();
+    if (v && !/^[A-Za-z0-9_-]{20,}$/.test(v)) { toast('API 키 모양이 아니에요. 다시 확인해 주세요'); return; }
+    S.gkey = v; save(); location.hash = '#map'; location.reload();
+  },
+  'mine-plan': el => { const m = S.mine.find(x => x.id === el.dataset.id); if (m) planSheet(ui.day || status().focus, null, { title: m.name, q: m.name, note: m.note || '' }); },
+  'mine-del': el => { S.mine = S.mine.filter(x => x.id !== el.dataset.id); save(); renderMap(); toast('찜한 곳에서 뺐어요'); },
+
+  /* 지갑 */
+  'cv-set': el => { const i = $('#cv-vnd'); i.value = nf(+el.dataset.v); onConv('vnd'); i.scrollIntoView({ block: 'center', behavior: 'smooth' }); },
+  'cv-k': () => { const i = $('#cv-vnd'), v = num(i.value); if (v) { i.value = nf(v * 1000); onConv('vnd'); } },
+  'rate-reload': async () => { toast('환율을 새로 받아요'); const ok = await loadRate(true); toast(ok ? '환율을 새로 받았어요' : '환율을 받지 못했어요. 인터넷 연결을 확인해 주세요'); },
+  'rate-edit': () => openSheet(`<form id="f-rate"><h2>환율 직접 입력</h2><label class="field"><span>1원이 몇 동인지 (예: 19.15)</span><input class="in" name="v" inputmode="decimal" required value="${S.rate.v.toFixed(2)}"></label>
+    <p class="note" style="margin-top:6px">환전소에서 받은 실제 환율을 넣으면 계산이 더 정확해요. “환율 새로 받기”를 누르면 다시 자동으로 돌아가요.</p>
+    <div class="row" style="margin-top:16px"><button type="button" class="btn ghost grow" data-act="sheet-close">취소</button><button class="btn pri grow">환율 저장</button></div></form>`),
+  'sp-cur': el => { ui.spCur = el.dataset.v; el.parentNode.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b === el)); spHint(); },
+  budget: () => openSheet(`<form id="f-budget"><h2>여행 예산</h2><label class="field"><span>현지에서 쓸 예산 (원). 0이면 예산 없이 기록만</span><input class="in" name="v" inputmode="numeric" value="${S.budget ? nf(S.budget) : ''}" placeholder="예: 3,000,000"></label>
+    <div class="row" style="margin-top:16px"><button type="button" class="btn ghost grow" data-act="sheet-close">취소</button><button class="btn pri grow">예산 저장</button></div></form>`),
+  'spend-open': el => {
+    const x = S.spend.find(s => s.id === el.dataset.id); if (!x) return;
+    const c = SPCATS.find(k => k.k === x.cat) || SPCATS[SPCATS.length - 1];
+    openSheet(`<h2>${c.e} ${esc(x.memo || c.n)}</h2><p style="font:800 28px/1.3 var(--fd);margin-top:6px">${nf(x.amt)}${x.cur === 'VND' ? '동' : '원'}</p>
+      <p class="note">${md(x.d)} ${dow(x.d)}요일, ${c.n}${x.cur === 'VND' ? `, 약 ${nf(toKrw(x))}원` : ''}</p>
+      <div class="row" style="margin-top:18px"><button class="btn danger" data-act="spend-del" data-id="${esc(x.id)}">이 지출 지우기</button><button class="btn ghost grow" data-act="sheet-close">닫기</button></div>`);
+  },
+  'spend-del': el => { S.spend = S.spend.filter(x => x.id !== el.dataset.id); save(); closeSheet(); renderWallet(); toast('지출을 지웠어요'); },
+  'spend-share': () => S.spend.length ? shareText('나트랑 여행 지출', spendText()) : toast('아직 기록한 지출이 없어요'),
+
+  /* 가이드 */
+  phr: el => { ui.phr = +el.dataset.v; renderGuide(); },
+  phrase: el => {
+    const [ko, vi, pr] = PHRASES[ui.phr].l[+el.dataset.i];
+    showCard(`<p class="k">${esc(ko)}</p><p class="big" lang="vi">${esc(vi)}</p><p class="pr">${esc(pr)}</p><div class="acts"><button class="btn" data-act="speak" data-t="${esc(vi)}">소리로 들려주기</button></div>`);
+  },
+  speak: el => {
+    try {
+      const ss = window.speechSynthesis; if (!ss) throw new Error('none');
+      const vs = ss.getVoices(), v = vs.find(x => /^vi/i.test(x.lang));
+      if (vs.length && !v) { toast('이 기기에는 베트남어 음성이 없어요. 화면을 보여주세요'); return; }
+      ss.cancel();
+      const u = new SpeechSynthesisUtterance(el.dataset.t.replace(/\s*\(.*?\)/g, '').replace(/\s*\/\s*/g, ', '));
+      u.lang = 'vi-VN'; if (v) u.voice = v; u.rate = 0.85; ss.speak(u);
+    } catch (e) { toast('이 기기에서는 소리로 들려줄 수 없어요'); }
+  },
+  taxi: () => {
+    const t = S.trip;
+    if (!t.hotel.trim() && !t.addr.trim()) { ui.guide = 'set'; go('guide'); toast('숙소 이름과 주소를 넣으면 기사님께 보여줄 카드가 만들어져요'); return; }
+    showCard(`<p class="k">기사님께 이 화면을 보여주세요</p><p class="mid" lang="vi">Xin vui lòng đưa tôi đến địa chỉ này:</p><p class="big">${esc(t.hotel)}</p>${t.addr ? `<p class="mid" lang="vi">${esc(t.addr)}</p>` : ''}${t.tel ? `<p class="sm">☎ ${esc(t.tel)}</p>` : ''}
+      <p class="sm">뜻: 이 주소로 데려다 주세요.</p><div class="acts"><a class="btn" target="_blank" rel="noopener" href="${G.dir((t.hotel + ' ' + t.addr).trim())}">구글지도로 길찾기</a></div>`);
+  },
+  lost: () => {
+    const t = S.trip;
+    if (!t.guardian.trim()) { ui.guide = 'set'; go('guide'); toast('보호자 전화번호를 넣으면 미아 방지 카드가 만들어져요'); return; }
+    showCard(`<p class="k">아이가 길을 잃었을 때 보여주는 카드</p><p class="mid" lang="vi">Cháu bị lạc. Xin hãy gọi cho bố mẹ cháu:</p><p class="big">${esc(t.guardian)}</p><p class="mid" lang="en">I am lost. Please call my parents.</p>
+      ${t.hotel ? `<p class="sm" lang="vi">Khách sạn: ${esc(t.hotel)}</p>` : ''}<p class="sm">뜻: 길을 잃었어요. 부모님께 전화해 주세요.\n이 화면을 캡처해 아이 휴대폰 잠금화면에 두거나 인쇄해 가방에 넣어 주세요.</p>
+      <div class="acts"><a class="btn" href="tel:${esc(t.guardian.replace(/[^\d+]/g, ''))}">이 번호로 전화 걸기</a></div>`);
+  },
+  'ck-del': el => { S.custom = S.custom.filter(x => x.id !== el.dataset.id); delete S.check[el.dataset.id]; save(); renderGuide(); },
+
+  /* 백업 */
+  'share-link': async () => {
+    const t = Object.assign({}, S.trip); delete t.guardian;
+    const url = location.href.split('#')[0] + '#d=' + await pack(Object.assign({ t, p: S.plan, h: S.theme, f: S.fav, m: S.mine }, S.gkey ? { k: S.gkey } : {}));
+    if (url.length > 9000) { toast('일정이 길어 링크로 보내기 어려워요. 백업 파일을 보내 주세요'); return; }
+    if (navigator.share) { try { await navigator.share({ title: '나트랑 가족여행 일정', url }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+    copyText(url);
+  },
+  export: () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 1)], { type: 'application/json' }));
+    a.download = `nhatrang-backup-${ymd(TZ_KR)}.json`; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 3000); toast('백업 파일을 저장했어요');
+  },
+  import: () => { const i = $('#imp'); if (i) i.click(); },
+  reset: () => ask('모든 기록을 지울까요?', '일정, 지출, 준비물 체크, 숙소 정보가 모두 지워지고 처음 상태로 돌아가요. 되돌릴 수 없어요.', '모두 지우기', () => { try { localStorage.removeItem(KEY); } catch (e) { } S = DEF(); seedPlan(); ui.day = null; go('home'); loadWx(true); loadRate(true); toast('처음 상태로 돌아갔어요'); }, true)
+};
+
+/* ───────── 입력 처리 ───────── */
+function onConv(from) {
+  const a = $('#cv-vnd'), b = $('#cv-krw'); if (!a || !b) return;
+  if (from === 'vnd') { const v = num(a.value); a.value = v ? nf(v) : ''; b.value = v ? nf(v / S.rate.v) : ''; }
+  else { const k = num(b.value); b.value = k ? nf(k) : ''; a.value = k ? nf(k * S.rate.v) : ''; }
+}
+function spHint() {
+  const i = $('#sp-amt'), h = $('#sp-hint'); if (!i || !h) return;
+  const v = num(i.value); i.value = v ? nf(v) : '';
+  h.textContent = !v ? '' : ui.spCur === 'VND' ? `약 ${nf(v / S.rate.v)}원` : `약 ${nf(v * S.rate.v)}동`;
+}
+const FORMS = {
+  'f-plan': (f, d) => {
+    const from = f.dataset.date, id = f.dataset.id, to = d.get('date'), hh = d.get('hh');
+    const title = d.get('title').trim(); if (!title) return;
+    const it = { id: id || uid(), t: hh ? `${hh}:${d.get('mm')}` : '', title, note: d.get('note').trim(), q: d.get('q').trim(), cat: d.get('cat') || 'etc', done: false };
+    if (id) { const old = (S.plan[from] || []).find(x => x.id === id); if (old) it.done = old.done; S.plan[from] = (S.plan[from] || []).filter(x => x.id !== id); }
+    (S.plan[to] = S.plan[to] || []).push(it);
+    save(); closeSheet(); ui.day = to;
+    if (ui.tab === 'plan') { renderPlan(); toast(id ? '고친 내용을 저장했어요' : '일정을 추가했어요'); }
+    else toast(`${md(to)} 일정에 넣었어요`);
+  },
+  'f-theme': (f, d) => { const v = d.get('th').trim(); if (v) S.theme[ui.day] = v; else delete S.theme[ui.day]; save(); closeSheet(); renderPlan(); },
+  'f-search': (f, d) => { ui.mq = d.get('q').trim(); ui.mterm = ''; renderMap(); },
+  'f-mine': (f, d) => { const name = d.get('name').trim(); if (!name) return; S.mine.push({ id: uid(), name, note: d.get('note').trim() }); save(); renderMap(); toast('찜한 곳에 추가했어요'); },
+  'f-spend': (f, d) => {
+    const amt = num(d.get('amt')); if (!amt) { toast('금액을 넣어 주세요'); return; }
+    S.spend.push({ id: uid(), d: d.get('d'), amt, cur: ui.spCur, cat: d.get('cat'), memo: d.get('memo').trim() });
+    save(); renderWallet(); toast('지출을 기록했어요');
+  },
+  'f-rate': (f, d) => { const v = Number(String(d.get('v')).replace(/[^\d.]/g, '')); if (!(v > 1 && v < 100)) { toast('1원이 몇 동인지 숫자로 넣어 주세요 (예: 19.15)'); return; } S.rate = { v, at: '직접 입력', ts: Date.now(), manual: true }; save(); closeSheet(); render(); toast('환율을 저장했어요'); },
+  'f-budget': (f, d) => { S.budget = num(d.get('v')); save(); closeSheet(); renderWallet(); toast('예산을 저장했어요'); },
+  'f-check': (f, d) => { const text = d.get('text').trim(); if (!text) return; S.custom.push({ id: 'c' + uid(), text }); save(); renderGuide(); toast('준비물에 추가했어요'); }
+};
+
+document.addEventListener('click', e => {
+  if (e.target === sheet) { closeSheet(); return; }
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const fn = ACT[el.dataset.act]; if (fn) fn(el, e);
+});
+document.addEventListener('submit', e => { e.preventDefault(); const fn = FORMS[e.target.id]; if (fn) fn(e.target, new FormData(e.target)); });
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.id === 'cv-vnd') onConv('vnd');
+  else if (t.id === 'cv-krw') onConv('krw');
+  else if (t.id === 'sp-amt') spHint();
+  else if (t.name === 'v' && t.closest('#f-budget')) { const v = num(t.value); t.value = v ? nf(v) : ''; }
+  else if (t.dataset.trip && t.type !== 'date') { S.trip[t.dataset.trip] = t.dataset.trip === 'code' ? t.value.toUpperCase() : t.value; save(); }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset.ck) {
+    if (t.checked) S.check[t.dataset.ck] = true; else delete S.check[t.dataset.ck];
+    save(); t.closest('.ck').classList.toggle('on', t.checked);
+    const ck = checkProgress(), n = $('#ck-n'), b = $('#ck-bar');
+    if (n) n.textContent = `${ck.done} / ${ck.total}`; if (b) b.style.width = (ck.total ? ck.done / ck.total * 100 : 0) + '%';
+  } else if (t.dataset.trip && t.type === 'date') {
+    const k = t.dataset.trip, v = t.value; if (!v) { t.value = S.trip[k]; return; }
+    const start = k === 'start' ? v : S.trip.start, end = k === 'end' ? v : S.trip.end;
+    if (end < start) { toast('도착하는 날이 출발하는 날보다 빨라요'); t.value = S.trip[k]; return; }
+    if (diffDays(end, start) > 30) { toast('여행 기간은 31일까지만 넣을 수 있어요'); t.value = S.trip[k]; return; }
+    S.trip[k] = v; save(); ui.day = null; toast('여행 날짜를 바꿨어요');
+  } else if (t.id === 'imp' && t.files && t.files[0]) {
+    const fr = new FileReader();
+    fr.onload = () => {
+      try {
+        const j = JSON.parse(fr.result);
+        if (!j || typeof j !== 'object' || !j.trip || typeof j.plan !== 'object') throw new Error('bad');
+        ask('백업을 불러올까요?', '이 휴대폰의 기록이 백업 파일의 내용으로 모두 바뀌어요.', '백업 불러오기', () => { localStorage.setItem(KEY, JSON.stringify(j)); S = load(); ui.day = null; go('home'); toast('백업을 불러왔어요'); });
+      } catch (err) { toast('이 앱의 백업 파일이 아니에요'); }
+    };
+    fr.readAsText(t.files[0]); t.value = '';
+  }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!show.hidden) closeShow(); else if (!sheet.hidden) closeSheet(); } });
+window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (RENDER[h] && h !== ui.tab) go(h); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { loadWx(); loadRate(); tick(); } });
+
+/* ───────── 시작 ───────── */
+function tick() { const a = $('#clk-vn'), b = $('#clk-kr'); if (a) a.textContent = hm(TZ_VN); if (b) b.textContent = hm(TZ_KR); }
+function installMeta() {
+  try {
+    const c = document.createElement('canvas'); c.width = c.height = 192; const x = c.getContext('2d');
+    x.fillStyle = '#0A5A66'; x.fillRect(0, 0, 192, 192);
+    x.fillStyle = '#FFB81C'; x.beginPath(); x.arc(130, 68, 30, 0, 7); x.fill();
+    x.strokeStyle = '#F3FBFA'; x.lineWidth = 12; x.lineCap = 'round';
+    for (let i = 0; i < 2; i++) { const y = 122 + i * 30; x.beginPath(); x.moveTo(32, y); x.bezierCurveTo(58, y - 24, 78, y + 24, 100, y); x.bezierCurveTo(122, y - 24, 140, y + 20, 160, y - 2); x.stroke(); }
+    const url = c.toDataURL('image/png');
+    ['icon', 'apple-touch-icon'].forEach(rel => { const l = document.createElement('link'); l.rel = rel; l.href = url; document.head.appendChild(l); });
+    const base = location.href.split('#')[0];
+    if (/^https?:/.test(base)) {
+      const m = { name: '나트랑 가족여행', short_name: '나트랑', start_url: base, scope: base.replace(/[^/]*$/, ''), display: 'standalone', background_color: '#F0F6F4', theme_color: '#0A5A66', icons: [{ src: url, sizes: '192x192', type: 'image/png' }] };
+      const l = document.createElement('link'); l.rel = 'manifest'; l.href = URL.createObjectURL(new Blob([JSON.stringify(m)], { type: 'application/manifest+json' })); document.head.appendChild(l);
+    }
+  } catch (e) { }
+}
+(async function boot() {
+  if (!S.seeded) seedPlan();
+  installMeta();
+  const shared = await checkIncoming();
+  const h = location.hash.slice(1);
+  go(!shared && RENDER[h] ? h : 'home');
+  setInterval(tick, 15000);
+  try { speechSynthesis.getVoices(); } catch (e) { }
+  loadWx(); loadRate();
+})();
+
+})();
+</script>
+</body>
+</html>
