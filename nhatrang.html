@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>나트랑 가족여행</title>
-<meta name="description" content="2026년 10월 23일부터 11월 2일까지, 나트랑 가족여행 도우미">
+<title>선우네 나트랑 여행</title>
+<meta name="description" content="2026년 10월 23일부터 11월 2일까지, 선우네 나트랑 가족여행 도우미">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#0A5A66">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="나트랑">
+<meta name="apple-mobile-web-app-title" content="선우네 나트랑">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="format-detection" content="telephone=no">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -346,7 +346,7 @@ html[data-large="true"] body{font-size:17px}html[data-large="true"] .note,html[d
 </head>
 <body>
 <a class="skip" href="#view">본문으로 건너뛰기</a>
-<div id="app"><header class="apphead"><div class="brand"><small>OUR FAMILY GETAWAY</small>나트랑, 함께 떠나요</div><div class="head-actions"><button data-act="appearance" id="appearance" aria-label="화면 테마 변경">화면</button><button data-act="large-text" id="large-text" aria-pressed="false" aria-label="큰 글씨">가+</button></div></header><div class="connection" id="connection" role="status"></div><main id="view" tabindex="-1"><noscript>이 앱은 자바스크립트가 켜져 있어야 동작해요.</noscript></main></div>
+<div id="app"><header class="apphead"><div class="brand"><small>선우네 가족여행</small>선우랑 나트랑, 함께 떠나요</div><div class="head-actions"><button data-act="appearance" id="appearance" aria-label="화면 테마 변경">화면</button><button data-act="large-text" id="large-text" aria-pressed="false" aria-label="큰 글씨">가+</button></div></header><div class="connection" id="connection" role="status"></div><main id="view" tabindex="-1"><noscript>이 앱은 자바스크립트가 켜져 있어야 동작해요.</noscript></main></div>
 <nav class="tabs" aria-label="메뉴"><div>
   <button data-act="tab" data-v="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</button>
   <button data-act="tab" data-v="plan"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>일정</button>
@@ -512,12 +512,19 @@ const CHECK = [
     ['dry', '방수팩·방수 가방', ''],
     ['rain', '우비와 접이식 우산', '10~11월은 연중 비가 가장 많은 시기'],
     ['snorkel', '아이용 스노클 마스크·튜브', '필요하면'] ] },
+  { g: '선우 챙기기', l: [
+    ['school', '학교에 교외체험학습 신청서 내기', '평일 7일 결석: 10/23(금), 10/26~30, 11/2(월). 제출 기한과 양식은 담임 선생님께 확인'],
+    ['report', '돌아와서 체험학습 보고서 내기', '일정 탭의 “선우의 여행 일기”를 매일 적어 두면 보고서 초안이 만들어져요'],
+    ['height', '선우 키 재 두기', '빈원더스 놀이기구는 키 제한이 있어요. 현장 안내판과 비교하려고'],
+    ['goggles', '선우 물안경·수영모·래시가드', ''],
+    ['kidspa', '키즈 마사지 되는 곳 예약', '웰 스파·제이 스파·아만 스파는 아이 동반 후기가 많아요'],
+    ['kidphone', '선우 휴대폰이나 태블릿 잠금화면에 미아 방지 카드 저장', '홈 화면의 “미아 방지 카드”를 캡처'] ] },
   { g: '짐: 아이·상비약', l: [
     ['meds', '해열제·지사제·소화제·멀미약', ''],
     ['band', '밴드·소독약·벌레 물린 데 바르는 약', ''],
     ['snack', '아이 간식, 김·컵라면', '육류 건더기가 든 식품은 반입 제한 대상'],
     ['play', '태블릿·이어폰·책', '비행과 이동 시간용'],
-    ['lost', '미아 방지 카드에 보호자 연락처 입력', '가이드 탭의 설정에서 입력'] ] },
+    ['lost', '미아 방지 카드에 보호자 연락처와 선우 영문 이름 입력', '가이드 탭의 설정에서 입력'] ] },
   { g: '돌아오기 전', l: [
     ['souvenir', '기념품 쇼핑', ''],
     ['dong', '남은 동 쓰거나 다시 환전', ''],
@@ -538,10 +545,10 @@ const SEED = [
     ['13:00', '점심 먹고 숙소 수영장', '한낮은 쉬어 가기', '', 'rest'],
     ['16:30', '롯데마트 장보기', '물·간식·과일. 기념품은 미리 구경만', 'Lotte Mart Nha Trang', 'shop'],
     ['18:30', '저녁: 씀모이 가든', '에어컨 있는 대형 가정식당', 'Xóm Mới Garden Nha Trang', 'food'],
-    ['20:00', '가족 마사지', '키즈 마사지 되는 곳으로 미리 예약', 'Well Spa Nha Trang', 'spa'] ] },
+    ['20:00', '가족 마사지', '선우는 키즈 마사지로. 미리 예약', 'Well Spa Nha Trang', 'spa'] ] },
   { th: '빈원더스 종일', l: [
     ['08:30', '빈원더스로 출발', '비 예보가 크면 다른 날과 맞바꾸기', 'VinWonders Nha Trang', 'move'],
-    ['09:30', '놀이기구와 아쿠아리움', '인기 어트랙션은 오전에 먼저', 'VinWonders Nha Trang', 'sight'],
+    ['09:30', '놀이기구와 아쿠아리움', '인기 어트랙션은 오전에 먼저. 놀이기구마다 키 제한을 확인', 'VinWonders Nha Trang', 'sight'],
     ['11:30', '이른 점심', '남들 식사할 때 줄이 짧아져요', '', 'food'],
     ['13:00', '워터파크', '', '', 'sight'],
     ['18:30', '저녁 먹고 복귀', '저녁 공연은 운영 여부를 현장에서 확인', '', 'food'] ] },
@@ -563,7 +570,7 @@ const SEED = [
     ['14:00', '숙소 복귀, 낮잠', '', '', 'rest'],
     ['17:30', '저녁: 목 해산물', '주문 전에 무게와 가격 확인', 'Hải Sản Mộc Quán Nha Trang', 'food'] ] },
   { th: '수영장과 카페', l: [
-    ['10:00', '수영장이나 해변에서 놀기', '수영 금지 깃발 확인', '', 'rest'],
+    ['10:00', '선우랑 수영장이나 해변에서 놀기', '수영 금지 깃발 확인', '', 'rest'],
     ['12:30', '점심: 짜오마오', '', 'Nhà hàng Chào Mào Nha Trang', 'food'],
     ['15:00', '레인포레스트 카페', '', 'Rainforest Nha Trang', 'food'],
     ['17:00', '마사지', '', 'J Spa Nha Trang', 'spa'],
@@ -621,9 +628,9 @@ const G = {
 const KEY = 'nhatrang-trip-2026';
 const DEF = () => ({
   v: 1,
-  trip: { from: '부산', code: 'PUS', start: '2026-10-23', end: '2026-11-02', out: '', back: '', hotel: '', addr: '', tel: '', guardian: '', memo: '' },
+  trip: { from: '부산', code: 'PUS', start: '2026-10-23', end: '2026-11-02', out: '', back: '', hotel: '', addr: '', tel: '', guardian: '', memo: '', kidEn: '', kidAge: '' },
   plan: {}, theme: {}, seeded: false, fav: [], mine: [], spend: [], budget: 0,
-  rate: { v: 19.15, at: '', ts: 0, manual: false }, check: {}, custom: [], wx: null, gkey: '', appearance: 'auto', largeText: false
+  rate: { v: 19.15, at: '', ts: 0, manual: false }, check: {}, custom: [], wx: null, gkey: '', appearance: 'auto', largeText: false, diary: {}
 });
 
 const isObj = x => !!x && typeof x === 'object' && !Array.isArray(x);
@@ -659,6 +666,7 @@ function normalize(j, strict = false) {
   d.check=Object.fromEntries(Object.entries(isObj(j.check)?j.check:{}).filter(([k,v])=>ids.has(k)&&v===true));
   if(isObj(j.wx)&&isObj(j.wx.cur)&&Array.isArray(j.wx.d)&&Number.isFinite(j.wx.at)&&['t','c','h'].every(k=>Number.isFinite(j.wx.cur[k]))&&j.wx.d.every(x=>isObj(x)&&validDate(x.d)&&['c','hi','lo'].every(k=>Number.isFinite(x[k]))))d.wx=j.wx;
   d.gkey=/^[A-Za-z0-9_-]{20,}$/.test(j.gkey||'')?j.gkey:'';
+  d.diary=recordMap(j.diary,v=>isObj(v)?{did:txt(v.did,600),fun:txt(v.fun,600),learn:txt(v.learn,600),feel:txt(v.feel,300)}:{did:'',fun:'',learn:'',feel:''});
   d.appearance=['auto','light','dark'].includes(j.appearance)?j.appearance:'auto'; d.largeText=j.largeText===true;
   return d;
 }
@@ -825,9 +833,9 @@ function renderHome() {
       ? `<div class="callout" style="margin-top:14px"><b>출발 전 입국 절차를 확인해 주세요.</b> 사전입국신고 대상 공항과 도착 시각을 항공사 안내로 확인하세요. <a href="https://prearrival.immigration.gov.vn" target="_blank" rel="noopener">작성하러 가기</a></div>`
       : '';
   view.innerHTML = `
-  <h1 class="home-title" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">나트랑 가족여행 대시보드</h1><section class="ticket" aria-label="여행 요약">
+  <h1 class="home-title" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">선우네 나트랑 여행 대시보드</h1><section class="ticket" aria-label="여행 요약">
     <div class="tk-top">
-      <div class="tk-name"><b>나트랑 가족여행</b><button class="tk-gear" data-act="guide" data-v="set" aria-label="여행 정보 설정">${ICON.gear}</button></div>
+      <div class="tk-name"><b>선우네 나트랑 여행</b><button class="tk-gear" data-act="guide" data-v="set" aria-label="여행 정보 설정">${ICON.gear}</button></div>
       <div class="tk-route">
         <div class="tk-port"><b>${esc(t.code || 'PUS')}</b><span>${esc(t.from || '출발')}</span></div>
         <div class="tk-path">${ICON.plane}</div>
@@ -906,6 +914,7 @@ function renderPlan() {
       </div>
     </li>`).join('')}</ol>` : `<div class="empty">아직 일정이 없어요. 아래 버튼으로 첫 일정을 넣어 보세요.</div>`}
   <div class="addbar"><button class="btn pri full" data-act="plan-add">이 날에 일정 추가</button></div>
+  ${diaryHTML(d, idx)}
   <div class="row" style="margin-top:10px">
     <button class="btn sm grow" data-act="day-share">이 날 일정 공유</button>
     <button class="btn sm grow" data-act="day-clear">이 날 비우기</button>
@@ -914,6 +923,30 @@ function renderPlan() {
   <div class="row" style="margin-top:8px"><button class="btn sm ghost" data-act="seed-reset">추천 초안으로 되돌리기</button><button class="btn sm ghost" data-act="plan-wipe">전체 일정 비우기</button></div>`;
   const sel = view.querySelector('.dayc[aria-selected=true]');
   if (sel) { const box = sel.parentNode; box.scrollLeft = sel.offsetLeft - box.clientWidth / 2 + sel.clientWidth / 2; }
+}
+const DIARY_Q = [['did', '오늘 무엇을 했나요?', '예: 빈원더스에서 케이블카를 타고 섬에 갔어요'], ['fun', '가장 재미있었던 것', '예: 워터파크 미끄럼틀'], ['learn', '새로 알게 된 것', '예: 베트남 돈은 0이 많아요. 10만 동은 약 5천 원'], ['feel', '오늘 기분 한 줄', '예: 신났어요!']];
+function diaryHTML(d, idx) {
+  const v = S.diary[d] || {}, filled = DIARY_Q.filter(([k]) => (v[k] || '').trim()).length;
+  return `<details class="tip diary"${filled ? ' open' : ''}><summary>✏️ 선우의 여행 일기 · ${idx + 1}일차 ${filled ? `<small class="note">${filled}/4</small>` : ''}</summary>
+    <div style="padding:0 16px 16px">
+      <p class="note">자기 전에 선우와 함께 적어 두면 돌아와서 체험학습 보고서를 쓰기 쉬워요.</p>
+      ${DIARY_Q.map(([k, label, ph]) => `<label class="field"><span>${label}</span><textarea class="in" id="diary-${k}" data-diary="${k}" data-d="${d}" maxlength="${k === 'feel' ? 300 : 600}" placeholder="${ph}" style="min-height:${k === 'feel' ? 48 : 64}px">${esc(v[k] || '')}</textarea></label>`).join('')}
+      <button class="btn sm" style="margin-top:10px" data-act="report">체험학습 보고서 초안 보기</button>
+    </div></details>`;
+}
+function reportText() {
+  const days = tripDays(), t = S.trip;
+  const head = `교외체험학습 보고서 (초안)\n장소: 베트남 나트랑\n기간: ${md(t.start)}(${dow(t.start)}) ~ ${md(t.end)}(${dow(t.end)})\n함께 간 사람: 가족\n`;
+  const body = days.map((d, i) => {
+    const v = S.diary[d] || {}, list = sorted(S.plan[d] || []).filter(x => x.done).map(x => x.title);
+    if (!DIARY_Q.some(([k]) => (v[k] || '').trim()) && !list.length) return '';
+    return `\n[${i + 1}일차 ${md(d)} ${dow(d)}요일]${S.theme[d] ? ' ' + S.theme[d] : ''}\n` +
+      (v.did ? `한 일: ${v.did}\n` : list.length ? `한 일: ${list.join(', ')}\n` : '') +
+      (v.fun ? `재미있었던 것: ${v.fun}\n` : '') + (v.learn ? `새로 알게 된 것: ${v.learn}\n` : '') + (v.feel ? `기분: ${v.feel}\n` : '');
+  }).filter(Boolean).join('');
+  const learned = days.map(d => (S.diary[d] || {}).learn).filter(x => (x || '').trim());
+  return head + (body || '\n아직 적은 일기가 없어요. 일정 탭에서 날마다 “선우의 여행 일기”를 적어 주세요.\n') +
+    (learned.length ? `\n[느낀 점과 배운 점]\n${learned.map(x => '- ' + x).join('\n')}\n` : '');
 }
 function planSheet(date, id, preset) {
   const days = tripDays(); if(!days.includes(date))date=days[0];
@@ -1168,6 +1201,7 @@ function renderWallet() {
     <p class="note" style="margin-top:8px">2만 동과 50만 동은 둘 다 파란색이고, 1만 동과 20만 동은 둘 다 갈색 계열이에요. 낼 때 0의 개수를 꼭 확인하세요.</p>
   </section>
 
+  ${quizHTML()}
   <section class="sec"><div class="sec-h"><h2>쓴 돈</h2><button class="more" data-act="spend-share">내역 공유</button></div>
     <div class="box">
       <div class="sum"><span>지금까지</span><b>${nf(total)}원</b></div>
@@ -1192,6 +1226,24 @@ function renderWallet() {
     }).join('');
   }).join('') : '<div class="empty">기록한 지출이 없어요. 위에 금액을 넣고 기록해 보세요.</div>'}
   </section>`;
+}
+/* 선우 동 계산 놀이: 구구단 범위의 곱셈·나눗셈을 '만 동' 단위로 */
+const QUIZ_ITEMS = [['🥖', '반미', 2, 5], ['🥭', '망고 주스', 3, 6], ['🍦', '아이스크림', 2, 4], ['🍜', '쌀국수', 5, 9], ['🥥', '코코넛', 3, 5], ['🧸', '기념품 인형', 4, 9]];
+const jong = w => { const c = w.charCodeAt(w.length - 1); return c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 > 0; };
+const ig = w => w + (jong(w) ? '이' : '가'), eul = w => w + (jong(w) ? '을' : '를');
+function newQuiz() {
+  const r = n => Math.floor(Math.random() * n), [e, name, lo, hi] = QUIZ_ITEMS[r(QUIZ_ITEMS.length)], price = lo + r(hi - lo + 1), n = 2 + r(8);
+  return r(2) ? { e, q: `${ig(name)} 1개에 ${price}만 동이에요. ${n}개를 사면 모두 몇만 동일까요?`, a: price * n, unit: '만 동', hint: `${price} × ${n}` }
+              : { e, q: `${price * n}만 동으로 ${price}만 동짜리 ${eul(name)} 몇 개 살 수 있을까요?`, a: n, unit: '개', hint: `${price * n} ÷ ${price}` };
+}
+function quizHTML() {
+  if (!ui.quiz) ui.quiz = newQuiz();
+  const z = ui.quiz, sc = ui.qscore || 0;
+  return `<section class="sec"><div class="sec-h"><h2>선우의 동 계산 놀이</h2><span class="note">맞힌 문제 ${sc}개</span></div>
+    <div class="box"><p style="font-size:16px;line-height:1.5"><span aria-hidden="true">${z.e}</span> ${esc(z.q)}</p>
+    <form id="f-quiz" class="search" style="margin:12px 0 0"><input class="in" name="a" inputmode="numeric" autocomplete="off" aria-label="정답" placeholder="정답"><span class="note" style="align-self:center">${z.unit}</span><button class="btn pri">확인</button></form>
+    <p class="note" id="quiz-msg" style="min-height:20px;margin-top:8px">${ui.qmsg || ''}</p>
+    <div class="row"><button class="btn sm" data-act="quiz-hint">힌트</button><button class="btn sm" data-act="quiz-next">다른 문제</button></div></div></section>`;
 }
 function spendText() {
   const total = S.spend.reduce((a, x) => a + toKrw(x), 0);
@@ -1312,8 +1364,9 @@ function setHTML() {
     <p class="note" style="margin-top:6px">입력해 두면 택시 기사에게 보여줄 카드와 “숙소 주변” 검색에 쓰여요.</p>
   </div>
   <div class="cg"><h3>미아 방지 카드</h3>
-    ${f('guardian', '보호자 전화번호', '+82 10-0000-0000', 'tel')}
-    <p class="note" style="margin-top:6px">현지에서 걸 수 있게 +82로 시작하는 번호로 적으세요. 이 기기에 저장되고 공유용 일정에는 들어가지 않아요. 전체 백업에는 포함돼요.</p>
+    ${f('kidEn', '선우 영문 이름 (여권 표기)', '예: YU SEONWOO')}
+    <div class="f2">${f('kidAge', '선우 나이', '예: 8', 'text', 'inputmode="numeric" maxlength="2"')}${f('guardian', '보호자 전화번호', '+82 10-0000-0000', 'tel')}</div>
+    <p class="note" style="margin-top:6px">현지에서 걸 수 있게 +82로 시작하는 번호로 적으세요. 이름·나이·번호는 이 기기에만 저장되고 공유용 일정에는 들어가지 않아요. 전체 백업에는 포함돼요.</p>
     <button class="btn sm" style="margin-top:8px" data-act="lost">카드 미리 보기</button>
   </div>
   <div class="cg"><h3>지도 안 실시간 검색</h3>
@@ -1386,8 +1439,8 @@ async function checkIncoming() {
     incoming = j;
     const n = Object.values(j.p).reduce((a, l) => a + (Array.isArray(l) ? l.length : 0), 0);
     ask('받은 일정이 있어요', `가족이 보낸 일정 ${n}개를 이 휴대폰에 불러올까요? 지금 이 휴대폰에 있는 일정과 찜한 곳은 받은 내용으로 바뀌어요. 지출과 준비물 체크는 그대로예요.`, '받은 일정 불러오기', () => {
-      const g = S.trip.guardian, memo=S.trip.memo;
-      if (j.t) S.trip = {...j.t, guardian:g, memo};
+      const g = S.trip.guardian, memo=S.trip.memo, kidEn=S.trip.kidEn, kidAge=S.trip.kidAge;
+      if (j.t) S.trip = {...j.t, guardian:g, memo, kidEn, kidAge};
       Object.values(j.p).forEach(l => Array.isArray(l) && l.forEach(x => { if (!/^\d\d:\d\d$/.test(x.t || '')) x.t = ''; }));
       S.plan = j.p; S.theme = j.h || {}; S.fav = Array.isArray(j.f) ? j.f : []; S.mine = Array.isArray(j.m) ? j.m : []; S.seeded = true;
       
@@ -1401,13 +1454,13 @@ async function checkIncoming() {
 /* ───────── 누르기 동작 ───────── */
 
 function downloadFile(name,text,type){const url=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);}
-function sharedData(){const t={...S.trip,guardian:'',memo:''};return{v:1,shareOnly:true,trip:t,plan:S.plan,theme:S.theme,fav:S.fav,mine:S.mine,seeded:true};}
+function sharedData(){const t={...S.trip,guardian:'',memo:'',kidEn:'',kidAge:''};return{v:1,shareOnly:true,trip:t,plan:S.plan,theme:S.theme,fav:S.fav,mine:S.mine,seeded:true};}
 function checkSharedFile(j){ask('공유용 일정을 불러올까요?','일정·찜한 곳·숙소 정보가 바뀝니다. 지출·준비물·보호자 연락처·개인 메모는 유지됩니다.','일정 불러오기',()=>{const guardian=S.trip.guardian,memo=S.trip.memo;S.trip={...j.trip,guardian,memo};S.plan=j.plan;S.theme=j.theme;S.fav=j.fav;S.mine=j.mine;S.seeded=true;save();ui.day=null;go('plan');toast('공유 일정을 불러왔어요');});}
 function spendEdit(id){const x=S.spend.find(s=>s.id===id);if(!x)return;
  openSheet(`<form id="f-spend-edit" data-id="${esc(id)}"><h2>지출 수정</h2><label class="field"><span>금액</span><input class="in" name="amt" inputmode="decimal" value="${nf(x.amt)}" required></label><div class="f2"><label class="field"><span>통화</span><select class="in" name="cur"><option value="VND"${x.cur==='VND'?' selected':''}>베트남 동</option><option value="KRW"${x.cur==='KRW'?' selected':''}>한국 원</option></select></label><label class="field"><span>날짜</span><input class="in" type="date" name="d" value="${esc(x.d)}" required></label></div><label class="field"><span>종류</span><select class="in" name="cat">${SPCATS.map(c=>`<option value="${c.k}"${c.k===x.cat?' selected':''}>${c.e} ${c.n}</option>`).join('')}</select></label><label class="field"><span>기록 환율 · 1원이 몇 동인지</span><input class="in" name="rate" inputmode="decimal" required value="${x.rate||S.rate.v}"></label><label class="field"><span>메모</span><input class="in" name="memo" maxlength="100" value="${esc(x.memo)}"></label><div class="row" style="margin-top:18px"><button type="button" class="btn ghost grow" data-act="sheet-close">취소</button><button class="btn pri grow">수정 저장</button></div></form>`);
 }
 function printPlan(){
- document.getElementById('print-area').innerHTML=`<h1>나트랑 가족여행</h1><p>${esc(S.trip.start)} ~ ${esc(S.trip.end)} · 현지 시각 기준${S.trip.hotel?'<br>숙소: '+esc(S.trip.hotel):''}</p>`+tripDays().map((d,i)=>`<section class="print-day"><h2>${i+1}일차 · ${md(d)} ${dow(d)}요일 ${esc(S.theme[d]||'')}</h2><ol>${sorted(S.plan[d]||[]).map(x=>`<li><b>${esc(x.t||'미정')} · ${esc(x.title)}</b>${x.note?'<small>'+esc(x.note)+'</small>':''}${x.q?'<small>장소: '+esc(x.q)+'</small>':''}</li>`).join('')||'<li>일정 없음</li>'}</ol></section>`).join('');
+ document.getElementById('print-area').innerHTML=`<h1>선우네 나트랑 여행</h1><p>${esc(S.trip.start)} ~ ${esc(S.trip.end)} · 현지 시각 기준${S.trip.hotel?'<br>숙소: '+esc(S.trip.hotel):''}</p>`+tripDays().map((d,i)=>`<section class="print-day"><h2>${i+1}일차 · ${md(d)} ${dow(d)}요일 ${esc(S.theme[d]||'')}</h2><ol>${sorted(S.plan[d]||[]).map(x=>`<li><b>${esc(x.t||'미정')} · ${esc(x.title)}</b>${x.note?'<small>'+esc(x.note)+'</small>':''}${x.q?'<small>장소: '+esc(x.q)+'</small>':''}</li>`).join('')||'<li>일정 없음</li>'}</ol></section>`).join('');
  window.print();
 }
 
@@ -1537,19 +1590,25 @@ const ACT = {
   lost: () => {
     const t = S.trip;
     if (!t.guardian.trim()) { ui.guide = 'set'; go('guide'); toast('보호자 전화번호를 넣으면 미아 방지 카드가 만들어져요'); return; }
-    showCard(`<p class="k">아이가 길을 잃었을 때 보여주는 카드</p><p class="mid" lang="vi">Cháu bị lạc. Xin hãy gọi cho bố mẹ cháu:</p><p class="big">${esc(t.guardian)}</p><p class="mid" lang="en">I am lost. Please call my parents.</p>
-      ${t.hotel ? `<p class="sm" lang="vi">Khách sạn: ${esc(t.hotel)}</p>` : ''}<p class="sm">뜻: 길을 잃었어요. 부모님께 전화해 주세요.\n이 화면을 캡처해 아이 휴대폰 잠금화면에 두거나 인쇄해 가방에 넣어 주세요.</p>
+    const kn = t.kidEn.trim(), ka = String(t.kidAge || '').trim();
+    showCard(`<p class="k">선우가 길을 잃었을 때 보여주는 카드</p>${kn ? `<p class="mid" lang="vi">Cháu tên là ${esc(kn)}${ka ? `, ${esc(ka)} tuổi` : ''}.</p>` : ''}<p class="mid" lang="vi">Cháu bị lạc. Xin hãy gọi cho bố mẹ cháu:</p><p class="big">${esc(t.guardian)}</p><p class="mid" lang="en">${kn ? `My name is ${esc(kn)}. ` : ''}I am lost. Please call my parents.</p>
+      ${t.hotel ? `<p class="sm" lang="vi">Khách sạn: ${esc(t.hotel)}</p>` : ''}<p class="sm">뜻: ${kn ? '제 이름은 선우예요. ' : ''}길을 잃었어요. 부모님께 전화해 주세요.\n이 화면을 캡처해 아이 휴대폰 잠금화면에 두거나 인쇄해 가방에 넣어 주세요.</p>
       <div class="acts"><a class="btn" href="tel:${esc(t.guardian.replace(/[^\d+]/g, ''))}">이 번호로 전화 걸기</a></div>`);
   },
+  report: () => openSheet(`<h2>체험학습 보고서 초안</h2><p class="note">일기와 완료한 일정으로 만든 초안이에요. 복사해서 학교 양식에 맞게 다듬어 쓰세요.</p><textarea class="in" readonly style="min-height:280px;margin-top:10px">${esc(reportText())}</textarea>
+    <div class="row" style="margin-top:12px"><button class="btn pri grow" data-act="report-copy">복사하기</button><button class="btn ghost grow" data-act="sheet-close">닫기</button></div>`),
+  'report-copy': () => copyText(reportText()),
+  'quiz-hint': () => { ui.qmsg = `힌트: ${ui.quiz.hint} 를 계산해 보세요.`; const m = $('#quiz-msg'); if (m) m.textContent = ui.qmsg; },
+  'quiz-next': () => { ui.quiz = newQuiz(); ui.qmsg = ''; renderWallet(); },
   'ck-del': el => { S.custom = S.custom.filter(x => x.id !== el.dataset.id); delete S.check[el.dataset.id]; save(); renderGuide(); },
 
   /* 백업 */
   'share-link': async () => {
     if(!/^https?:/.test(location.protocol)||['localhost','127.0.0.1','[::1]'].includes(location.hostname)||location.hostname.endsWith('.localhost')){openSheet('<h2>파일로 일정 공유</h2><p class="note">지금 주소는 이 컴퓨터에서만 열리는 주소라 가족 휴대폰에서 링크로 열 수 없어요. 아래 공유용 JSON과 HTML 파일을 함께 보내고, 가족이 설정에서 JSON을 불러오면 됩니다. 공유용 파일에는 지출·보호자 연락처·개인 메모·API 키를 제외합니다.</p><button class="btn pri full" style="margin-top:16px" data-act="export-shared">공유용 일정 파일 저장</button>');return;}
-    const t = Object.assign({}, S.trip); delete t.guardian;delete t.memo;
+    const t = Object.assign({}, S.trip); delete t.guardian;delete t.memo;delete t.kidEn;delete t.kidAge;
     const url = location.href.split('#')[0] + '#d=' + await pack({ t, p: S.plan, h: S.theme, f: S.fav, m: S.mine });
     if (url.length > 9000) { toast('일정이 길어 링크로 보내기 어려워요. 백업 파일을 보내 주세요'); return; }
-    if (navigator.share) { try { await navigator.share({ title: '나트랑 가족여행 일정', url }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+    if (navigator.share) { try { await navigator.share({ title: '선우네 나트랑 여행 일정', url }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
     copyText(url);
   },
   export: () => {
@@ -1574,6 +1633,11 @@ function spHint() {
   h.textContent = !v ? '' : ui.spCur === 'VND' ? `약 ${nf(v / S.rate.v)}원` : `약 ${nf(v * S.rate.v)}동`;
 }
 const FORMS = {
+  'f-quiz': (f, d) => {
+    const v = num(d.get('a')), z = ui.quiz; if (!String(d.get('a')).trim()) return;
+    if (v === z.a) { ui.qscore = (ui.qscore || 0) + 1; ui.quiz = newQuiz(); ui.qmsg = `정답이에요! ${z.a}${z.unit}. 다음 문제도 풀어 볼까요?`; renderWallet(); }
+    else { ui.qmsg = '아쉬워요. 다시 생각해 보세요. 힌트를 눌러도 돼요.'; const m = $('#quiz-msg'); if (m) m.textContent = ui.qmsg; }
+  },
   'f-picks':(f,d)=>{ui.pq=d.get('q').trim();renderMap();},
   'f-spend-edit':(f,d)=>{const x=S.spend.find(s=>s.id===f.dataset.id),amt=num(d.get('amt')),rate=num(d.get('rate'));if(!x)return;if(!(amt>0&&amt<=1e12&&rate>1&&rate<100&&validDate(d.get('d')))){toast('금액·환율·날짜를 확인해 주세요');return;}Object.assign(x,{amt,rate,d:d.get('d'),cur:d.get('cur'),cat:d.get('cat'),memo:d.get('memo').trim()});save();closeSheet();renderWallet();toast('지출을 수정했어요');},
   'f-plan': (f, d) => {
@@ -1607,6 +1671,7 @@ document.addEventListener('click', e => {
 document.addEventListener('submit', e => { e.preventDefault(); const fn = FORMS[e.target.id]; if (fn) fn(e.target, new FormData(e.target)); });
 document.addEventListener('input', e => {
   const t = e.target;
+  if (t.dataset.diary) { const d = t.dataset.d; S.diary[d] = Object.assign({ did: '', fun: '', learn: '', feel: '' }, S.diary[d] || {}, { [t.dataset.diary]: t.value }); save(); return; }
   if (t.id === 'cv-vnd') onConv('vnd');
   else if (t.id === 'cv-krw') onConv('krw');
   else if (t.id === 'sp-amt') spHint();
@@ -1664,7 +1729,7 @@ function installMeta() {
     ['icon', 'apple-touch-icon'].forEach(rel => { const l = document.createElement('link'); l.rel = rel; l.href = url; document.head.appendChild(l); });
     const base = location.href.split('#')[0];
     if (/^https?:/.test(base)) {
-      const m = { name: '나트랑 가족여행', short_name: '나트랑', start_url: base, scope: base.replace(/[^/]*$/, ''), display: 'standalone', background_color: '#F0F6F4', theme_color: '#0A5A66', icons: [{ src: url, sizes: '192x192', type: 'image/png' }] };
+      const m = { name: '선우네 나트랑 여행', short_name: '선우네 나트랑', start_url: base, scope: base.replace(/[^/]*$/, ''), display: 'standalone', background_color: '#F0F6F4', theme_color: '#0A5A66', icons: [{ src: url, sizes: '192x192', type: 'image/png' }] };
       const l = document.createElement('link'); l.rel = 'manifest'; l.href = URL.createObjectURL(new Blob([JSON.stringify(m)], { type: 'application/manifest+json' })); document.head.appendChild(l);
     }
   } catch (e) { }
