@@ -803,6 +803,13 @@ def soft_whoosh(rng, dur=1.2):
     return fade(normpk(x * att(t, 0.01) * np.exp(-t / (dur * 0.3))), 0.002, 0.05)
 
 
+def page_env(t, pre=0.26):
+    """page-switch swish envelope: accelerating rise, crest at `pre`, quick
+    swipe release with a soft tail"""
+    return np.where(t < pre, (t / pre) ** 4,
+                    0.65 * np.exp(-(t - pre) / 0.02) + 0.35 * np.exp(-(t - pre) / 0.12))
+
+
 def page_whoosh(rng, pre=0.26, post=0.4):
     """subtle page-switch swish, peaks at `pre` seconds, pans L->R"""
     n = ns(pre + post)
@@ -810,7 +817,7 @@ def page_whoosh(rng, pre=0.26, post=0.4):
     u = t / (pre + post)
     fc = np.where(t < pre, 700 * (4500 / 700) ** (t / pre), 4500 * (1800 / 4500) ** ((t - pre) / post))
     x = tvf(noise(rng, n), fc, 1.2, 'bp', 32)
-    env = np.where(t < pre, (t / pre) ** 3, np.exp(-(t - pre) / (post * 0.3)))   # crests sharply at the switch
+    env = page_env(t, pre)
     th = (0.15 + 0.7 * u) * np.pi / 2
     x = normpk(x * env)
     return fade(np.vstack((x * np.cos(th), x * np.sin(th))) * np.sqrt(2), 0.01, 0.05)
@@ -1533,9 +1540,14 @@ def verify(wav_path, stems, info):
             k, to, jmp, r = onset(t)
             print(f'  {t:7.3f} tap   onset {1000 * (to - t):+5.1f} ms  ({k}, 20 ms jump {jmp:+5.1f} dB)  {text}')
         elif fxs is not None:                    # whoosh peak, measured on the fx stem (20 ms RMS)
-            m = fxs.mean(axis=0)[ns(t - 0.4):ns(t + 0.4)]
-            e = np.sqrt(np.convolve(m ** 2, np.ones(ns(0.01)) / ns(0.01), mode='same'))
-            print(f'  {t:7.3f} page  whoosh envelope peak (10 ms RMS, fx stem) {1000 * (np.argmax(e) / SR - 0.4):+5.1f} ms  {text}')
+            # matched filter: align the fx stem's energy with the known swish
+            # envelope; the best lag gives where the crest actually sits
+            seg = fxs.mean(axis=0)[ns(t - 0.26 - 0.03):ns(t + 0.4 + 0.03)] ** 2
+            tmpl = page_env(tvec(ns(0.66))) ** 2
+            lags = np.arange(-ns(0.03), ns(0.03) + 1)
+            cc = [np.dot(seg[ns(0.03) + L:ns(0.03) + L + len(tmpl)], tmpl) for L in lags]
+            lag = lags[int(np.argmax(cc))] / SR
+            print(f'  {t:7.3f} page  whoosh crest (matched to its envelope, fx stem) {1000 * lag:+5.1f} ms  {text}')
 
     # spectrogram
     f, tt, Z = signal.stft(mono, SR, nperseg=4096, noverlap=4096 - 480)
