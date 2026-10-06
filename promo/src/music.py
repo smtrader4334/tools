@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-music.py (v4) - original score for the 47.5 s 더함화재특종손해사정 brand film.
+music.py (v5) - original score for the 47.5 s 더함화재특종손해사정 brand film.
 
 Premium, restrained corporate score: felt piano, warm string beds, deep clean
 low hits, a soft pulse and a lot of air.  Everything is synthesised from
@@ -36,8 +36,9 @@ Form
                    downbeats, felt accent per beat; lift at 22.5 (piano
                    A4 C5 E5 G5 on 복구 일상 제자리 회복, shimmer)
   dropB   25-35    F | C | Dm | Bb : piano melody (the motif turned major)
-                   over a pad, gentle 8th pulse, kick on beats 1+3, UI ticks,
-                   page whooshes; ring-out at 34.375: kick + pulse drop out,
+                   over a pad, gentle 8th pulse, kick on beats 1+3, UI ticks
+                   (26.875, 33.75), page whooshes peaking at 28.75, 30.625,
+                   32.5; ring-out at 34.375: kick + pulse drop out,
                    Bb -> F chord (piano + pad) decays naturally into the outro
   outro   35-47.5  softboom, Fmaj9 without its 3rd + piano A4 (the missing
                    third is "added"), subdrop + light sweep, piano-harmonic
@@ -71,7 +72,6 @@ BEAT = float(TL['beat'])
 BAR = 4 * BEAT
 SEC = {s['name']: (float(s['start']), float(s['end'])) for s in TL['sections']}
 HITS = [(float(w['t']), w['hit'], w['text']) for w in TL['words'] if 'hit' in w]
-UI = [(float(w['t']), w['ui'], w['text']) for w in TL['words'] if 'ui' in w]
 
 
 def word_time(prefix, default):
@@ -96,6 +96,13 @@ SWELL0 = hit_time('swell', BUILD1 - BEAT)          # 14.375 breath-in swell into
 CREST = SWELL0 - 0.175                             # 14.2   build strings + riser crest, then fall away
 LIFT = word_time('복구', A0 + 3 * BAR)               # 22.5 lift to major
 RING0 = hit_time('ringout', B1 - BEAT)             # 34.375 drop B ring-out chord (Bb -> F)
+# drop B phone section (v5): five scenes of 3 beats from 25.0; UI sounds follow
+# the picture (defined here; timeline.json's older 'ui' fields are not used)
+UI = [(B0 + 3 * BEAT, 'tap', '화재 손해 tab'),           # 26.875
+      (B0 + 6 * BEAT, 'page', 'home -> 대표 page'),      # 28.75  whoosh peak
+      (B0 + 9 * BEAT, 'page', '-> 선임권 page'),          # 30.625 whoosh peak
+      (B0 + 12 * BEAT, 'page', '-> home'),               # 32.5   whoosh peak
+      (B0 + 14 * BEAT, 'tap', 'KakaoTalk button')]       # 33.75
 
 # opening / build harmony (string bed + low-hit tuning) and the word motif
 OPEN_CHORDS = [(OPEN0, OPEN0 + BAR, 'Dm'), (OPEN0 + BAR, OPEN0 + 2 * BAR, 'Bbmaj7'),
@@ -164,7 +171,7 @@ LV = dict(
     lowhit=0.53, piano=0.87, strings_open=0.16, tick=0.28,
     riser=0.05, breath=0.36, kick=0.62, accent=0.30, air=0.08, taiko=0.36, ost=0.40,
     strings_a=0.13, sub=0.25, shimmer=0.035, impact=0.70, whoosh=0.10,
-    pad_b=0.12, pulse=0.16, ui=0.06, page=0.05, ring=0.52,
+    pad_b=0.12, pulse=0.16, ui=0.11, page=0.05, ring=0.52,
     softboom=0.42, pad_o=0.09, subdrop=0.36, sweep=0.04, chime=0.16, ember=0.28,
 )
 
@@ -803,7 +810,7 @@ def page_whoosh(rng, pre=0.26, post=0.4):
     u = t / (pre + post)
     fc = np.where(t < pre, 700 * (4500 / 700) ** (t / pre), 4500 * (1800 / 4500) ** ((t - pre) / post))
     x = tvf(noise(rng, n), fc, 1.2, 'bp', 32)
-    env = np.where(t < pre, smoothstep(t / pre) ** 1.5, np.exp(-(t - pre) / (post * 0.3)))
+    env = np.where(t < pre, (t / pre) ** 3, np.exp(-(t - pre) / (post * 0.3)))   # crests sharply at the switch
     th = (0.15 + 0.7 * u) * np.pi / 2
     x = normpk(x * env)
     return fade(np.vstack((x * np.cos(th), x * np.sin(th))) * np.sqrt(2), 0.01, 0.05)
@@ -1116,12 +1123,12 @@ def render_drops(B):
     for t, kind, text in UI:
         if kind == 'tap':
             B['fx'].add(ui_tick(ur), t, LV['ui'], 0.2)
-            ev(t, 'KEY', f'UI tap "{text}"', 'soft UI tick')
+            ev(t, 'KEY', f'UI tap ({text})', 'soft UI tick')
         elif kind == 'page':
             pw = page_whoosh(ur)
             B['fx'].add(pw, t - 0.26, LV['page'])
             B['s_hall'].add(pw, t - 0.26, LV['page'] * 0.3)
-            ev(t, 'KEY', f'page whoosh "{text}"', 'swish PEAKS at this time (starts 0.26 s earlier)')
+            ev(t, 'KEY', f'page whoosh ({text})', 'swish PEAKS at this time (starts 0.26 s earlier)')
     # ---- ring-out: kick + pulse gone, Bb -> F chord decays naturally into the outro --
     for nm, v in RING_PIANO:
         p = piano(nm, v, 1.6)
@@ -1519,6 +1526,16 @@ def verify(wav_path, stems, info):
         print(f'  {t:7.3f} {kind:<9s} onset {1000 * (to - t):+5.1f} ms  ({k}, 20 ms jump {jmp:+5.1f} dB'
               + (f', 2/8 ms ratio {rise:+5.1f} dB' if k == 'HF' else '') + f')  {text}')
     print(f'  worst |onset error| = {1000 * worst:.2f} ms')
+    print('\nUI sync points (drop B phone scenes)')
+    fxs = (stems or {}).get('fx')
+    for t, kind, text in UI:
+        if kind == 'tap':
+            k, to, jmp, r = onset(t)
+            print(f'  {t:7.3f} tap   onset {1000 * (to - t):+5.1f} ms  ({k}, 20 ms jump {jmp:+5.1f} dB)  {text}')
+        elif fxs is not None:                    # whoosh peak, measured on the fx stem (20 ms RMS)
+            m = fxs.mean(axis=0)[ns(t - 0.4):ns(t + 0.4)]
+            e = np.sqrt(np.convolve(m ** 2, np.ones(ns(0.01)) / ns(0.01), mode='same'))
+            print(f'  {t:7.3f} page  whoosh envelope peak (10 ms RMS, fx stem) {1000 * (np.argmax(e) / SR - 0.4):+5.1f} ms  {text}')
 
     # spectrogram
     f, tt, Z = signal.stft(mono, SR, nperseg=4096, noverlap=4096 - 480)

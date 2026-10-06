@@ -80,7 +80,7 @@ const phraseEl = $('phraseIn');
 function renderPhrase(t) {
   const p = PHRASES.find((p) => t >= p.t0 && t < p.t1);
   if (!p) { phraseEl.innerHTML = ''; return null; }
-  let out = 1 - lin(t, p.t1 - 0.32, p.t1);
+  let out = 1 - lin(t, p.t1 - 0.15, p.t1);
   if (p.build) out = 1 - eInOut(lin(t, 14.2, 14.75));
   const html = p.words.map(([w, b], i) => {
     const u = (t - bt(b)) / 0.5;
@@ -120,24 +120,27 @@ const rig = $('phoneRig'), phone = $('phone');
 const hl = $('hl'), tap = $('tap'), tapRing = $('tapRing'), kw = $('kw'), kwSub = $('kwSub');
 const PG = { home: { el: $('pg-home') }, sm: { el: $('pg-sm') }, dk: { el: $('pg-dk') } };
 const VH = 794; // 상태바 아래 페이지 뷰포트 높이
-const words2 = (arr, n, br) => arr.map((w, i) => (br.includes(i) ? '<br>' : i ? ' ' : '') + `<span class="${i < n ? '' : 'ghost'}"${i === n - 1 ? ' data-new' : ''}>${w}</span>`).join('');
+// 글자 장면: 머리말 → 1줄 → 2줄(→3줄) 순서로 위에서 아래로. 마지막 줄이 나온 뒤 1.2초 이상 유지
+const SC = [
+  { t0: bt(40), t1: bt(43), lines: [['근거를 찾고,', 40], ['회복의 방향을.', 41]] },
+  { t0: bt(43), t1: bt(46), eyebrow: '화재 손해', lines: [['타버린 곳 너머,', 43], ['손해의 범위를 살핍니다.', 44]] },
+  { t0: bt(46), t1: bt(49), eyebrow: '유승민 대표 · 재물손해사정사', list: true,
+    lines: [['현직 손실보상심의위원', 46], ['보험사 조사회사 지점장 출신', 46.5], ['건축기사 · 건설안전기사', 47]] },
+  { t0: bt(49), t1: bt(52), eyebrow: '이도경 이사 · 손해사정사 선임권 상담', lines: [['손해사정사 선택,', 49], ['고객님의 <span class="blue">권리</span>입니다.', 50]] },
+  { t0: bt(52), t1: 35.0, eyebrow: '부산 · 울산 · 경남', lines: [['가까운 현장에서,', 52], ['함께 시작합니다.', 53]] },
+];
 
+// 폰 안 동작: 페이지 · 스크롤 · 하이라이트 · 탭
 const DB = [
-  { b: 40, page: 'home', kw: words2(['근거를 찾고,', '회복의 방향을.'], 1, [1]), scroll: 0, hl: { sel: 'h1' } },
-  { b: 41, page: 'home', kw: words2(['근거를 찾고,', '회복의 방향을.'], 2, [1]), add: true, hl: { sel: 'h1' } },
-  { b: 42, page: 'home', kw: '<span class="blue">화재</span> 손해.', scroll: { sel: '[id$="-trigger-fire"]', mode: 'top' }, tap: { sel: '[id$="-trigger-fire"]' }, hl: { sel: '[id$="-trigger-fire"]' } },
-  { b: 43, page: 'home', kw: '타버린 곳 너머,', sub: '손해의 범위를 살핍니다.', scroll: { sel: 'h3', text: '타버린 곳' }, hl: { sel: 'h3', text: '타버린 곳', up: 1 } },
-  { b: 44, page: 'home', kw: words2(['현장을 읽고,', '자료를 대조하고,', '설명합니다.'], 1, [1, 2]), scroll: { sel: 'h3', text: '자료를 대조' }, hl: { sel: 'h3', text: '현장을 읽습니다', up: 1 } },
-  { b: 45, page: 'home', kw: words2(['현장을 읽고,', '자료를 대조하고,', '설명합니다.'], 2, [1, 2]), add: true, hl: { sel: 'h3', text: '자료를 대조', up: 1 } },
-  { b: 46, page: 'home', kw: words2(['현장을 읽고,', '자료를 대조하고,', '설명합니다.'], 3, [1, 2]), add: true, hl: { sel: 'h3', text: '설명합니다', up: 1 } },
-  { b: 47, page: 'sm', kw: '부산소방재난본부<br>손실보상심의위원.', sub: '현직 · 유승민 대표', scroll: { sel: 'h3', text: '보험사 조사회사' }, hl: { sel: 'h3', text: '현직 손실보상', up: 1 } },
-  { b: 48, page: 'sm', kw: '보험사 조사회사<br>지점장 출신.', hl: { sel: 'h3', text: '보험사 조사회사', up: 1 } },
-  { b: 49, page: 'sm', kw: '건축기사 ·<br>건설안전기사.', hl: { sel: 'h3', text: '건축기사', up: 1 } },
-  { b: 50, page: 'dk', kw: words2(['손해사정사 선택,', '고객님의 <span class="blue">권리</span>입니다.'], 1, [1]), scroll: { sel: '#appointment-title', at: 380 }, hl: { sel: '#appointment-title' } },
-  { b: 51, page: 'dk', kw: words2(['손해사정사 선택,', '고객님의 <span class="blue">권리</span>입니다.'], 2, [1]), add: true, sub: '이도경 이사 · 손해사정사 선임권 상담', hl: { sel: '#appointment-title' } },
-  { b: 52, page: 'home', kw: '부산 · 울산 · 경남.', sub: '가까운 현장에서, 함께 시작합니다.', scroll: { sel: '#co-regions-title', mode: 'top' }, hl: { sel: '#co-regions-title' } },
-  { b: 53, page: 'home', kw: words2(['지금,', '상담하세요.'], 1, [1]), tap: { sel: 'a.co-dock-kakao' }, hl: { sel: 'a.co-dock-kakao' } },
-  { b: 54, page: 'home', kw: words2(['지금,', '상담하세요.'], 2, [1]), add: true, hl: { sel: 'a.co-dock-kakao' } },
+  { b: 40, page: 'home', scroll: 0, hl: { sel: 'h1' } },
+  { b: 43, page: 'home', scroll: { sel: '[id$="-trigger-fire"]', mode: 'top' }, tap: { sel: '[id$="-trigger-fire"]' }, hl: { sel: '[id$="-trigger-fire"]' } },
+  { b: 44, page: 'home', hl: { sel: 'h3', text: '타버린 곳', up: 1 } },
+  { b: 46, page: 'sm', scroll: { sel: 'h3', text: '보험사 조사회사' }, hl: { sel: 'h3', text: '현직 손실보상', up: 1 } },
+  { b: 46.5, page: 'sm', hl: { sel: 'h3', text: '보험사 조사회사', up: 1 } },
+  { b: 47, page: 'sm', hl: { sel: 'h3', text: '건축기사', up: 1 } },
+  { b: 49, page: 'dk', scroll: { sel: '#appointment-title', at: 380 }, hl: { sel: '#appointment-title' } },
+  { b: 52, page: 'home', scroll: { sel: '#co-regions-title', mode: 'top' }, hl: { sel: '#co-regions-title' } },
+  { b: 54, page: 'home', tap: { sel: 'a.co-dock-kakao' }, hl: { sel: 'a.co-dock-kakao' } },
 ];
 for (let i = 0; i < DB.length; i++) { DB[i].t = bt(DB[i].b); DB[i].end = DB[i + 1] ? bt(DB[i + 1].b) : 35.0; }
 
@@ -188,6 +191,34 @@ function scrollFor(i, t) {
   return y;
 }
 
+function renderSceneText(t) {
+  const sc = SC.find((s) => t >= s.t0 && t < s.t1);
+  kwSub.style.display = 'none';
+  if (!sc) { kw.innerHTML = ''; return; }
+  const base = sc.list ? S(66, 62) : S(112, 100);
+  const ebFS = S(34, 38);
+  const st = (b, extra = 0) => { const u = (t - bt(b) - extra) / 0.45; return u < 0 ? 'opacity:0' : reveal(u, 22, 8); };
+  const bar = '<span style="display:inline-block;width:.16em;height:.86em;background:var(--blue);border-radius:2px;margin-right:.42em;vertical-align:-.06em"></span>';
+  const linesHTML = (withStyle) => sc.lines.map(([w, b], i) =>
+    `<div style="white-space:nowrap;${sc.list ? 'margin-top:.28em;' : ''}${withStyle ? st(b, sc.eyebrow && i === 0 ? 0.08 : 0) : ''}">${sc.list ? bar : ''}${w}</div>`).join('');
+  // 가장 긴 줄 기준으로 한 번에 크기를 정해 장면 내내 고정
+  kw.style.fontSize = base + 'px';
+  kw.innerHTML = linesHTML(false);
+  const w0 = kw.scrollWidth, maxW = S(800, 960);
+  const fs = w0 > maxW ? base * maxW / w0 : base;
+  kw.style.fontSize = fs + 'px';
+  const eb = sc.eyebrow ? `<div style="font-size:${ebFS}px;color:var(--blue-l);font-weight:600;letter-spacing:.01em;line-height:1.3;margin-bottom:${S(22, 24)}px;white-space:nowrap;${st(sc.lines[0][1])}">${sc.eyebrow}</div>` : '';
+  kw.innerHTML = eb + linesHTML(true);
+  const out = 1 - lin(t, sc.t1 - 0.12, sc.t1);
+  const kfade = 1 - eInOut(lin(t, 34.4, 34.8));
+  kw.style.opacity = (sc.t1 >= 35 ? 1 : out) * kfade;
+  kw.style.filter = 'none'; kw.style.transform = 'none';
+  const kwW = kw.scrollWidth, kwH = kw.scrollHeight;
+  kw.style.textAlign = V ? 'center' : 'left';
+  kw.style.left = S(1060, (W - kwW) / 2) + 'px';
+  kw.style.top = S(H / 2 - kwH / 2, 400 - kwH / 2) + 'px';
+}
+
 function renderPhone(t) {
   const on = t >= 25 && t < 35;
   rig.style.visibility = on ? 'visible' : 'hidden';
@@ -204,12 +235,11 @@ function renderPhone(t) {
     else el.style.visibility = 'hidden';
   }
   PG[c.page].win.scrollTo(0, Math.round(scrollFor(i, t)));
-  // 다음 컷이 다른 페이지면 미리 제 위치로 (전환 직전 프레임에 보일 수 있도록)
   const next = DB[i + 1];
   if (next && next.page !== c.page) PG[next.page].win.scrollTo(0, next.target);
   if (sw < 1 && prev) PG[prev.page].win.scrollTo(0, prev.target);
 
-  // 폰 배치 + 등장
+  // 폰 배치 + 등장 · 퇴장
   const s = S(1.2, 1.22);
   const pw = 418 * s, ph = 872 * s;
   let px = S(620 - pw / 2, 540 - pw / 2), py = S(64, H - ph - 120);
@@ -232,11 +262,10 @@ function renderPhone(t) {
     hl.style.opacity = fresh ? clamp(u) : 1;
     hl.style.transform = `scale(${fresh ? 1 + 0.04 * (1 - eOutExpo(u)) : 1})`;
   } else hl.style.display = 'none';
-  if (t >= 34.45) hl.style.display = 'none';
 
   // 탭 터치
   const tc = DB.find((b) => b.tap && t >= b.t - 0.08 && t < b.t + 0.45);
-  if (tc && tc.page === c.page) {
+  if (tc && tc.page === c.page && t < 34.45) {
     const r = find(tc.page, tc.tap).getBoundingClientRect();
     const cx = r.left + r.width / 2, cy = r.top + 50 + r.height / 2;
     const u = t - tc.t;
@@ -249,82 +278,40 @@ function renderPhone(t) {
     tapRing.style.transform = `scale(${1 + 1.5 * eOut(ur)})`;
   } else { tap.style.display = 'none'; tapRing.style.display = 'none'; }
 
-  // 키워드
-  const u = (t - c.t) / 0.45;
-  const base = c.big ? S(200, 180) : S(112, 100);
-  const maxW = S(800, 960);
-  kw.style.fontSize = base + 'px';
-  kw.innerHTML = c.kw.replace(/class="ghost"/g, '');
-  const w0 = kw.scrollWidth;
-  kw.style.fontSize = (w0 > maxW ? base * maxW / w0 : base) + 'px';
-  kw.innerHTML = c.kw;
-  if (c.add) {
-    const nw = kw.querySelector('[data-new]');
-    if (nw) nw.setAttribute('style', 'display:inline-block;' + reveal(u, 22, 8));
-    kw.style.cssText = kw.style.cssText.replace(/opacity:[^;]+;?|filter:[^;]+;?/g, '');
-    kw.style.opacity = 1; kw.style.filter = 'none'; kw.style.transform = 'none';
-  } else {
-    const e = eOut(u);
-    kw.style.opacity = clamp(u * 1.6);
-    kw.style.filter = `blur(${(1 - e) * 8}px)`;
-    kw.style.transform = `translateY(${(1 - eOutExpo(u)) * 22}px)`;
-  }
-  const kwH = kw.scrollHeight, kwW = kw.scrollWidth;
-  // 이어지는 컷(add)에서 나올 설명 자리까지 미리 잡아 두어 문장이 위아래로 튀지 않게
-  let k = i; while (DB[k + 1] && DB[k + 1].add) k++;
-  const layoutSub = c.sub || DB[k].sub;
-  const subH = layoutSub ? S(34, 36) * 1.5 * (layoutSub.split('<br>').length) + 18 : 0;
-  const kfade = 1 - eInOut(lin(t, 34.4, 34.8));
-  kw.style.opacity = parseFloat(kw.style.opacity || 1) * kfade;
-  const kx = S(1060, (W - kwW) / 2);
-  const ky = S(H / 2 - (kwH + subH) / 2, 400 - (kwH + subH) / 2);
-  kw.style.left = kx + 'px'; kw.style.top = ky + 'px';
-  kw.style.textAlign = V ? 'center' : 'left';
-  if (c.sub) {
-    kwSub.style.display = 'block';
-    kwSub.innerHTML = c.sub;
-    kwSub.style.fontSize = S(30, 32) + 'px';
-    kwSub.style.textAlign = V ? 'center' : 'left';
-    kwSub.style.left = S(kx + 4, 0) + 'px';
-    kwSub.style.width = V ? W + 'px' : '760px';
-    kwSub.style.top = ky + kwH + 18 + 'px';
-    let j = i; while (j > 0 && DB[j - 1].sub === c.sub) j--;
-    const subT = DB[j].t + (c.add ? 0.35 : 0.15);
-    kwSub.style.opacity = clamp((t - subT) / 0.3) * kfade;
-  } else kwSub.style.display = 'none';
+  renderSceneText(t);
 }
 
-// ---------------------------------------------------------------- 엔딩
-const endcard = $('endcard'), logoWrap = $('logoWrap'), sheen = $('logoSheen'), tagline = $('tagline');
+// ---------------------------------------------------------------- 엔딩: 큰 한 줄 → (사라짐) → 로고 → 한 줄 → 상호 → 연락처 → 고지
+const endcard = $('endcard'), logoWrap = $('logoWrap'), sheen = $('logoSheen'), tagline = $('tagline'), tagSmall = $('tagSmall');
 const brand = $('brandname'), official = $('official'), contacts = $('contacts'), disclaimer = $('disclaimer');
 contacts.innerHTML = V
-  ? '<b>손해사정</b> 유승민 대표 010-3589-7193<br><b>선임권</b> 이도경 이사 010-2506-0717<br><b>카카오톡 상담</b>'
-  : '<b>손해사정</b> 유승민 대표 010-3589-7193<span class="sep">|</span><b>선임권</b> 이도경 이사 010-2506-0717<span class="sep">|</span><b>카카오톡 상담</b>';
+  ? '<b>손해사정</b> 유승민 대표 010-3589-7193<br><b>선임권</b> 이도경 이사 010-2506-0717<br><span class="blue"><b class="blue">카카오톡 상담</b></span>'
+  : '<b>손해사정</b> 유승민 대표 010-3589-7193<span class="sep">|</span><b>선임권</b> 이도경 이사 010-2506-0717<br><span class="blue"><b class="blue">카카오톡 상담</b></span>';
 const L = {
-  logoH: S(210, 260), logoCY: S(292, 640),
-  tagY: S(474, 860), tagFS: S(58, 60), lineFS: S(150, 124),
-  brandY: S(548, 948), brandFS: S(30, 38),
-  offY: S(596, 1004), offFS: S(22, 28),
-  conY: S(690, 1108), conFS: S(25, 30),
-  disY: S(1010, 1800), disFS: S(18, 24),
+  logoH: S(210, 260), logoCY: S(270, 600),
+  tagY: S(440, 820), tagFS: S(58, 62), lineFS: S(150, 124),
+  brandY: S(512, 905), brandFS: S(32, 40),
+  offY: S(560, 962), offFS: S(24, 30),
+  conY: S(660, 1080), conFS: S(34, 42),
+  disY: S(1010, 1800), disFS: S(20, 26),
 };
 function renderOutro(t) {
   const on = t >= 35;
   endcard.style.display = on && t >= 38.6 ? 'block' : 'none';
-  tagline.style.display = on && t >= bt(57) ? 'block' : 'none';
+  tagline.style.display = on && t >= bt(57) && t < 38.6 ? 'block' : 'none';
   if (!on) return;
-  if (t >= bt(57)) {
+  if (t >= bt(57) && t < 38.6) {
     const u1 = (t - bt(57)) / 0.55, u2 = (t - bt(59)) / 0.55;
-    const m = eInOut(lin(t, 38.2, 39.0));
-    const br = V && m < 0.5 ? '<br>' : ' ';
+    const br = V ? '<br>' : ' ';
     tagline.innerHTML = `<span style="display:inline-block;${reveal(u1, 26, 10)}">빠진 것을,</span>${br}` +
       `<span class="blue" style="display:inline-block;${u2 < 0 ? 'opacity:0' : reveal(u2, 26, 10)}">더합니다.</span>`;
     tagline.style.fontSize = L.lineFS + 'px';
     tagline.style.lineHeight = 1.15;
-    const hgt = tagline.scrollHeight;
-    const sc = lerp(1, L.tagFS / L.lineFS, m);
-    tagline.style.top = lerp(H / 2, L.tagY, m) - hgt / 2 + 'px';
-    tagline.style.transform = `scale(${sc})`;
+    tagline.style.top = H / 2 - tagline.scrollHeight / 2 + 'px';
+    const f = eInOut(lin(t, 37.95, 38.5));
+    tagline.style.opacity = 1 - f;
+    tagline.style.filter = f > 0.02 ? `blur(${f * 8}px)` : 'none';
+    tagline.style.transform = `scale(${1 - 0.03 * f})`;
   }
   if (t < 38.6) return;
   const lw = L.logoH * 1328 / 1151;
@@ -342,6 +329,7 @@ function renderOutro(t) {
     el.style.opacity = u; el.style.transform = `translateY(${(1 - eOut(u)) * 12}px)`;
     if (extra) extra(u);
   };
+  place(tagSmall, L.tagY - L.tagFS * 0.6, L.tagFS, bt(63));
   place(brand, L.brandY, L.brandFS, bt(64), (u) => { brand.style.letterSpacing = lerp(0.3, 0.14, eOut(u)) + 'em'; });
   place(official, L.offY, L.offFS, bt(64) + 0.3);
   place(contacts, L.conY, L.conFS, bt(66));
