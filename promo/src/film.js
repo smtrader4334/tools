@@ -133,7 +133,7 @@ const DB = [
   { b: 47, page: 'sm', kw: '부산소방재난본부<br>손실보상심의위원.', sub: '현직 · 유승민 대표', scroll: { sel: 'h3', text: '보험사 조사회사' }, hl: { sel: 'h3', text: '현직 손실보상', up: 1 } },
   { b: 48, page: 'sm', kw: '보험사 조사회사<br>지점장 출신.', hl: { sel: 'h3', text: '보험사 조사회사', up: 1 } },
   { b: 49, page: 'sm', kw: '건축기사 ·<br>건설안전기사.', hl: { sel: 'h3', text: '건축기사', up: 1 } },
-  { b: 50, page: 'dk', kw: words2(['손해사정사 선택,', '고객님의 <span class="blue">권리</span>입니다.'], 1, [1]), sub: '이도경 이사 · 손해사정사 선임권 상담', scroll: { sel: '#appointment-title', at: 380 }, hl: { sel: '#appointment-title' } },
+  { b: 50, page: 'dk', kw: words2(['손해사정사 선택,', '고객님의 <span class="blue">권리</span>입니다.'], 1, [1]), scroll: { sel: '#appointment-title', at: 380 }, hl: { sel: '#appointment-title' } },
   { b: 51, page: 'dk', kw: words2(['손해사정사 선택,', '고객님의 <span class="blue">권리</span>입니다.'], 2, [1]), add: true, sub: '이도경 이사 · 손해사정사 선임권 상담', hl: { sel: '#appointment-title' } },
   { b: 52, page: 'home', kw: '부산 · 울산 · 경남.', sub: '가까운 현장에서, 함께 시작합니다.', scroll: { sel: '#co-regions-title', mode: 'top' }, hl: { sel: '#co-regions-title' } },
   { b: 53, page: 'home', kw: words2(['지금,', '상담하세요.'], 1, [1]), tap: { sel: 'a.co-dock-kakao' }, hl: { sel: 'a.co-dock-kakao' } },
@@ -270,7 +270,10 @@ function renderPhone(t) {
     kw.style.transform = `translateY(${(1 - eOutExpo(u)) * 22}px)`;
   }
   const kwH = kw.scrollHeight, kwW = kw.scrollWidth;
-  const subH = c.sub ? S(34, 36) * 1.5 * (c.sub.split('<br>').length) + 18 : 0;
+  // 이어지는 컷(add)에서 나올 설명 자리까지 미리 잡아 두어 문장이 위아래로 튀지 않게
+  let k = i; while (DB[k + 1] && DB[k + 1].add) k++;
+  const layoutSub = c.sub || DB[k].sub;
+  const subH = layoutSub ? S(34, 36) * 1.5 * (layoutSub.split('<br>').length) + 18 : 0;
   const kfade = 1 - eInOut(lin(t, 34.4, 34.8));
   kw.style.opacity = parseFloat(kw.style.opacity || 1) * kfade;
   const kx = S(1060, (W - kwW) / 2);
@@ -285,7 +288,9 @@ function renderPhone(t) {
     kwSub.style.left = S(kx + 4, 0) + 'px';
     kwSub.style.width = V ? W + 'px' : '760px';
     kwSub.style.top = ky + kwH + 18 + 'px';
-    kwSub.style.opacity = clamp((t - c.t - 0.15) / 0.3) * kfade;
+    let j = i; while (j > 0 && DB[j - 1].sub === c.sub) j--;
+    const subT = DB[j].t + (c.add ? 0.35 : 0.15);
+    kwSub.style.opacity = clamp((t - subT) / 0.3) * kfade;
   } else kwSub.style.display = 'none';
 }
 

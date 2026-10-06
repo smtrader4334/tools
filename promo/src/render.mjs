@@ -65,7 +65,7 @@ if (PREVIEW) {
     console.log(f, Date.now() - t0, 'ms');
   }
 } else {
-  const out = path.join(BUILD, `video-${FMT}.mp4`);
+  const out = path.join(BUILD, arg('--out', `video-${FMT}.mp4`));
   const ff = spawn(FFMPEG, ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-',
     '-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', out], { stdio: ['pipe', 'inherit', 'inherit'] });
   const n0 = Math.round(FROM * FPS), n1 = Math.round(TO * FPS);
